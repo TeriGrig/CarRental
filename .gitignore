@@ -1,0 +1,11 @@
+# SQL Server
+*.mdf
+*.ldf
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# ASP.NET App_Data folder
+App_Data/
