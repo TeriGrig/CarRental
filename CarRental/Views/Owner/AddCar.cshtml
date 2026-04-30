@@ -1,0 +1,52 @@
+﻿@model CarRental.ViewModels.AddVehicleViewModel
+
+<form asp-action="AddCar" method="post" enctype="multipart/form-data">
+
+    <div>
+        <label>Make</label>
+        <input asp-for="Make" class="form-control" />
+        <span asp-validation-for="Make"></span>
+    </div>
+
+    <div>
+        <label>Model</label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model"></span>
+    </div>
+
+    <div>
+        <label>Cubic</label>
+        <input asp-for="Cubic" type="number" class="form-control" />
+    </div>
+
+    <div>
+        <label>Year</label>
+        <input asp-for="Year" type="number" class="form-control" />
+    </div>
+
+    <div>
+        <label>PricePerDay</label>
+        <input asp-for="PricePerDay" type="number" class="form-control" />
+    </div>
+
+    <div>
+        <label>Location</label>
+        <input asp-for="Location" class="form-control" />
+        <span asp-validation-for="Location"></span>
+    </div>
+
+    <div>
+        <label>Comments</label>
+        <textarea asp-for="Comments" class="form-control"></textarea>
+        <span asp-validation-for="Comments"></span>
+    </div>
+
+    <div>
+        <label>Image</label>
+        <input asp-for="ImageFile" type="file" />
+        <span asp-validation-for="ImageFile"></span>
+    </div>
+
+    <button type="submit">Submit</button>
+
+</form>

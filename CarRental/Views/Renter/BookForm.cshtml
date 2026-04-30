@@ -1,0 +1,26 @@
+﻿@model CarRental.Models.Vehicle
+
+<h2>Book Car</h2>
+
+<div>
+    <h3>@Model.Make @Model.Model</h3>
+    <img src="@Model.Image" style="width:300px;" />
+</div>
+
+<form method="post" action="/Renter/CreateBooking">
+
+    <input type="hidden" name="vehicleId" value="@Model.VehicleId" />
+
+    <div>
+        <label>Start Date</label>
+        <input type="date" name="startDate" required />
+    </div>
+
+    <div>
+        <label>End Date</label>
+        <input type="date" name="endDate" required />
+    </div>
+
+    <button type="submit">Confirm Booking</button>
+
+</form>

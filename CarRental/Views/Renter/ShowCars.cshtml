@@ -1,0 +1,29 @@
+﻿@model List<CarRental.Models.Vehicle>
+
+<h2>Available Cars</h2>
+
+<div style="display:flex; flex-wrap:wrap; gap:20px;">
+
+@foreach (var car in Model)
+{
+    <div style="border:1px solid gray; padding:10px; width:250px;">
+
+        <img src="@car.Image" style="width:100%; height:150px; object-fit:cover;" />
+
+        <h4>@car.Make @car.Model</h4>
+
+        <p><b>Year:</b> @car.Year</p>
+        <p><b>Cubic:</b> @car.Cubic</p>
+        <p><b>Price/Day:</b> @car.PricePerDay €</p>
+        <p><b>Location:</b> @car.Location</p>
+
+        <form method="post" action="/Renter/Book">
+            <input type="hidden" name="vehicleId" value="@car.VehicleId" />
+            <button type="submit">Book</button>
+        </form>
+
+    </div>
+}
+
+</div>
+

@@ -4,8 +4,7 @@
 
 using CarRental.Data;
 using CarRental.Models;
-using CarRental.Data;
-using CarRental.Models;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
