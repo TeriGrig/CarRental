@@ -39,7 +39,7 @@ namespace CarRental.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "Renter")]
         [HttpGet]
         public IActionResult BookForm(int vehicleId)
         {
