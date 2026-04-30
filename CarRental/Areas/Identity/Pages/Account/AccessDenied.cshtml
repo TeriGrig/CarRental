@@ -7,4 +7,12 @@
 <header>
     <h1 class="text-danger">@ViewData["Title"]</h1>
     <p class="text-danger">You do not have access to this resource.</p>
+    @if(User.IsInRole("Renter"))
+    {
+        <p class="text-danger">Please login as an Owner.</p>
+    }
+    else if(User.IsInRole("Owner"))
+    {
+        <p class="text-danger">Please login as a Renter.</p>
+    }
 </header>

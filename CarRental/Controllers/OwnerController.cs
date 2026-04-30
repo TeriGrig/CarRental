@@ -17,7 +17,8 @@ namespace CarRental.Controllers
             _context = context;
         }
 
-        [Authorize]
+        //[Authorize]
+        [Authorize(Roles = "Owner")]
         [HttpGet]
         public IActionResult AddCar()
         {
