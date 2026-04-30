@@ -43,10 +43,6 @@ namespace CarRental.Controllers
         [HttpGet]
         public IActionResult BookForm(int vehicleId)
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account", new { returnUrl = $"/Renter/BookForm/{vehicleId}" });
-            }
             var vehicle = _context.Vehicles.FirstOrDefault(v => v.VehicleId == vehicleId);
 
             if (vehicle == null)

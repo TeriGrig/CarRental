@@ -2,7 +2,9 @@
 using CarRental.Data;
 using CarRental.Models;
 using CarRental.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CarRental.Controllers
 {
@@ -15,7 +17,7 @@ namespace CarRental.Controllers
             _context = context;
         }
 
-        
+        [Authorize]
         [HttpGet]
         public IActionResult AddCar()
         {
@@ -26,6 +28,13 @@ namespace CarRental.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCar([Bind(Prefix = "")] AddVehicleViewModel model)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var owner = _context.Owners.FirstOrDefault(r => r.UserId == userId);
+
+            if (owner == null)
+                return Content("Owner not found");
+
             if (!ModelState.IsValid)
             {
                 var errors = ModelState
@@ -66,7 +75,7 @@ namespace CarRental.Controllers
                 Comments = model.Comments,
                 Availability = true,
                 Image = imagePath?? "/images/car-placeholder.png",
-                OwnerID = 1
+                OwnerID = owner.Id
             };
 
             _context.Vehicles.Add(vehicle);
