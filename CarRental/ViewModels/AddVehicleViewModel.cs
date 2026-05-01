@@ -17,8 +17,9 @@ namespace CarRental.ViewModels
         public int? PricePerDay { get; set; }
         [Required]
         public string Location { get; set; }
-        public string Comments { get; set; }
+        public string? Comments { get; set; }
 
+        public bool IsAvailable { get; set; }
         public IFormFile? ImageFile { get; set; }
     }
 }

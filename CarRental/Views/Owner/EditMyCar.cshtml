@@ -1,13 +1,13 @@
 ﻿@model CarRental.ViewModels.AddVehicleViewModel
 
-<form asp-action="AddCar" method="post" enctype="multipart/form-data">
-
-    <div>
+  @* <form asp-action="EditMyCar" method="post" enctype="multipart/form-data"> *@
+    <form asp-action="EditMyCar" asp-route-vehicleId="@Context.Request.Query["vehicleId"]" method="post" enctype="multipart/form-data">
+      
+      <div>
         <label>Make</label>
         <input asp-for="Make" class="form-control" />
         <span asp-validation-for="Make"></span>
     </div>
-
     <div>
         <label>Model</label>
         <input asp-for="Model" class="form-control" />
@@ -47,10 +47,11 @@
         <span asp-validation-for="ImageFile"></span>
     </div>
 
-    <div>
-        <label>Available for Rent</label>
-        <input asp-for="IsAvailable" type="checkbox"></>
-        <span asp-validation-for="IsAvailable"></span>
+    <div class="form-check mb-3">
+        <input asp-for="IsAvailable" type="checkbox" class="form-check-input" id="availableCheck" />
+        <label class="form-check-label" for="availableCheck">
+            Available for Rent
+        </label>
     </div>
 
     <button type="submit">Submit</button>
