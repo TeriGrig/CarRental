@@ -3,13 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CarRental.Views.Owner
 {
-    public class AddCarModel : PageModel
+    public class ViewMyCarModel : PageModel
     {
         public void OnGet()
         {
-
-
-
         }
     }
 }
