@@ -1,0 +1,41 @@
+﻿@using CarRental.Models
+@model dynamic  //ώστε να πάρει το user αυτούσιο και να το χωρίσει μετά
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<section>
+    <h3>Personal Information</h3>
+    <p>First Name: @Model.User.FirstName</p>
+    <p>Last Name: @Model.User.LastName</p>
+    <p>Email: @Model.User.Email</p>
+    <p>Phone: @Model.User.PhoneNumber</p>
+</section>
+
+@if (Model is Renter)
+{
+    <section>
+        
+        <p>Birth Year: @(Model.BirthYear > 0 ? Model.BirthYear.ToString() : "Not provided")</p>
+        <p>Licence Year: @(Model.LicenceYear > 0 ? Model.LicenceYear.ToString() : "Not provided")</p>
+    </section>
+}
+
+@if (Model is Owner)
+{
+    <section>
+        <h3>Owner Dashboard</h3>
+        <a asp-controller="Owner" asp-action="ViewMyCar">Manage My Cars</a>
+    </section>
+}
+
+<nav>
+    <br />
+    <a href="/User/EditProfile">Edit My Profile</a>
+    <br />
+    <a href="/Home/Index">Back to Home</a>
+    
+    </nav>
