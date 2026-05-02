@@ -2,10 +2,21 @@
 
 <form asp-action="AddCar" method="post" enctype="multipart/form-data">
 
-    <div>
-        <label>Make</label>
-        <input asp-for="Make" class="form-control" />
-        <span asp-validation-for="Make"></span>
+    <div class="form-group">
+        <label asp-for="Make"></label>
+
+        <input asp-for="Make" class="form-control" list="carMakes" />
+
+        <datalist id="carMakes">
+            <option value="Audi"></option>
+            <option value="Mercedes"></option>
+            <option value="BMW"></option>
+            <option value="Toyota"></option>
+            <option value="Ford"></option>
+            <option value="Volkswagen"></option>
+        </datalist>
+
+        <span asp-validation-for="Make" class="text-danger"></span>
     </div>
 
     <div>
