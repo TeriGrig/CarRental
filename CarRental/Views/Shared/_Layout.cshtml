@@ -46,9 +46,39 @@
                     </ul>
                     <partial name="_LoginPartial" />
                         @if (User.IsInRole("Owner") || User.IsInRole("Renter")) {
+
+                            <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="User" asp-action="ViewProfile">View Profile</a>
+                            </li>
                         }
                     </div>
+                   
+         
+                <li class="nav-item">
+                    <button class="nav-link text-dark" onclick="onClickNotification()"> Notifications </button>
+                </li>
+            
+                <div
+                    id="notificationBox" 
+                    style="
+                    display:none;
+                    position:absolute;
+                    right:20px;
+                    top:60px;
+                    width:300px;
+                    background:red;
+                    z-index: 9999;
+                    border:1px solid gray;
+                    padding:10px;
+                    max-height:300px;
+                    overflow-y:auto;
+                    ">
+                    <h4>Booking Requests</h4>
+                    <div id="notificationsContent">
+                       
+
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -67,5 +97,67 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+            function onClickNotification() {
+                var notification = document.getElementById("notificationBox");
+                if (notification.style.display === "none" || notification.style.display === "") {
+                    notification.style.display = "block";
+                    loadNotifications();
+                } else {
+                    notification.style.display = "none";
+                }
+            }
+
+            function loadNotifications() {
+                $.ajax({
+                    url: '/User/BookingNotifications',
+                    method: 'GET',
+                    success: function (bookings) {
+                        var notificationsContent = $('#notificationsContent');
+                        notificationsContent.empty();
+                
+                        if (bookings.length === 0) {
+                            notificationsContent.append('<p style="color:white; padding:10px;">No new requests.</p>');
+                        } else {
+                            bookings.forEach(function (item) {
+                                notificationsContent.append(
+                                    '<div style="border-bottom:1px solid white; padding:10px; color:white;">' +
+                                        '<div>' + item.message + '</div>' +
+                                        '<div style="margin-top:5px;">' +
+                                            '<button onclick="respondToBooking(' + item.id + ', \'Accepted\')" style="background:green; color:white; border:none; margin-right:5px; cursor:pointer;">Accept</button>' +
+                                            '<button onclick="respondToBooking(' + item.id + ', \'Rejected\')" style="background:black; color:white; border:none; cursor:pointer;">Reject</button>' +
+                                        '</div>' +
+                                    '</div>'
+                                );
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Failed to load notifications.');
+                    }
+                });
+            }
+           
+            
+            function respondToBooking(id, statusValue) {
+            $.ajax({
+                url: '/Owner/UpdateBookingStatus',
+                method: 'POST', 
+                data: {
+                    bookingId: id,
+                    Status: statusValue 
+                },
+                success: function (response) {
+                    if (response.success) {
+                        loadNotifications(); 
+                    }
+                },
+                error: function () {
+                    alert('Failed to respond to booking.');
+                }
+            });
+          
+            }
+    </script>
 </body>
 </html>
