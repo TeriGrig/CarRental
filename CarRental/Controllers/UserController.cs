@@ -120,7 +120,7 @@ namespace CarRental.Controllers
 
 
         [HttpGet]
-        public async  Task<IActionResult> BookingNotifications( )
+        public async Task<IActionResult> BookingNotifications()
 
         {
             var userId = _userManager.GetUserId(User);
@@ -131,21 +131,63 @@ namespace CarRental.Controllers
 
                 var bookings = await _context.Bookings
                 .Include(b => b.Vehicle)
-                .Include(b => b.Renter.User) 
+                .Include(b => b.Renter.User)
                 .Where(b => b.Vehicle.OwnerID == owner.Id && b.Status == "Requested")
-                .Select(b => new 
+                .Select(b => new
                 {
                     id = b.BookingId,
-                    message = "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName
+                    message = "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName,
+                    profileUrl = "/User/OpenUsersProfile?userId=" + b.Renter.UserId
+
                 })
-             .ToListAsync();
+                  .ToListAsync();
 
                 return Json(bookings);
-                
-           }
+
+            }
+            if (User.IsInRole("Renter"))
+            {
+                var renter = await _context.Renters.FirstOrDefaultAsync(r => r.UserId == userId);
+                if (renter == null) return NotFound();
+                var bookings = await _context.Bookings
+                .Include(b => b.Vehicle)
+                .Include(b => b.Vehicle.Owner.User)
+                .Where(b => b.RenterId == renter.Id)
+                .Select(b => new
+                {
+                    id = b.BookingId,
+                    message = b.Status == "Requested"
+                        ? "Your booking for " + b.Vehicle.Make + " is pending approval from " + b.Vehicle.Owner.User.FirstName
+                        : "Your booking for " + b.Vehicle.Make + " has been " + b.Status.ToLower() + " by " + b.Vehicle.Owner.User.FirstName, 
+                        profileUrl = "/User/OpenUsersProfile?userId=" + b.Vehicle.Owner.UserId
+
+                })
+                  .ToListAsync();
+                return Json(bookings);
+
+
+            }
 
             return NotFound();
         }
 
-    }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> OpenUsersProfile(string userId)
+        {
+
+            if (string.IsNullOrEmpty(userId)) return NotFound();
+
+            var renter = await _context.Renters.Include(r => r.User).FirstOrDefaultAsync(r => r.UserId == userId);
+            if (renter != null) return View("OpenUsersProfile", renter);
+
+            var owner = await _context.Owners.Include(o => o.User).FirstOrDefaultAsync(o => o.UserId == userId);
+            if (owner != null) return View("OpenUsersProfile", owner);
+
+            return NotFound();
+
+
+        }
+
+        }
 }
