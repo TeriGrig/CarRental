@@ -4,6 +4,7 @@ using CarRental.Models;
 using CarRental.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace CarRental.Controllers
@@ -191,14 +192,39 @@ namespace CarRental.Controllers
             _context.Vehicles.Update(vehicle);
             await _context.SaveChangesAsync();
             return RedirectToAction("ViewMyCar");
-
-
-
-
-
-
-
-
         }
+
+
+
+  
+        [HttpPost]
+        [Authorize(Roles = "Owner")]
+        public async Task<IActionResult> UpdateBookingStatus(int bookingId, string Status)
+        {
+           
+            var booking = await _context.Bookings
+                .Include(b => b.Vehicle)
+                .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            if (booking == null) return NotFound();
+
+            booking.Status = Status;
+
+            if (Status == "Accepted")
+            {
+                booking.Vehicle.Availability = false;
+            }
+            else if (Status == "Rejected")
+            {
+                
+                booking.Vehicle.Availability = true;
+            }
+
+            _context.Update(booking);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
     }
 }

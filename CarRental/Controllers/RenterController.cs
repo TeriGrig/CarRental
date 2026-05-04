@@ -75,17 +75,19 @@ namespace CarRental.Controllers
                 RenterId = renter.Id,
                 StartDate = startDate,
                 EndDate = endDate,
-                Status = "Requested"
+                Status = "Requested",
+                
             };
 
             _context.Bookings.Add(booking);
 
-            //  Make booked car unavailable
+           
             vehicle.Availability = false;
-
             _context.SaveChanges();
+            TempData["Success"] = "Request created!";
 
-            return RedirectToAction("Booking");
+            return RedirectToAction("ShowCars");
+       
         }
 
 

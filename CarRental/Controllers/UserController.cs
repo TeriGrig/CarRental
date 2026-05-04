@@ -101,7 +101,7 @@ namespace CarRental.Controllers
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
-             if (User.IsInRole("Renter"))
+                if (User.IsInRole("Renter"))
                 {
                     var renter = _context.Renters.FirstOrDefault(r => r.UserId == userId);
                     if (renter != null)
@@ -116,10 +116,36 @@ namespace CarRental.Controllers
             }
 
             return View(user);
-
-
-
         }
-    }
 
+
+        [HttpGet]
+        public async  Task<IActionResult> BookingNotifications( )
+
+        {
+            var userId = _userManager.GetUserId(User);
+            if (User.IsInRole("Owner"))
+            {
+                var owner = await _context.Owners.FirstOrDefaultAsync(o => o.UserId == userId);
+                if (owner == null) return NotFound();
+
+                var bookings = await _context.Bookings
+                .Include(b => b.Vehicle)
+                .Include(b => b.Renter.User) 
+                .Where(b => b.Vehicle.OwnerID == owner.Id && b.Status == "Requested")
+                .Select(b => new 
+                {
+                    id = b.BookingId,
+                    message = "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName
+                })
+             .ToListAsync();
+
+                return Json(bookings);
+                
+           }
+
+            return NotFound();
+        }
+
+    }
 }

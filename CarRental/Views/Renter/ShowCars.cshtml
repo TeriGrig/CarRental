@@ -4,6 +4,13 @@
 
 <div style="display:flex; flex-wrap:wrap; gap:20px;">
 
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            Δεν βρέθηκαν διαθέσιμα αυτοκίνητα.
+        </div>
+    }
+
 @foreach (var car in Model)
 {
     <div style="border:1px solid gray; padding:10px; width:250px;">
