@@ -1,0 +1,30 @@
+﻿@using CarRental.Models
+@model dynamic  
+
+    <section>
+        <h3>Personal Information</h3>
+        <p>First Name: @Model.User.FirstName</p>
+        <p>Last Name: @Model.User.LastName</p>
+        <p>Email: @Model.User.Email</p>
+        <p>Phone: @Model.User.PhoneNumber</p>
+       
+    </section>
+
+
+@if (Model is Renter renter)
+{
+    <section>
+        <h4>Renter Details</h4>
+        <p>Birth Year: @(renter.BirthYear > 0 ? renter.BirthYear.ToString() : "Not provided")</p>
+        <p>Licence Year: @(renter.LicenceYear > 0 ? renter.LicenceYear.ToString() : "Not provided")</p>
+    </section>
+}
+
+@if (Model is Owner)
+{
+    <section>
+        <h4>Owner Profile</h4>
+        <p>Verified Car Provider</p>
+    </section>
+
+}
