@@ -25,7 +25,7 @@
                         </li>
                        
                             <ul class="navbar-nav flex-grow-1">
-                                @if (!User.IsInRole("Renter"))
+                                @if (!User.IsInRole("Renter") && !User.IsInRole("Admin"))
                                 {
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-controller="Owner" asp-action="AddCar">Add a Car</a>
@@ -37,7 +37,7 @@
                                         </li>
                                     }
                                 }
-                                @if (!User.IsInRole("Owner"))
+                                @if (!User.IsInRole("Owner") && !User.IsInRole("Admin"))
                                 {
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-controller="Renter" asp-action="ShowCars">Book a car</a>
