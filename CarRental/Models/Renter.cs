@@ -7,7 +7,6 @@
         public User User { get; set; }
         public int BirthYear { get; set; }
         public int LicenceYear { get; set; }
-
         public ICollection<Booking> Bookings { get; set; }
     }
 }

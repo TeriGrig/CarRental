@@ -3,7 +3,6 @@ using CarRental.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,11 +18,15 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+
+
 using (var scope = app.Services.CreateScope())
 {
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-    string[] roles = { "Owner", "Renter" };
+    string[] roles = { "Admin","Owner", "Renter" };
 
     foreach (var role in roles)
     {
@@ -39,22 +42,36 @@ using (var scope = app.Services.CreateScope())
             Console.WriteLine($"Role seeding failed for {role}: {ex.Message}");
         }
     }
+
+    string email = "admin@site.com";
+    string password = "Admin123!";
+
+    var user = await userManager.FindByEmailAsync(email);
+
+    if (user == null)
+    {
+        user = new User
+        {
+            UserName = email,
+            Email = email,
+            EmailConfirmed = true,
+            FirstName = "Admin",
+            LastName = "User"
+        };
+
+        await userManager.CreateAsync(user, password);
+
+        await userManager.AddToRoleAsync(user, "Admin");
+
+        var admin = new Admin
+        {
+            UserId = user.Id
+        };
+
+        context.Admins.Add(admin);
+        await context.SaveChangesAsync();
+    }
 }
-
-//using (var scope = app.Services.CreateScope())
-//{
-//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-//    string[] roles = { "Owner", "Renter" };
-
-//    foreach (var role in roles)
-//    {
-//        if (!await roleManager.RoleExistsAsync(role))
-//        {
-//            await roleManager.CreateAsync(new IdentityRole(role));
-//        }
-//    }
-//}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -118,7 +118,6 @@ namespace CarRental.Controllers
             return View(user);
         }
 
-
         [HttpGet]
         public async Task<IActionResult> BookingNotifications()
 
@@ -164,8 +163,6 @@ namespace CarRental.Controllers
                 })
                   .ToListAsync();
                 return Json(bookings);
-
-
             }
 
             return NotFound();

@@ -10,6 +10,9 @@ namespace CarRental.Data
         public DbSet<Renter> Renters { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,10 +33,28 @@ namespace CarRental.Data
 
             // Booking → Renter
             modelBuilder.Entity<Booking>()
-             .HasOne(b => b.Renter)
-             .WithMany(u => u.Bookings)
-             .HasForeignKey(b => b.RenterId)
-             .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(b => b.Renter)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.RenterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Commenter)
+                .WithMany()
+                .HasForeignKey(r => r.CommenterId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Recipient)
+                .WithMany()
+                .HasForeignKey(r => r.RecipientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Admin>()
+                .HasOne(a => a.User)
+                .WithOne()
+                .HasForeignKey<Admin>(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
