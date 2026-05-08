@@ -32,6 +32,34 @@
     </section>
 }
 
+<hr />
+<section>
+    <h3>My Reviews</h3>
+</section>
+
+@{
+    var myReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
+}
+
+@if (myReviews != null && myReviews.Any())
+{
+    foreach (var reviewItem in myReviews)
+    {
+        <div class="review" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+            <p><strong>From:</strong> @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName</p>
+            <p><strong>Rating:</strong> @reviewItem.Rating/5</p>
+            <p><strong>Comment:</strong> @reviewItem.Comment</p>
+        </div>
+    }
+}
+else
+{
+    <p>You haven't received any reviews yet.</p>
+}
+
+
+
+
 <nav>
     <br />
     <a href="/User/EditProfile">Edit My Profile</a>

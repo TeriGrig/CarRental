@@ -1,4 +1,6 @@
 ﻿@using CarRental.Models
+
+
 @model dynamic  
 
     <section>
@@ -8,9 +10,10 @@
         <p>Email: @Model.User.Email</p>
         <p>Phone: @Model.User.PhoneNumber</p>
        
+       
     </section>
 
-
+     
 @if (Model is Renter renter)
 {
     <section>
@@ -28,3 +31,77 @@
     </section>
 
 }
+
+
+<hr />
+<section> Reviews </section>
+@{
+   
+    var displayReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
+}
+
+@if (displayReviews != null && displayReviews.Any())
+{
+    foreach (var reviewItem in displayReviews)
+    {
+
+        <div class="review">
+            <p><strong>Reviewer:</strong> @reviewItem.Commenter.FirstName</p>
+            <p><strong>Rating:</strong> @reviewItem.Rating/5</p>
+            <p><strong>Comment:</strong> @reviewItem.Comment</p>
+        </div>
+    }
+}
+else
+{
+   <p>No reviews yet.</p>
+}
+
+    <section> Leave a Review </section>
+<form id="reviewForm" style="margin-top: 20px;">
+    <input type="hidden" id="recipientId" value="@Model.User.Id" />
+        
+    <div class="form-group">
+        <label>Rating (1-5)</label>
+        <input type="number" id="rating" min="1" max="5" class="form-control" style="width: 100px;" required />
+    </div>
+
+    <div class="form-group" style="margin-top:10px;">
+        <label>Your Comment</label>
+        <textarea id="comment" class="form-control" rows="3" placeholder="Write your experience..." required></textarea>
+    </div>
+
+    <button type="button" onclick="submitReview()" class="btn btn-primary" style="margin-top: 15px;">Submit Review</button>
+</form>
+
+<div id="reviewStatus" style="margin-top:10px; display:none;"></div>
+
+
+<script>
+        function submitReview() {
+        var data = {
+            recipientId: $('#recipientId').val(),
+            rating: $('#rating').val(), 
+            comment: $('#comment').val() 
+        };
+
+        console.log("Sending data:", data);
+
+        $.ajax({
+            url: '/Reviews/AddReview',
+            type: 'POST',
+            data: data,
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert("Σφάλμα από τον διακομιστή: " + response.message);
+                }
+            },
+            error: function (xhr) {
+                console.error("Status:", xhr.status);
+                alert("Απέτυχε η επικοινωνία με τον server.");
+            }
+        });
+    }
+</script>
