@@ -28,6 +28,12 @@ namespace CarRental.Controllers
         {
             var userId = _userManager.GetUserId(User);
 
+            var reviews = await _context.Reviews
+            .Include(r => r.Commenter)
+            .Where(r => r.RecipientId == userId && !r.IsDeleted)
+            .ToListAsync();
+            ViewBag.Reviews = reviews;
+
             if (User.IsInRole("Renter"))
             {
                 //ρεντερ και οουνερ μαζι 
@@ -175,6 +181,12 @@ namespace CarRental.Controllers
 
             if (string.IsNullOrEmpty(userId)) return NotFound();
 
+            var reviews = await _context.Reviews
+             .Include(r => r.Commenter)
+             .Where(r => r.RecipientId == userId && !r.IsDeleted)
+             .ToListAsync();
+            ViewBag.Reviews = reviews;
+
             var renter = await _context.Renters.Include(r => r.User).FirstOrDefaultAsync(r => r.UserId == userId);
             if (renter != null) return View("OpenUsersProfile", renter);
 
@@ -186,5 +198,5 @@ namespace CarRental.Controllers
 
         }
 
-        }
+    }
 }
