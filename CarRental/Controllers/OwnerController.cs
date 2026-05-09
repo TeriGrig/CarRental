@@ -196,17 +196,17 @@ namespace CarRental.Controllers
 
 
 
-  
+
         [HttpPost]
         [Authorize(Roles = "Owner")]
         public async Task<IActionResult> UpdateBookingStatus(int bookingId, string Status)
         {
-           
             var booking = await _context.Bookings
                 .Include(b => b.Vehicle)
                 .FirstOrDefaultAsync(b => b.BookingId == bookingId);
 
-            if (booking == null) return NotFound();
+            if (booking == null)
+                return NotFound();
 
             booking.Status = Status;
 
@@ -216,14 +216,21 @@ namespace CarRental.Controllers
             }
             else if (Status == "Rejected")
             {
-                
                 booking.Vehicle.Availability = true;
             }
 
             _context.Update(booking);
+
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true });
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Json(new { success = true });
+            }
+
+
+            return RedirectToAction("MyBookings", "User");
         }
 
     }

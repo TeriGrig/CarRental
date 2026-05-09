@@ -52,6 +52,9 @@
                                 {
                                     @if (User.IsInRole("Owner") || User.IsInRole("Renter"))
                                     {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="User" asp-action="MyBookings">MyBookings</a>
+                                    </li>
                                         <li class="nav-item">
                                             <a class="nav-link text-dark" asp-controller="User" asp-action="ViewProfile">View Profile</a>
                                         </li>

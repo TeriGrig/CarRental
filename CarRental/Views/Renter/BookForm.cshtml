@@ -3,7 +3,8 @@
 <h2>Book Car</h2>
 
 <div>
-    <h3>@Model.Make @Model.Model</h3>
+    <h3>@Model.Make @Model.Model from 
+        <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@Model.Owner.UserId"> @Model.Owner.User.FirstName @Model.Owner.User.LastName</a></h3>
     <img src="@Model.Image" style="width:300px;" />
 </div>
 

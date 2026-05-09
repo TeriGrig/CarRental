@@ -198,5 +198,57 @@ namespace CarRental.Controllers
 
         }
 
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> MyBookings()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            if (User.IsInRole("Owner"))
+            {
+                var owner = await _context.Owners.FirstOrDefaultAsync(o => o.UserId == userId);
+
+                var bookings = _context.Bookings
+                .Where(b => b.Vehicle.OwnerID == owner.Id)
+                .Include(b => b.Vehicle)
+                .Include(b => b.Renter)
+                 .ThenInclude(r => r.User)
+                .ToList();
+                return View(bookings);
+            }
+            if (User.IsInRole("Renter"))
+            {
+                var renter = await _context.Renters.FirstOrDefaultAsync(r => r.UserId == userId);
+                var bookings = _context.Bookings
+                .Where(b => b.RenterId == renter.Id)
+                .Include(b => b.Vehicle)
+                .Include(b => b.Vehicle.Owner)
+                    .ThenInclude(r => r.User)
+                .ToList();
+                return View(bookings);
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult CancelBooking(int bookingId)
+        {
+            var booking = _context.Bookings
+                .Include(b => b.Vehicle)
+                .FirstOrDefault(b => b.BookingId == bookingId);
+
+            if (booking == null)
+            {
+                return Content("Booking not found");
+            }
+            booking.Status = "Cancelled";
+            booking.Vehicle.Availability = true;
+            _context.SaveChanges();
+            return RedirectToAction("MyBookings");
+
+        }
+
     }
 }
