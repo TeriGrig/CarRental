@@ -2,6 +2,7 @@
 using CarRental.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Security.Claims;
 
@@ -43,10 +44,15 @@ namespace CarRental.Controllers
         [HttpGet]
         public IActionResult BookForm(int vehicleId)
         {
-            var vehicle = _context.Vehicles.FirstOrDefault(v => v.VehicleId == vehicleId);
+            var vehicle = _context.Vehicles
+        .Include(v => v.Owner)
+            .ThenInclude(o => o.User)
+        .FirstOrDefault(v => v.VehicleId == vehicleId);
 
             if (vehicle == null)
+            {
                 return NotFound();
+            }
 
             return View(vehicle);
         }
