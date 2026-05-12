@@ -15,10 +15,12 @@ namespace CarRental.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserController(UserManager<User> userManager, ApplicationDbContext context)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _context = context;
         }
 
@@ -102,11 +104,17 @@ namespace CarRental.Controllers
             user.FirstName = FirstName;
             user.LastName = LastName;
             user.PhoneNumber = PhoneNumber;
-            user.Email = Email;
+
+            await _userManager.SetEmailAsync(user, Email);
+            await _userManager.SetUserNameAsync(user, Email);
 
             var result = await _userManager.UpdateAsync(user);
+
+
             if (result.Succeeded)
             {
+                await _signInManager.RefreshSignInAsync(user);
+
                 if (User.IsInRole("Renter"))
                 {
                     var renter = _context.Renters.FirstOrDefault(r => r.UserId == userId);
