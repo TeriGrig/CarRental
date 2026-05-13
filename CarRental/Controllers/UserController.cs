@@ -105,6 +105,22 @@ namespace CarRental.Controllers
             user.LastName = LastName;
             user.PhoneNumber = PhoneNumber;
 
+            var emailExists = await _userManager.Users.AnyAsync(u => u.Email == Email && u.Id != userId);
+
+            if (emailExists)
+            {
+                ModelState.AddModelError("Email", "This email is already in use.");
+                return View(user);
+            }
+
+            var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == PhoneNumber && u.Id != userId);
+
+            if (phoneExists)
+            {
+                ModelState.AddModelError("PhoneNumber", "This phone number is already in use.");
+                return View(user);
+            }
+
             await _userManager.SetEmailAsync(user, Email);
             await _userManager.SetUserNameAsync(user, Email);
 
