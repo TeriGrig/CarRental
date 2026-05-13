@@ -5,6 +5,7 @@
 using CarRental.Data;
 using CarRental.Models;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -160,6 +161,14 @@ namespace CarRental.Areas.Identity.Pages.Account
             user.FirstName = Input.FirstName;
             user.LastName = Input.LastName;
             user.PhoneNumber = Input.PhoneNumber;
+
+            var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber != null && u.PhoneNumber == Input.PhoneNumber);
+
+            if (phoneExists)
+            {
+                ModelState.AddModelError("Input.PhoneNumber", "This phone number is already in use.");
+                return Page();
+            }
 
             var result = await _userManager.CreateAsync(user, Input.Password);
 
