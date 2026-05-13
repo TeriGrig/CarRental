@@ -16,6 +16,15 @@ namespace CarRental.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // Unique phonenumber
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasIndex(u => u.PhoneNumber)
+                      .IsUnique();
+            });
+            //modelBuilder.Entity<User>()
+            //    .HasIndex(u => u.PhoneNumber)
+            //    .IsUnique();
 
             // Vehicle → Owner
             modelBuilder.Entity<Vehicle>()
