@@ -1,7 +1,6 @@
 ﻿@model CarRental.ViewModels.AddVehicleViewModel
 
-<link rel="stylesheet"
-      href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
 <form asp-action="AddCar" method="post" enctype="multipart/form-data">
 
@@ -42,12 +41,6 @@
         <label>PricePerDay</label>
         <input asp-for="PricePerDay" type="number" class="form-control" />
     </div>
-
-    @* <div>
-        <label>Country</label>
-        <input asp-for="Location" class="form-control" />
-        <span asp-validation-for="Location"></span>
-    </div> *@
 
     <div>
         <label>Select Vehicle Location</label>

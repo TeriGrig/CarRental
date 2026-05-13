@@ -1,5 +1,7 @@
 ﻿@model CarRental.ViewModels.AddVehicleViewModel
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   @* <form asp-action="EditMyCar" method="post" enctype="multipart/form-data"> *@
     <form asp-action="EditMyCar" asp-route-vehicleId="@Context.Request.Query["vehicleId"]" method="post" enctype="multipart/form-data">
       
@@ -40,11 +42,10 @@
         <input asp-for="PricePerDay" type="number" class="form-control" />
     </div>
 
-    @* <div>
-        <label>Country</label>
-        <input asp-for="Location" class="form-control" />
-        <span asp-validation-for="Location"></span>
-    </div> *@
+    <div>
+        <label>Select Vehicle Location</label>
+        <div id="map" style="height:400px; margin-bottom:20px;"></div>
+    </div>
 
     <div>
         <label>Comments</label>
@@ -65,6 +66,52 @@
         </label>
     </div>
 
+    @* For choosing the car on the map *@
+    <input asp-for="Latitude" type="hidden" id="Latitude" />
+    <input asp-for="Longitude" type="hidden" id="Longitude" />
+
     <button type="submit">Submit</button>
 
 </form>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+@* Map logic *@
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+    // Default center
+    var lat = @Model.Latitude;
+    var lng = @Model.Longitude;
+
+    var map = L.map('map').setView([lat, lng], 13);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    var marker = L.marker([lat, lng]).addTo(map);
+
+    document.getElementById("Latitude").value = lat;
+    document.getElementById("Longitude").value = lng;
+
+    map.on('click', function (e) {
+
+    var newLat = e.latlng.lat;
+    var newLng = e.latlng.lng;
+
+    if (marker) {
+    map.removeLayer(marker);
+    }
+
+    marker = L.marker([newLat, newLng]).addTo(map);
+
+    document.getElementById("Latitude").value = newLat;
+    document.getElementById("Longitude").value = newLng;
+    });
+
+    });
+
+</script>

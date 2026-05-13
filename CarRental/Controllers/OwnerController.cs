@@ -152,7 +152,8 @@ namespace CarRental.Controllers
                 Cubic = vehicle.Cubic,
                 Year = vehicle.Year,
                 PricePerDay = vehicle.PricePerDay,
-                //Location = vehicle.Location,
+                Latitude = vehicle.Latitude,
+                Longitude = vehicle.Longitude,
                 Comments = vehicle.Comments,
                 ImageFile = null,
                 IsAvailable = vehicle.Availability
@@ -181,8 +182,9 @@ namespace CarRental.Controllers
             vehicle.Cubic = model.Cubic ?? 0;
             vehicle.Year = model.Year ?? 0;
             vehicle.PricePerDay = model.PricePerDay ?? 0;
-            //vehicle.Location = model.Location;
             vehicle.Comments = model.Comments ?? "";
+            vehicle.Latitude = model.Latitude;
+            vehicle.Longitude = model.Longitude;
             vehicle.Availability = model.IsAvailable;
             if (model.ImageFile != null && model.ImageFile.Length > 0)
             {
