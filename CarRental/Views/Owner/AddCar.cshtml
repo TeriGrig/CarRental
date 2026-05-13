@@ -1,5 +1,8 @@
 ﻿@model CarRental.ViewModels.AddVehicleViewModel
 
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
 <form asp-action="AddCar" method="post" enctype="multipart/form-data">
 
     <div class="form-group">
@@ -40,10 +43,18 @@
         <input asp-for="PricePerDay" type="number" class="form-control" />
     </div>
 
-    <div>
-        <label>Location</label>
+    @* <div>
+        <label>Country</label>
         <input asp-for="Location" class="form-control" />
         <span asp-validation-for="Location"></span>
+    </div> *@
+
+    <div>
+        <label>Select Vehicle Location</label>
+
+        <div id="map"
+             style="height:400px; margin-bottom:20px;">
+        </div>
     </div>
 
     <div>
@@ -64,6 +75,47 @@
         <span asp-validation-for="IsAvailable"></span>
     </div>
 
+    @* For choosing the car on the map *@
+    <input asp-for="Latitude" type="hidden" id="Latitude" />
+    <input asp-for="Longitude" type="hidden" id="Longitude" />
+
     <button type="submit">Submit</button>
 
 </form>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+    // Create map centered on Greece
+    var map = L.map('map').setView([37.9838, 23.7275], 7);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    // Variable for marker
+    var marker;
+
+    // When user clicks map
+    map.on('click', function (e) {
+
+    var lat = e.latlng.lat;
+    var lng = e.latlng.lng;
+
+    // Remove old marker
+    if (marker) {
+    map.removeLayer(marker);
+    }
+
+    marker = L.marker([lat, lng]).addTo(map);
+
+    // Save coordinates to hidden inputs
+    document.getElementById('Latitude').value = lat;
+    document.getElementById('Longitude').value = lng;
+
+    });
+
+</script>

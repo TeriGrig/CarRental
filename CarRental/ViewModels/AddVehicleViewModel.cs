@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Build.Framework;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CarRental.ViewModels
 {
@@ -16,7 +17,9 @@ namespace CarRental.ViewModels
         [Required]
         public int? PricePerDay { get; set; }
         [Required]
-        public string Location { get; set; }
+        public double Latitude { get; set; }
+        [Required]
+        public double Longitude { get; set; }
         public string? Comments { get; set; }
 
         public bool IsAvailable { get; set; }

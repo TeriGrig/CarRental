@@ -1,6 +1,10 @@
 ﻿@model List<CarRental.Models.Vehicle>
 
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
 <h2>Available Cars</h2>
+<div id="map" style="height:500px; margin-bottom:20px;"></div>
 
 <div style="display:flex; flex-wrap:wrap; gap:20px;">
 
@@ -22,7 +26,7 @@
         <p><b>Year:</b> @car.Year</p>
         <p><b>Cubic:</b> @car.Cubic</p>
         <p><b>Price/Day:</b> @car.PricePerDay €</p>
-        <p><b>Location:</b> @car.Location</p>
+        @* <p><b>Location:</b> @car.Location</p> *@
 
         <form method="post" action="/Renter/Book">
             <input type="hidden" name="vehicleId" value="@car.VehicleId" />
@@ -34,3 +38,32 @@
 
 </div>
 
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    var map = L.map('map').setView([37.9838, 23.7275], 7);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    @foreach (var car in Model)
+    {
+        if (car.Latitude != 0 && car.Longitude != 0)
+        {
+            <text>
+                L.marker([@car.Latitude, @car.Longitude])
+                .addTo(map)
+                .bindPopup(`
+                <b>@car.Make @car.Model</b><br>
+                Price: @car.PricePerDay € / day
+                `);
+            </text>
+        }
+    }
+
+    });
+</script>

@@ -37,6 +37,11 @@ namespace CarRental.Controllers
             if (owner == null)
                 return Content("Owner not found");
 
+            if (model.Latitude == 0 && model.Longitude == 0)
+            {
+                return Content("Please select a location on the map");
+            }
+
             if (!ModelState.IsValid)
             {
                 var errors = ModelState
@@ -73,7 +78,9 @@ namespace CarRental.Controllers
                 Cubic = model.Cubic ?? 0,
                 Year = model.Year ?? 0,
                 PricePerDay = model.PricePerDay ?? 0,
-                Location = model.Location,
+                //Location = model.Location,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude,
                 Comments = model.Comments ?? "",
                 Availability = model.IsAvailable,
                 Image = imagePath ?? "/images/car-placeholder.png",
@@ -145,7 +152,7 @@ namespace CarRental.Controllers
                 Cubic = vehicle.Cubic,
                 Year = vehicle.Year,
                 PricePerDay = vehicle.PricePerDay,
-                Location = vehicle.Location,
+                //Location = vehicle.Location,
                 Comments = vehicle.Comments,
                 ImageFile = null,
                 IsAvailable = vehicle.Availability
@@ -174,8 +181,8 @@ namespace CarRental.Controllers
             vehicle.Cubic = model.Cubic ?? 0;
             vehicle.Year = model.Year ?? 0;
             vehicle.PricePerDay = model.PricePerDay ?? 0;
-            vehicle.Location = model.Location;
-            vehicle.Comments = model.Comments;
+            //vehicle.Location = model.Location;
+            vehicle.Comments = model.Comments ?? "";
             vehicle.Availability = model.IsAvailable;
             if (model.ImageFile != null && model.ImageFile.Length > 0)
             {
