@@ -4,7 +4,8 @@
 
   @* <form asp-action="EditMyCar" method="post" enctype="multipart/form-data"> *@
     <form asp-action="EditMyCar" asp-route-vehicleId="@Context.Request.Query["vehicleId"]" method="post" enctype="multipart/form-data">
-      
+     
+    <div class=" form-container">
     <div class="form-group">
         <label asp-for="Make"></label>
 
@@ -70,10 +71,10 @@
     <input asp-for="Latitude" type="hidden" id="Latitude" />
     <input asp-for="Longitude" type="hidden" id="Longitude" />
 
-    <button type="submit">Submit</button>
+        <button type="submit" class="btn-custom ">Submit</button>
 
 </form>
-
+</div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 @* Map logic *@
