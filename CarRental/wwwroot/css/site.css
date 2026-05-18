@@ -18,7 +18,8 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -30,24 +31,10 @@ body {
   text-align: start;
 }
 
-.booking-section {
-    margin-bottom: 50px;
-}
 
-.booking-card {
-    border: 1px solid black;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-}
-
-.archived {
-    opacity: 0.6;
-    background-color: #f2f2f2;
-}
 
 body {
-    background-color: #ebebec;
+    background-color: #8a9db5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #1e293b;
     margin: 0;
@@ -64,6 +51,7 @@ h1, h2, h3 {
 input[type="text"],
 input[type="date"],
 input[type="number"],
+input[type="email"],
 textarea,
 select {
     width: 100%;
@@ -72,7 +60,7 @@ select {
     border-radius: 8px;
     background-color: #ffffff;
     margin-bottom: 15px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 button, .btn-custom {
     padding: 10px 25px;
@@ -311,3 +299,417 @@ label {
     color: #251F3D;
     border-bottom: 2px solid #251F3D;
 }
+
+
+
+
+
+/*BOOKINGS*/
+.my-bookings {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+
+.bookings-column {
+    flex: 1;
+}
+
+
+.booking-section {
+    height: 70vh; 
+    overflow-y: auto; 
+    padding-right: 10px; 
+}
+
+    /* OPTIONAL: nicer scroll */
+    .booking-section::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .booking-section::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+
+    .booking-section::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+/* EXISTING CARDS */
+
+.booking-card {
+    border: 1px solid #d1d5db;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background-color: #f9fafb;
+}
+
+.archived {
+    opacity: 0.6;
+}
+
+/* MAP + CAR LIST PAGE */
+
+.cars-map-layout {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+    margin-top: 25px;
+    height: calc(100vh - 120px); 
+
+
+}
+/* LEFT SIDE MAP */
+
+.cars-map {
+    width: 60%;
+    height: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+}
+
+/* RIGHT SIDE LIST */
+
+.cars-list {
+    width: 40%;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-right: 10px;
+}
+
+/* CARD */
+
+.car-list-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform .2s, box-shadow .2s;
+    flex: 0 0 auto;
+    width: 100%;
+    min-height: 150px;
+}
+
+    .car-list-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+/* IMAGE */
+
+.car-list-image {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+}
+
+/* CONTENT */
+
+.car-list-body {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.car-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.car-actions {
+    margin-left: auto; 
+}
+
+.show-car-btn {
+    background-color: #ffb500;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* BOOK CAR PAGE */
+
+.book-page-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 30px;
+}
+
+
+
+.book-car-section {
+    width: 60%;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+
+.book-car-image {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+
+
+.book-car-info {
+    margin-bottom: 20px;
+}
+
+
+
+.book-car-map {
+    width: 100%;
+    height: 300px;
+    min-height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+.booking-form-section {
+    width: 40%;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+}
+
+
+.profile-page-layout {
+    display: flex;
+    gap: 35px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+/* LEFT COLUMN */
+
+.profile-column {
+    flex: 1;
+}
+
+/* RIGHT COLUMN */
+
+.reviews-column {
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* PERSONAL INFO CARD */
+
+.profile-personal-info-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+    .profile-personal-info-card h3 {
+        margin-bottom: 25px;
+    }
+
+.profile-links a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+    .profile-links a:hover {
+        text-decoration: underline;
+    }
+
+/* PROFILE CONTENT */
+
+.profile-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+/* PROFILE LEFT */
+
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 220px;
+    text-align: center;
+}
+
+/* PROFILE IMAGE */
+
+.profile-picture-img {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e5e7eb;
+}
+
+/* OWNER BADGE */
+
+.owner-badge {
+    margin-top: 15px;
+}
+
+    .owner-badge h4 {
+        margin-bottom: 5px;
+        font-size: 22px;
+        color: #111827;
+    }
+
+    .owner-badge p {
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+/* PERSONAL INFO */
+
+.personal-info {
+    flex: 1;
+    font-size: 18px;
+}
+
+    .personal-info p {
+        margin-bottom: 14px;
+    }
+
+    .personal-info h4 {
+        margin-top: 25px;
+        margin-bottom: 12px;
+        color: #111827;
+    }
+
+/* REVIEWS SECTION */
+
+.reviews-section,
+.leave-review-section {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+    .reviews-section h3,
+    .leave-review-section h3 {
+        margin-bottom: 20px;
+    }
+
+/* REVIEWS */
+
+.reviews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 450px;
+    width:400px;
+    overflow-y: auto;
+}
+
+.review-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 18px 22px;
+    border: 1px solid #e5e7eb;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.review-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+}
+
+.review-rating {
+    background-color: #5d749f;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.review-comment {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4b5563;
+    margin-top: 10px;
+}
+
+/* FORM */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+.form-control {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 15px;
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: #5d749f;
+    }
+
+
+
+.submit-review-btn {
+    background-color: #5d749f;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+    .submit-review-btn:hover {
+        background-color: #4b5f84;
+    }
