@@ -1,4 +1,5 @@
-﻿@model List<CarRental.Models.Vehicle>
+﻿
+@model List<CarRental.Models.Vehicle>
 
 <link rel="stylesheet"
       href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -67,6 +68,9 @@
     attribution: '&copy; OpenStreetMap'
     }
     ).addTo(map);
+
+    // Store markers by VehicleId
+    var markers = {};
 
     @foreach (var car in Model)
     {
