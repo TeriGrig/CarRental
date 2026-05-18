@@ -5,6 +5,7 @@ using CarRental.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
 
 namespace CarRental.Controllers
@@ -78,7 +79,6 @@ namespace CarRental.Controllers
                 Cubic = model.Cubic ?? 0,
                 Year = model.Year ?? 0,
                 PricePerDay = model.PricePerDay ?? 0,
-                //Location = model.Location,
                 Latitude = model.Latitude,
                 Longitude = model.Longitude,
                 Comments = model.Comments ?? "",
@@ -125,6 +125,21 @@ namespace CarRental.Controllers
             if (vehicle == null)
             {
                 return NotFound();
+            }
+
+            if (!vehicle.Availability)
+            {
+                ModelState.AddModelError("", "Car is already booked!");
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var owner = _context.Owners.FirstOrDefault(o => o.UserId == userId);
+
+                var vehicles = _context.Vehicles
+                    .Where(v => v.OwnerID == owner.Id)
+                    .ToList();
+
+                return View("ViewMyCar", vehicles);
             }
 
             _context.Vehicles.Remove(vehicle);
