@@ -107,10 +107,30 @@ namespace CarRental.Controllers
 
             var emailExists = await _userManager.Users.AnyAsync(u => u.Email == Email && u.Id != userId);
 
+            //if (emailExists)
+            //{
+            //    ModelState.AddModelError("Email", "This email is already in use.");
+            //    return View(user);
+            //}
+
             if (emailExists)
             {
                 ModelState.AddModelError("Email", "This email is already in use.");
-                return View(user);
+
+                if (User.IsInRole("Renter"))
+                {
+                    var renter = _context.Renters
+                        .Include(r => r.User)
+                        .FirstOrDefault(r => r.UserId == userId);
+
+                    return View(renter);
+                }
+
+                var owner = _context.Owners
+                    .Include(o => o.User)
+                    .FirstOrDefault(o => o.UserId == userId);
+
+                return View(owner);
             }
 
             var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber == PhoneNumber && u.Id != userId);
@@ -118,7 +138,21 @@ namespace CarRental.Controllers
             if (phoneExists)
             {
                 ModelState.AddModelError("PhoneNumber", "This phone number is already in use.");
-                return View(user);
+
+                if (User.IsInRole("Renter"))
+                {
+                    var renter = _context.Renters
+                        .Include(r => r.User)
+                        .FirstOrDefault(r => r.UserId == userId);
+
+                    return View(renter);
+                }
+
+                var owner = _context.Owners
+                    .Include(o => o.User)
+                    .FirstOrDefault(o => o.UserId == userId);
+
+                return View(owner);
             }
 
             await _userManager.SetEmailAsync(user, Email);
