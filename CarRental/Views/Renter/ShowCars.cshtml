@@ -1,5 +1,4 @@
-﻿
-@model List<CarRental.Models.Vehicle>
+﻿@model List<CarRental.Models.Vehicle>
 
 <link rel="stylesheet"
       href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -8,11 +7,20 @@
 
 <div class="cars-map-layout">
 
-    <!-- Map -->
-    <div id="map" class="cars-map"></div>
+    <!-- LEFT SIDE MAP -->
+    <div id="map" class="cars-map">
+        <button id="resetMapBtn"
+                style="position:absolute; bottom:10px; left:10px; z-index:1000;
+            background:white; border:1px solid #ccc;
+            padding:6px 10px; border-radius:6px; cursor:pointer;">
+            Reset Map
+        </button>
 
-    <!-- Cars -->
-    <div class="cars-list">
+    </div>
+   
+
+    <!-- RIGHT SIDE LIST -->
+    <div class="car-list">
 
         @if (!Model.Any())
         {
@@ -21,30 +29,37 @@
             </div>
         }
 
-        @foreach (var car in Model)
+        @foreach (Vehicle car in Model)
         {
-            <div class="car-list-card"
-                 onclick="focusCar(@car.Latitude, @car.Longitude)">
+            if (car.Availability == true)
+            {
+                <div class="car-list-card"
+                     data-id="@car.VehicleId"
+                     data-lat="@car.Latitude"
+                     data-lng="@car.Longitude">
 
-                <img src="@car.Image" class="car-list-image" />
+                    <img src="@car.Image" class="car-list-image" />
 
-                <div class="car-list-body">
+                    <div class="car-list-body">
 
-                    <div class="car-info">
-                        <h4>@car.Make @car.Model</h4>
+                        <div class="car-info">
+                            <h4>@car.Make @car.Model</h4>
 
-                        <p><b>Year:</b> @car.Year<br>
-                            <b>Cubic:</b> @car.Cubic<br>
-                        <b>Price/Day:</b> @car.PricePerDay €</p>
+                            <p>
+                                <b>Year:</b> @car.Year<br>
+                                <b>Cubic:</b> @car.Cubic<br>
+                                <b>Price/Day:</b> @car.PricePerDay €
+                            </p>
+                        </div>
+
+                        <form method="post" action="/Renter/Book" class="car-actions">
+                            <input type="hidden" name="vehicleId" value="@car.VehicleId" />
+                            <button class="show-car-btn" type="submit">Book</button>
+                        </form>
+
                     </div>
-
-                    <form method="post" action="/Renter/Book" class="car-actions">
-                        <input type="hidden" name="vehicleId" value="@car.VehicleId" />
-                        <button type="submit" class="show-car-btn">Book</button>
-                    </form>
-
                 </div>
-            </div>
+            }
         }
 
     </div>
@@ -53,60 +68,67 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-
-    let map;
-    let markers = [];
-
     document.addEventListener("DOMContentLoaded", function () {
 
-    map = L.map('map').setView([37.9838, 23.7275], 7);
+    var map = L.map('map').setView([37.9838, 23.7275], 7);
 
-    L.tileLayer(
-    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap'
-    }
-    ).addTo(map);
+    }).addTo(map);
 
-    // Store markers by VehicleId
     var markers = {};
 
+    // Create markers
     @foreach (var car in Model)
     {
         if (car.Latitude != 0 && car.Longitude != 0)
         {
             <text>
-                var marker = L.marker([
-                @car.Latitude,
-                @car.Longitude
-                ])
+                markers["@car.VehicleId"] = L.marker([@car.Latitude, @car.Longitude])
                 .addTo(map)
                 .bindPopup(`
                 <b>@car.Make @car.Model</b><br>
                 Price: @car.PricePerDay € / day
                 `);
-
-                markers.push(marker);
             </text>
         }
     }
+    document.getElementById("resetMapBtn").addEventListener("click", function () {
+    map.flyTo([37.9838, 23.7275], 7, {
+    animate: true,
+    duration: 1.2
+    });
     });
 
-    function focusCar(lat, lng) {
+    // Click card → focus map
+    document.querySelectorAll(".car-list-card").forEach(card => {
+    card.addEventListener("click", function (e) {
 
-    if (lat === 0 || lng === 0)
-    return;
+    // prevent click on BOOK button from triggering map move
+    if (e.target.tagName === "BUTTON") return;
 
-    map.setView([lat, lng], 14);
+    var id = this.getAttribute("data-id");
+    var lat = this.getAttribute("data-lat");
+    var lng = this.getAttribute("data-lng");
 
-    markers.forEach(m => {
-    var pos = m.getLatLng();
+    var marker = markers[id];
 
-    if (pos.lat === lat && pos.lng === lng) {
-    m.openPopup();
-    }
+    if (marker) {
+    map.flyTo(marker.getLatLng(), 15, {
+    animate: true,
+    duration: 1.2
+    });
+
+    marker.openPopup();
+    } else if (lat && lng) {
+    map.flyTo([lat, lng], 15, {
+    animate: true,
+    duration: 1.2
     });
     }
+    });
+    });
 
+    });
 </script>

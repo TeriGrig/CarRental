@@ -16,19 +16,17 @@
         .ToList();
 }
 
-
 <div class="my-bookings">
 
-    <!-- LEFT: ACTIVE -->
+    <!-- ACTIVE -->
     <div class="bookings-column">
+        <h2>Active Bookings</h2>
 
         <div class="booking-section">
 
-            <h2>Active Bookings</h2>
-
             @if (activeBookings.Count == 0)
             {
-                <p>No active bookings.</p>
+                <p class="no-bookings-message">No active bookings.</p>
             }
 
             @foreach (var booking in activeBookings)
@@ -78,32 +76,103 @@
 
                     <p>Status: @booking.Status</p>
 
+                   
+                    @if (booking.Status == "Accepted")
+                    {
+                        <form asp-controller="User"
+                              asp-action="CancelBooking"
+                              method="post">
+
+                            <input type="hidden"
+                                   name="bookingId"
+                                   value="@booking.BookingId" />
+
+                            <button type="submit">
+                                Cancel Booking
+                            </button>
+
+                        </form>
+                    }
+
+                    @if (User.IsInRole("Owner") && booking.Status == "Requested")
+                    {
+                        <form asp-controller="Owner"
+                              asp-action="UpdateBookingStatus"
+                              method="post">
+
+                            <input type="hidden"
+                                   name="bookingId"
+                                   value="@booking.BookingId" />
+
+                            <button type="submit"
+                                    name="Status"
+                                    value="Accepted">
+                                Accept
+                            </button>
+
+                            <button type="submit"
+                                    name="Status"
+                                    value="Rejected">
+                                Reject
+                            </button>
+
+                        </form>
+                    }
+
                 </div>
             }
 
         </div>
     </div>
 
-    <!-- RIGHT: ARCHIVED -->
+    <!-- ARCHIVED -->
     <div class="bookings-column">
+        <h2>Archived Bookings</h2>
 
         <div class="booking-section">
 
-            <h2>Archived Bookings</h2>
-
             @if (archivedBookings.Count == 0)
             {
-                <p>No archived bookings.</p>
+                <p class="no-bookings-message">No archived bookings.</p>
             }
 
             @foreach (var booking in archivedBookings)
             {
                 <div class="booking-card archived">
 
-                    <h4>
-                        Booking for @booking.Vehicle.Make
-                        @booking.Vehicle.Model
-                    </h4>
+                    @if (User.IsInRole("Owner"))
+                    {
+                        <h4>
+                            Booking made for @booking.Vehicle.Make
+                            @booking.Vehicle.Model by user
+
+                            <a asp-controller="User"
+                                   asp-action="OpenUsersProfile"
+                                   asp-route-userId="@booking.Renter.UserId">
+
+                                @booking.Renter.User.FirstName
+                                @booking.Renter.User.LastName
+
+                            </a>
+                        </h4>
+                    }
+
+                    @if (User.IsInRole("Renter"))
+                    {
+                        <h4>
+                            Booking for vehicle @booking.Vehicle.Make
+                            @booking.Vehicle.Model owned by
+
+                            <a asp-controller="User"
+                                   asp-action="OpenUsersProfile"
+                                   asp-route-userId="@booking.Vehicle.Owner.UserId">
+
+                                @booking.Vehicle.Owner.User.FirstName
+                                @booking.Vehicle.Owner.User.LastName
+
+                            </a>
+                        </h4>
+                    }
 
                     <p>
                         Dates:
@@ -122,5 +191,3 @@
     </div>
 
 </div>
-
-

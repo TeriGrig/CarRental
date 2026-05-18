@@ -1,198 +1,105 @@
-﻿@using CarRental.Models
+﻿<div class="profile-page-layout">
 
-
-@model dynamic  
-
-<div class="profile-page-layout">
-
-    
+    <!-- LEFT COLUMN -->
     <div class="profile-column">
-<section class="profile-personal-info-card">
-    
-    <h3>Personal Information</h3>
 
-    <div class="profile-content">
+        <section class="profile-personal-info-card">
+            <h3>Personal Information</h3>
 
-       
-        <div class="profile-left">
+            <div class="profile-content">
 
-            <img class="profile-picture-img" src="/images/profile-picture.png" />
+                <div class="profile-left">
+                    <img class="profile-picture-img" src="/images/profile-picture.png" />
 
-            @if (Model is Owner)
-            {
-                <div class="owner-badge">
-                    <h4>Owner Profile</h4>
-                    <p>Verified Car Provider</p>
+                    @if (Model is Owner)
+                    {
+                        <div class="owner-badge">
+                            <h4>Owner Profile</h4>
+                            <p>Verified Car Provider</p>
+                        </div>
+                    }
                 </div>
-            }
 
-        </div>
+                <div class="personal-info">
+                    <p>First Name: @Model.User.FirstName</p>
+                    <p>Last Name: @Model.User.LastName</p>
+                    <p>Email: @Model.User.Email</p>
+                    <p>Phone: @Model.User.PhoneNumber</p>
+                </div>
 
-        
-        <div class="personal-info">
+            </div>
+        </section>
 
-            <p>First Name: @Model.User.FirstName</p>
-            <p>Last Name: @Model.User.LastName</p>
-            <p>Email: @Model.User.Email</p>
-            <p>Phone: @Model.User.PhoneNumber</p>
+        <!-- LEAVE REVIEW MUST STAY HERE -->
+        <section class="leave-review-section">
 
-            @if (Model is Renter renter)
-            {
-                <h4>Renter Details</h4>
+            <h3>Leave a Review</h3>
 
-                <p>
-                    Birth Year:
-                    @(renter.BirthYear > 0
-                        ? renter.BirthYear.ToString()
-                        : "Not provided")
-                </p>
+            <form id="reviewForm">
 
-                <p>
-                    Licence Year:
-                    @(renter.LicenceYear > 0
-                        ? renter.LicenceYear.ToString()
-                        : "Not provided")
-                </p>
-            }
+                <input type="hidden" id="recipientId" value="@Model.User.Id" />
 
-        </div>
+                <div class="form-group">
+                    <label>Rating (1-5)</label>
+                    <input type="number" id="rating" min="1" max="5" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Your Comment</label>
+                    <textarea id="comment" class="form-control" rows="4"></textarea>
+                </div>
+
+                <button type="button" onclick="submitReview()" class="submit-review-btn">
+                    Submit Review
+                </button>
+
+            </form>
+
+        </section>
 
     </div>
 
-</section></div>
+    <!-- RIGHT COLUMN -->
+    <div class="reviews-column">
 
-<hr />
-<div class="reviews-column">
+        <section class="reviews-section">
 
-    <!-- REVIEWS -->
-    <section class="reviews-section">
+            <h3>Reviews</h3>
 
-        <h3>Reviews</h3>
+            @if (ViewBag.Reviews != null)
+            {
+                <div class="reviews-container">
 
-        @{
-            var displayReviews =
-                ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
-        }
+                    @foreach (var reviewItem in ViewBag.Reviews)
+                    {
+                        <div class="review-card">
 
-        @if (displayReviews != null && displayReviews.Any())
-        {
-            <div class="reviews-container">
+                            <div class="review-header">
+                                <div class="review-name">
+                                    @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
+                                </div>
 
-                @foreach (var reviewItem in displayReviews)
-                {
-                    <div class="review-card">
-
-                        <div class="review-header">
-
-                            <div class="review-name">
-                                @reviewItem.Commenter.FirstName
-                                @reviewItem.Commenter.LastName
+                                <div class="review-rating">
+                                    ⭐ @reviewItem.Rating/5
+                                </div>
                             </div>
 
-                            <div class="review-rating">
-                                ⭐ @reviewItem.Rating/5
+                            <div class="review-comment">
+                                @reviewItem.Comment
                             </div>
 
                         </div>
+                    }
 
-                        <div class="review-comment">
-                            @reviewItem.Comment
-                        </div>
-
-                    </div>
-                }
-
-            </div>
-        }
-        else
-        {
-            <p>No reviews yet.</p>
-        }
-
-    </section>
-
-    <!-- LEAVE REVIEW -->
-    <section class="leave-review-section">
-
-        <h3>Leave a Review</h3>
-
-        <form id="reviewForm">
-
-            <input type="hidden"
-                   id="recipientId"
-                   value="@Model.User.Id" />
-
-            <div class="form-group">
-
-                <label>Rating (1-5)</label>
-
-                <input type="number"
-                       id="rating"
-                       min="1"
-                       max="5"
-                       class="form-control"
-                       required />
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Your Comment</label>
-
-                <textarea id="comment"
-                          class="form-control"
-                          rows="4"
-                          placeholder="Write your experience..."
-                          required></textarea>
-
-            </div>
-
-            <button type="button"
-                    onclick="submitReview()"
-                    class="submit-review-btn">
-
-                Submit Review
-
-            </button>
-
-        </form>
-
-        <div id="reviewStatus"></div>
-
-    </section>
-
-</div>
-
-</div>
-
-<script>
-    function submitReview() {
-
-        var data = {
-            recipientId: $('#recipientId').val(),
-            rating: $('#rating').val(),
-            comment: $('#comment').val()
-        };
-
-        $.ajax({
-            url: '/Reviews/AddReview',
-            type: 'POST',
-            data: data,
-
-            success: function (response) {
-
-                if (response.success) {
-                    location.reload();
-                }
-                else {
-                    alert("Server Error: " + response.message);
-                }
-            },
-
-            error: function (xhr) {
-                console.error("Status:", xhr.status);
-                alert("Failed to communicate with server.");
+                </div>
             }
-        });
-    }
-</script>
+            else
+            {
+                <p>No reviews yet.</p>
+            }
+
+        </section>
+
+    </div>
+
+</div>
