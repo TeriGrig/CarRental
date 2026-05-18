@@ -3,104 +3,195 @@
 
 @model dynamic  
 
-    <section>
-        <h3>Personal Information</h3>
-        <p>First Name: @Model.User.FirstName</p>
-        <p>Last Name: @Model.User.LastName</p>
-        <p>Email: @Model.User.Email</p>
-        <p>Phone: @Model.User.PhoneNumber</p>
+<div class="profile-page-layout">
+
+    
+    <div class="profile-column">
+<section class="profile-personal-info-card">
+    
+    <h3>Personal Information</h3>
+
+    <div class="profile-content">
+
        
-       
-    </section>
+        <div class="profile-left">
 
-     
-@if (Model is Renter renter)
-{
-    <section>
-        <h4>Renter Details</h4>
-        <p>Birth Year: @(renter.BirthYear > 0 ? renter.BirthYear.ToString() : "Not provided")</p>
-        <p>Licence Year: @(renter.LicenceYear > 0 ? renter.LicenceYear.ToString() : "Not provided")</p>
-    </section>
-}
+            <img class="profile-picture-img" src="/images/profile-picture.png" />
 
-@if (Model is Owner)
-{
-    <section>
-        <h4>Owner Profile</h4>
-        <p>Verified Car Provider</p>
-    </section>
+            @if (Model is Owner)
+            {
+                <div class="owner-badge">
+                    <h4>Owner Profile</h4>
+                    <p>Verified Car Provider</p>
+                </div>
+            }
 
-}
+        </div>
 
+        
+        <div class="personal-info">
+
+            <p>First Name: @Model.User.FirstName</p>
+            <p>Last Name: @Model.User.LastName</p>
+            <p>Email: @Model.User.Email</p>
+            <p>Phone: @Model.User.PhoneNumber</p>
+
+            @if (Model is Renter renter)
+            {
+                <h4>Renter Details</h4>
+
+                <p>
+                    Birth Year:
+                    @(renter.BirthYear > 0
+                        ? renter.BirthYear.ToString()
+                        : "Not provided")
+                </p>
+
+                <p>
+                    Licence Year:
+                    @(renter.LicenceYear > 0
+                        ? renter.LicenceYear.ToString()
+                        : "Not provided")
+                </p>
+            }
+
+        </div>
+
+    </div>
+
+</section></div>
 
 <hr />
-<section> Reviews </section>
-@{
-   
-    var displayReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
-}
+<div class="reviews-column">
 
-@if (displayReviews != null && displayReviews.Any())
-{
-    foreach (var reviewItem in displayReviews)
-    {
+    <!-- REVIEWS -->
+    <section class="reviews-section">
 
-        <div class="review">
-            <p><strong>Reviewer:</strong> @reviewItem.Commenter.FirstName</p>
-            <p><strong>Rating:</strong> @reviewItem.Rating/5</p>
-            <p><strong>Comment:</strong> @reviewItem.Comment</p>
-        </div>
-    }
-}
-else
-{
-   <p>No reviews yet.</p>
-}
+        <h3>Reviews</h3>
 
-    <section> Leave a Review </section>
-<form id="reviewForm" style="margin-top: 20px;">
-    <input type="hidden" id="recipientId" value="@Model.User.Id" />
-        
-    <div class="form-group">
-        <label>Rating (1-5)</label>
-        <input type="number" id="rating" min="1" max="5" class="form-control" style="width: 100px;" required />
-    </div>
+        @{
+            var displayReviews =
+                ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
+        }
 
-    <div class="form-group" style="margin-top:10px;">
-        <label>Your Comment</label>
-        <textarea id="comment" class="form-control" rows="3" placeholder="Write your experience..." required></textarea>
-    </div>
+        @if (displayReviews != null && displayReviews.Any())
+        {
+            <div class="reviews-container">
 
-    <button type="button" onclick="submitReview()" class="btn btn-primary" style="margin-top: 15px;">Submit Review</button>
-</form>
+                @foreach (var reviewItem in displayReviews)
+                {
+                    <div class="review-card">
 
-<div id="reviewStatus" style="margin-top:10px; display:none;"></div>
+                        <div class="review-header">
 
+                            <div class="review-name">
+                                @reviewItem.Commenter.FirstName
+                                @reviewItem.Commenter.LastName
+                            </div>
+
+                            <div class="review-rating">
+                                ⭐ @reviewItem.Rating/5
+                            </div>
+
+                        </div>
+
+                        <div class="review-comment">
+                            @reviewItem.Comment
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <p>No reviews yet.</p>
+        }
+
+    </section>
+
+    <!-- LEAVE REVIEW -->
+    <section class="leave-review-section">
+
+        <h3>Leave a Review</h3>
+
+        <form id="reviewForm">
+
+            <input type="hidden"
+                   id="recipientId"
+                   value="@Model.User.Id" />
+
+            <div class="form-group">
+
+                <label>Rating (1-5)</label>
+
+                <input type="number"
+                       id="rating"
+                       min="1"
+                       max="5"
+                       class="form-control"
+                       required />
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Your Comment</label>
+
+                <textarea id="comment"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Write your experience..."
+                          required></textarea>
+
+            </div>
+
+            <button type="button"
+                    onclick="submitReview()"
+                    class="submit-review-btn">
+
+                Submit Review
+
+            </button>
+
+        </form>
+
+        <div id="reviewStatus"></div>
+
+    </section>
+
+</div>
+
+</div>
 
 <script>
-        function submitReview() {
+    function submitReview() {
+
         var data = {
             recipientId: $('#recipientId').val(),
-            rating: $('#rating').val(), 
-            comment: $('#comment').val() 
+            rating: $('#rating').val(),
+            comment: $('#comment').val()
         };
-
-        console.log("Sending data:", data);
 
         $.ajax({
             url: '/Reviews/AddReview',
             type: 'POST',
             data: data,
+
             success: function (response) {
+
                 if (response.success) {
                     location.reload();
-                } else {
-                    alert("Σφάλμα από τον διακομιστή: " + response.message);
+                }
+                else {
+                    alert("Server Error: " + response.message);
                 }
             },
+
             error: function (xhr) {
                 console.error("Status:", xhr.status);
-                alert("Απέτυχε η επικοινωνία με τον server.");
+                alert("Failed to communicate with server.");
             }
         });
     }

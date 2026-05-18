@@ -17,180 +17,110 @@
 }
 
 
-<!-- active bookings -->
+<div class="my-bookings">
 
+    <!-- LEFT: ACTIVE -->
+    <div class="bookings-column">
 
-<div class="booking-section">
+        <div class="booking-section">
 
-    <h2>Active Bookings</h2>
+            <h2>Active Bookings</h2>
 
-    @if (activeBookings.Count == 0)
-    {
-        <p>No active bookings.</p>
-    }
-
-    @foreach (var booking in activeBookings)
-    {
-        <div class="booking-card">
-
-            @if (User.IsInRole("Owner"))
+            @if (activeBookings.Count == 0)
             {
-                <h4>
-                    Booking made for @booking.Vehicle.Make
-                    @booking.Vehicle.Model by user
-                    <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@booking.Renter.UserId"> @booking.Renter.User.FirstName @booking.Renter.User.LastName </a>
-                </h4>
+                <p>No active bookings.</p>
             }
 
-            @if (User.IsInRole("Renter"))
+            @foreach (var booking in activeBookings)
             {
-                <h4>
-                    Booking for vehicle @booking.Vehicle.Make
-                    @booking.Vehicle.Model owned by
+                <div class="booking-card">
 
-                    <a asp-controller="User"
-                           asp-action="OpenUsersProfile"
-                           asp-route-userId="@booking.Vehicle.Owner.UserId">
+                    @if (User.IsInRole("Owner"))
+                    {
+                        <h4>
+                            Booking made for @booking.Vehicle.Make
+                            @booking.Vehicle.Model by user
 
-                        @booking.Vehicle.Owner.User.FirstName @booking.Vehicle.Owner.User.LastName
+                            <a asp-controller="User"
+                                   asp-action="OpenUsersProfile"
+                                   asp-route-userId="@booking.Renter.UserId">
 
-                    </a>
-                </h4>
-            }
+                                @booking.Renter.User.FirstName
+                                @booking.Renter.User.LastName
 
-            
+                            </a>
+                        </h4>
+                    }
 
-            <p>
-                Dates:
-                @booking.StartDate.ToShortDateString()
-                -
-                @booking.EndDate.ToShortDateString()
-            </p>
+                    @if (User.IsInRole("Renter"))
+                    {
+                        <h4>
+                            Booking for vehicle @booking.Vehicle.Make
+                            @booking.Vehicle.Model owned by
 
-            <p>Status: @booking.Status</p>
+                            <a asp-controller="User"
+                                   asp-action="OpenUsersProfile"
+                                   asp-route-userId="@booking.Vehicle.Owner.UserId">
 
-            @if (booking.Status == "Accepted")
-            {
-                <form asp-controller="User"
-                      asp-action="CancelBooking"
-                      method="post">
+                                @booking.Vehicle.Owner.User.FirstName
+                                @booking.Vehicle.Owner.User.LastName
 
-                    <input type="hidden"
-                           name="bookingId"
-                           value="@booking.BookingId" />
+                            </a>
+                        </h4>
+                    }
 
-                    <button type="submit">
-                        Cancel Booking
-                    </button>
+                    <p>
+                        Dates:
+                        @booking.StartDate.ToShortDateString()
+                        -
+                        @booking.EndDate.ToShortDateString()
+                    </p>
 
-                </form>
-            }
-            @if (User.IsInRole("Owner") && booking.Status == "Requested")
-            {
-                <form asp-controller="Owner"
-                      asp-action="UpdateBookingStatus"
-                      method="post">
+                    <p>Status: @booking.Status</p>
 
-                    <input type="hidden"
-                           name="bookingId"
-                           value="@booking.BookingId" />
-
-                    <button type="submit"
-                            name="Status"
-                            value="Accepted">
-
-                        Accept
-
-                    </button>
-
-                    <button type="submit"
-                            name="Status"
-                            value="Rejected">
-
-                        Reject
-
-                    </button>
-
-                </form>
+                </div>
             }
 
         </div>
-    }
+    </div>
 
-</div>
+    <!-- RIGHT: ARCHIVED -->
+    <div class="bookings-column">
 
-<!-- archived bookings -->
+        <div class="booking-section">
 
-<div class="booking-section">
+            <h2>Archived Bookings</h2>
 
-    <h2>Archived Bookings</h2>
-
-    @if (archivedBookings.Count == 0)
-    {
-        <p>No archived bookings.</p>
-    }
-
-    @foreach (var booking in archivedBookings)
-    {
-        <div class="booking-card archived">
-
-            @if (User.IsInRole("Owner"))
+            @if (archivedBookings.Count == 0)
             {
-                <h4>
-                    Booking made for @booking.Vehicle.Make
-                    @booking.Vehicle.Model by user
-                    <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@booking.Renter.UserId"> @booking.Renter.User.FirstName @booking.Renter.User.LastName </a>
-                </h4>
+                <p>No archived bookings.</p>
             }
 
-            @if (User.IsInRole("Renter"))
+            @foreach (var booking in archivedBookings)
             {
-                <h4>
-                    Booking for vehicle @booking.Vehicle.Make
-                    @booking.Vehicle.Model owned by
+                <div class="booking-card archived">
 
-                    <a asp-controller="User"
-                           asp-action="OpenUsersProfile"
-                           asp-route-userId="@booking.Vehicle.Owner.UserId">
+                    <h4>
+                        Booking for @booking.Vehicle.Make
+                        @booking.Vehicle.Model
+                    </h4>
 
-                        @booking.Vehicle.Owner.User.FirstName @booking.Vehicle.Owner.User.LastName
+                    <p>
+                        Dates:
+                        @booking.StartDate.ToShortDateString()
+                        -
+                        @booking.EndDate.ToShortDateString()
+                    </p>
 
-                    </a>
-                </h4>
+                    <p>Status: @booking.Status</p>
+
+                </div>
             }
-
-            <p>
-                Dates:
-                @booking.StartDate.ToShortDateString()
-                -
-                @booking.EndDate.ToShortDateString()
-            </p>
-
-            <p>Status: @booking.Status</p>
 
         </div>
-    }
+
+    </div>
 
 </div>
 
 
-
-<style>
-
-    .booking-section {
-        margin-bottom: 50px;
-    }
-
-    .booking-card {
-        border: 1px solid black;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 10px;
-    }
-
-    .archived {
-        opacity: 0.6;
-        background-color: #f2f2f2;
-    }
-
-</style>

@@ -6,31 +6,13 @@
 
 <h2>Available Cars</h2>
 
-<style>
-    /* Hide scrollbar but keep scrolling */
-    .car-list {
-        width: 35%;
-        max-height: 700px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* Firefox */
-        scrollbar-width: none;
-        /* IE/Edge legacy */
-        -ms-overflow-style: none;
-    }
+<div class="cars-map-layout">
 
-        /* Chrome, Safari, Edge */
-        .car-list::-webkit-scrollbar {
-            display: none;
-        }
-</style>
+    <!-- Map -->
+    <div id="map" class="cars-map"></div>
 
-<div style="display:flex; gap:20px; align-items:flex-start;">
-
-    <!-- LEFT SIDE (SCROLLABLE CAR LIST) -->
-    <div class="car-list">
+    <!-- Cars -->
+    <div class="cars-list">
 
         @if (!Model.Any())
         {
@@ -39,66 +21,53 @@
             </div>
         }
 
-        @foreach (Vehicle car in Model)
+        @foreach (var car in Model)
         {
-            @if (car.Availability == true)
-            {
-                <div data-id="@car.VehicleId" style="border:1px solid gray; padding:10px; width:260px; margin-bottom:15px; border-radius:8px;">
+            <div class="car-list-card"
+                 onclick="focusCar(@car.Latitude, @car.Longitude)">
 
-                    <img src="@car.Image"
-                         style="width:100%; height:150px; object-fit:cover; border-radius:6px;" />
+                <img src="@car.Image" class="car-list-image" />
 
-                    <h4 style="margin-top:10px;">@car.Make @car.Model</h4>
+                <div class="car-list-body">
 
-                    <p><b>Year:</b> @car.Year</p>
-                    <p><b>Cubic:</b> @car.Cubic</p>
-                    <p><b>Price/Day:</b> @car.PricePerDay €</p>
+                    <div class="car-info">
+                        <h4>@car.Make @car.Model</h4>
 
-                    <form method="post" action="/Renter/Book">
+                        <p><b>Year:</b> @car.Year<br>
+                            <b>Cubic:</b> @car.Cubic<br>
+                        <b>Price/Day:</b> @car.PricePerDay €</p>
+                    </div>
+
+                    <form method="post" action="/Renter/Book" class="car-actions">
                         <input type="hidden" name="vehicleId" value="@car.VehicleId" />
-                        <button type="submit">Book</button>
+                        <button type="submit" class="show-car-btn">Book</button>
                     </form>
 
                 </div>
-            }
+            </div>
         }
 
     </div>
-
-    <!-- RIGHT SIDE (MAP) -->
-    <div style="width:65%;">
-        <div id="map"
-             style="height:700px; width:100%; border-radius:10px;">
-            <div style="width:65%; position:relative;">
-
-                <button id="resetMapBtn"
-                        style="position:absolute; bottom:10px; left:10px; z-index:1000;
-                    background:white; border:1px solid #ccc;
-                    padding:6px 10px; border-radius:6px; cursor:pointer;">
-                    Reset Map
-                </button>
-
-                <div id="map"
-                     style="height:700px; width:100%; border-radius:10px;">
-                </div>
-            </div>
-        </div>
-
-    </div>
-
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
+
+    let map;
+    let markers = [];
+
     document.addEventListener("DOMContentLoaded", function () {
 
-    var map = L.map('map').setView([37.9838, 23.7275], 7);
+    map = L.map('map').setView([37.9838, 23.7275], 7);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    }
+    ).addTo(map);
 
     // Store markers by VehicleId
     var markers = {};
@@ -108,44 +77,36 @@
         if (car.Latitude != 0 && car.Longitude != 0)
         {
             <text>
-                var marker = L.marker([@car.Latitude, @car.Longitude])
+                var marker = L.marker([
+                @car.Latitude,
+                @car.Longitude
+                ])
                 .addTo(map)
                 .bindPopup(`
                 <b>@car.Make @car.Model</b><br>
                 Price: @car.PricePerDay € / day
                 `);
 
-                markers[@car.VehicleId] = marker;
+                markers.push(marker);
             </text>
         }
     }
-
-    document.getElementById("resetMapBtn").addEventListener("click", function () {
-    map.flyTo([37.9838, 23.7275], 7, {
-    animate: true,
-    duration: 1.2
-    });
     });
 
-    // Click car card → move map to marker
-    document.querySelectorAll("[data-id]").forEach(card => {
-    card.addEventListener("click", function () {
+    function focusCar(lat, lng) {
 
-    var id = this.getAttribute("data-id");
-    var marker = markers[id];
+    if (lat === 0 || lng === 0)
+    return;
 
-    if (marker) {
-    var latlng = marker.getLatLng();
+    map.setView([lat, lng], 14);
 
-    map.flyTo(latlng, 15, {
-    animate: true,
-    duration: 1.2
-    });
+    markers.forEach(m => {
+    var pos = m.getLatLng();
 
-    marker.openPopup();
+    if (pos.lat === lat && pos.lng === lng) {
+    m.openPopup();
     }
     });
-    });
+    }
 
-    });
 </script>
