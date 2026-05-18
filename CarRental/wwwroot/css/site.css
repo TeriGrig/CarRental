@@ -29,3 +29,285 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.booking-section {
+    margin-bottom: 50px;
+}
+
+.booking-card {
+    border: 1px solid black;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.archived {
+    opacity: 0.6;
+    background-color: #f2f2f2;
+}
+
+body {
+    background-color: #ebebec;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1e293b;
+    margin: 0;
+    padding-bottom: 50px;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 20px;
+    text-align:center;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #ffffff;
+    margin-bottom: 15px;
+    box-sizing: border-box; 
+}
+button, .btn-custom {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ffb500;
+}
+
+label {
+    display: block; 
+    font-size: 15px; 
+    font-weight: 600; 
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+
+.form-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto; 
+}
+
+
+.cars-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.car-card {
+    background-color: white;
+    width: 280px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.car-card-body {
+    padding: 20px 25px;
+    text-align: left;
+}
+
+.car-card-img img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    
+}
+
+.btn-edit {
+    display: block;
+    text-align: center;
+    background: #ffb500;
+    color: white;
+    padding: 10px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+
+.btn-delete {
+    width: 100%; 
+    background: red;
+    color: white;
+    padding: 10px 0; 
+    border: none;
+    border-radius: 6px;
+ 
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.car-card-actions {
+    padding: 0 25px 25px 25px; 
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+
+ /*  το link και το form να μοιραστούν τον χώρο 50-50 */
+    .car-card-actions class,
+    .car-card-actions a,
+    .car-card-actions form {
+        flex: 1;
+    }
+
+
+    /*  WELCOME PAGE*/
+.index {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.start-section {
+    background-color: #251F3D;
+    width: 100vw; /* Αναγκάζει το div να πιάσει το 100% του πλάτους της οθόνης */
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    margin-top: -24px;
+}
+
+    .start-section h1 {
+        font-size: 52px;
+        color: white;
+        margin-bottom: 15px;
+        letter-spacing: -1px;
+        border-bottom: 2px solid #ffb500;
+    }
+
+    .start-section p {
+        font-size: 19px;
+        color: white;
+        max-width: 700px;
+        margin: 0 auto 30px auto;
+        line-height: 1.6;
+    }
+
+/* Ευθυγράμμιση του slider και των κουμπιών */
+.slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 40px; /* Χώρος δεξιά-αριστερά για να πατάνε τα βελάκια */
+}
+
+/* ΟΡΙΖΟΝΤΙΑ ΟΙ ΚΑΡΤΕΣ*/
+.slider-container {
+    display: flex;
+    flex-direction: row; 
+    overflow-x: auto; /*οριζόντιο σκρολάρισμα */
+    scroll-behavior: smooth;
+    gap: 25px;
+    padding: 20px 5px;
+    width: 100%;
+    scrollbar-width: none; 
+}
+
+
+    .slider-container::-webkit-scrollbar {
+        display: none;
+    }
+
+   
+    .slider-container .car-card {
+        flex: 0 0 280px; /* Δεν επιτρέπει στην κάρτα να αλλάξει μέγεθος */
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+/*ΓΙΑ ΤΑ ΒΕΛΑΚΙΑ */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #211066; 
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+    .slider-btn:hover {
+        background-color: #2563eb; /* Γίνεται μπλε στο hover */
+       
+    }
+
+/* Τοποθέτηση στα άκρα */
+.prev-btn {
+    left: 0;
+}
+
+.next-btn {
+    right: 0;
+}
+
+
+
+
+/*
+    PRIVACY POLICY
+
+*/
+.text-privacy {
+    font-size: 20px;
+    color: #251F3D;
+}
+
+
+.header-privacy {
+    font-size: 30px;
+    color: #251F3D;
+    border-bottom: 2px solid #251F3D;
+}
