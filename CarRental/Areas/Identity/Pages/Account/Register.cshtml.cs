@@ -155,7 +155,7 @@ namespace CarRental.Areas.Identity.Pages.Account
 
             var user = CreateUser();
 
-            user.UserName = Input.Email;
+            user.UserName = Input.FirstName;
             user.Email = Input.Email;
 
             user.FirstName = Input.FirstName;
