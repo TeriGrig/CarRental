@@ -11,8 +11,6 @@
     <div class="form-container">
     <div class="form-group">
 
-
-
         <label asp-for="Make"></label>
 
         <input asp-for="Make" class="form-control" list="carMakes" />
@@ -86,7 +84,7 @@
 </div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<script>
+@* <script>
 
     // Create map centered on Greece
     var map = L.map('map').setView([37.9838, 23.7275], 7);
@@ -119,4 +117,54 @@
 
     });
 
+</script> *@
+
+    <script>
+var selectedLat = null;
+var selectedLng = null;
+
+// Create map
+var map = L.map('map').setView([37.9838, 23.7275], 7);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+var marker;
+
+map.on('click', function (e) {
+
+var lat = e.latlng.lat;
+var lng = e.latlng.lng;
+
+if (marker) {
+map.removeLayer(marker);
+}
+
+marker = L.marker([lat, lng]).addTo(map);
+
+// IMPORTANT FIX
+document.getElementById('Latitude').value = lat.toFixed(6);
+
+document.getElementById('Longitude').value = lng.toFixed(6);
+
+console.log(
+document.getElementById('Latitude').value,
+document.getElementById('Longitude').value
+);
+});
+
+// 🔥 BLOCK FORM IF NO COORDS
+document.querySelector("form").addEventListener("submit", function (e) {
+
+    if (selectedLat === null || selectedLng === null) {
+        e.preventDefault();
+        alert("Please select a location on the map!");
+        return;
+    }
+
+    document.getElementById('Latitude').value = selectedLat;
+    document.getElementById('Longitude').value = selectedLng;
+});
 </script>

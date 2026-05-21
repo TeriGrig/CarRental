@@ -394,19 +394,22 @@ label {
         }
         /* RIGHT SIDE LIST */
 
-       .car-list {
-            width: 40%;
-            height: calc(100vh - 120px);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding-right: 10px;
-        }
-.car-list {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge legacy */
-}
+    .car-list {
+        width: 40%;
+        height: calc(100vh - 120px);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-right: 10px;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge legacy */
+    }
+
+        /*.car-list {
+            scrollbar-width: none;*/ /* Firefox */
+            /*-ms-overflow-style: none;*/ /* IE/Edge legacy */
+        /*}*/
 
     .car-list::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Edge */
