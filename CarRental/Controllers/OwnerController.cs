@@ -79,6 +79,8 @@ namespace CarRental.Controllers
                 Cubic = model.Cubic ?? 0,
                 Year = model.Year ?? 0,
                 PricePerDay = model.PricePerDay ?? 0,
+                //Latitude = (model.Latitude >= -90 && model.Latitude <= 90) ? model.Latitude : 0,
+                //Longitude = (model.Longitude >= -180 && model.Longitude <= 180) ? model.Longitude : 0,
                 Latitude = model.Latitude,
                 Longitude = model.Longitude,
                 Comments = model.Comments ?? "",
