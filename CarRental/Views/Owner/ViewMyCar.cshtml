@@ -1,73 +1,104 @@
-﻿
-@model List<CarRental.Models.Vehicle>
+﻿@model List<CarRental.Models.Vehicle>
 
 <link rel="stylesheet"
       href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-<h2>My Cars</h2>
+<link rel="stylesheet" href="~/css/view-car-cars.css" />
 
-<div class="cars-map-layout">
+<h2 class="view-car-title">Manage Cars</h2>
 
-    <!-- LEFT SIDE MAP -->
-    <div id="map" class="cars-map">
-        <button id="resetMapBtn"
-                style="position:absolute; bottom:10px; left:10px; z-index:1000;
-            background:white; border:1px solid #ccc;
-            padding:6px 10px; border-radius:6px; cursor:pointer;">
-            Reset Map
+<div class="view-car-page">
+
+    <!-- MAP -->
+    <div id="discoverMap" class="view-car-map"></div>
+
+    <!-- SLIDER SECTION -->
+    <div class="view-car-slider-section">
+
+        <!-- LEFT ARROW -->
+        <button class="view-car-slider-btn view-car-left-btn"
+                id="slideLeft">
+            &#10094;
         </button>
-    </div>
 
-   
-    <!-- RIGHT SIDE LIST -->
-    <div class="car-list">
+        <!-- CARS -->
+        <div class="view-car-cars-wrapper">
 
-        @if (!Model.Any())
-        {
-            <div class="alert alert-warning">
-                No cars found.
-            </div>
-        }
+            @if (!Model.Any())
+            {
+                <div class="view-car-empty">
+                    No cars found.
+                </div>
+            }
 
-        @foreach (var car in Model)
-        {
-            <div class="car-list-card"
-                 data-id="@car.VehicleId"
-                 data-lat="@car.Latitude"
-                 data-lng="@car.Longitude">
+            else
+            {
+                <div class="view-car-cars-slider"
+                     id="discoverSlider">
 
-                <img src="@car.Image" class="car-list-image" />
+                    @foreach (Vehicle car in Model)
+                    {
+                            <div class="view-car-car-card"
+                                 data-id="@car.VehicleId">
 
-                <div class="car-list-body">
+                                <img src="@car.Image"
+                                     class="view-car-car-image" />
 
-                    <div class="car-info">
-                        <h4>@car.Make @car.Model</h4>
+                                <div class="view-car-car-content">
 
-                        <p>
-                            <b>Year:</b> @car.Year<br>
-                            <b>Cubic:</b> @car.Cubic<br>
-                            <b>Price/Day:</b> @car.PricePerDay €
-                        </p>
-                    </div>
+                                    <div class="view-car-car-info">
 
-                    <div asp-validation-summary="All" class="text-danger"></div>
+                                        <h3>@car.Make @car.Model</h3>
 
-                    <div class="car-card-actions">
-                        <a href="/Owner/EditMyCar?vehicleId=@car.VehicleId" class="btn-edit">
-                            Edit
-                        </a>
+                                        <p>
+                                            <b>Year:</b> @car.Year
+                                        </p>
 
-                        <form method="post" action="/Owner/DeleteCar">
-                            <input type="hidden" name="vehicleId" value="@car.VehicleId" />
-                            <button type="submit" class="btn-delete">Delete</button>
-                        </form>
-                    </div>
+                                        <p>
+                                            <b>Cubic:</b> @car.Cubic
+                                        </p>
+
+                                        <p>
+                                            <b>Price/Day:</b> @car.PricePerDay €
+                                        </p>
+
+                                    </div>
+
+                                    <!-- ACTION BUTTONS -->
+                                    <div class="view-car-card-actions">
+
+                                        
+                                        
+                                            <a href="/Owner/EditMyCar?vehicleId=@car.VehicleId" class="view-car-btn-edit">
+                                                Edit
+                                            </a>
+
+
+                                            <form method="post" action="/Owner/DeleteCar">
+                                                <input type="hidden" name="vehicleId" value="@car.VehicleId" />
+                                                <button type="submit" class="view-car-btn-delete">Delete</button>
+                                            </form>
+                                        
+                                    </div>
+
+                                </div>
+                            </div>
+                        
+                    }
 
                 </div>
-            </div>
-        }
+            }
+
+        </div>
+
+        <!-- RIGHT ARROW -->
+        <button class="view-car-slider-btn view-car-right-btn"
+                id="slideRight">
+            &#10095;
+        </button>
 
     </div>
+
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -75,22 +106,29 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-    var map = L.map('map').setView([37.9838, 23.7275], 7);
+    // MAP
+    const map = L.map('discoverMap')
+    .setView([37.9838, 23.7275], 7);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    }
+    ).addTo(map);
 
-    var markers = {};
+    const markers = {};
 
-    // Create markers
     @foreach (var car in Model)
     {
         if (car.Latitude != 0 && car.Longitude != 0)
         {
             <text>
-                markers["@car.VehicleId"] = L.marker([@car.Latitude, @car.Longitude])
+                markers["@car.VehicleId"] = L.marker([
+                @car.Latitude,
+                @car.Longitude
+                ])
                 .addTo(map)
                 .bindPopup(`
                 <b>@car.Make @car.Model</b><br>
@@ -99,74 +137,59 @@
             </text>
         }
     }
-    document.getElementById("resetMapBtn").addEventListener("click", function () {
-    map.flyTo([37.9838, 23.7275], 7, {
-    animate: true,
-    duration: 1.2
-    });
-    });
 
-    // Click card → focus map
-    document.querySelectorAll(".car-list-card").forEach(card => {
+    // CARD CLICK → MAP
+    document.querySelectorAll(".view-car-car-card")
+    .forEach(card => {
+
     card.addEventListener("click", function (e) {
 
-    // prevent click on BOOK button from triggering map move
-    if (e.target.tagName === "BUTTON") return;
+    // prevent buttons triggering map movement
+    if (e.target.tagName === "BUTTON")
+    return;
 
-    var id = this.getAttribute("data-id");
-    var lat = this.getAttribute("data-lat");
-    var lng = this.getAttribute("data-lng");
+    const id = this.getAttribute("data-id");
 
-    var marker = markers[id];
+    const marker = markers[id];
 
     if (marker) {
-    map.flyTo(marker.getLatLng(), 15, {
+
+    map.flyTo(
+    marker.getLatLng(),
+    15,
+    {
     animate: true,
     duration: 1.2
-    });
+    }
+    );
 
     marker.openPopup();
-    } else if (lat && lng) {
-    map.flyTo([lat, lng], 15, {
-    animate: true,
-    duration: 1.2
-    });
     }
     });
+    });
+
+    // SLIDER
+    const slider = document.getElementById("discoverSlider");
+
+    document.getElementById("slideLeft")
+    .addEventListener("click", () => {
+
+    slider.scrollBy({
+    left: -350,
+    behavior: "smooth"
+    });
+
+    });
+
+    document.getElementById("slideRight")
+    .addEventListener("click", () => {
+
+    slider.scrollBy({
+    left: 350,
+    behavior: "smooth"
+    });
+
     });
 
     });
 </script>
-
-@* <div class="cars-grid">
-    @foreach (var car in Model)
-    {
-        <div class="car-card">
-            <div class="car-card-img">
-                <img src="@car.Image" alt="@car.Make @car.Model" />
-            </div>
-
-            <div class="car-card-body">
-                <h4>@car.Make @car.Model</h4>
-                <p><b>Year:</b> @car.Year</p>
-                <p><b>Cubic:</b> @car.Cubic</p>
-                <p class="car-price"><b>Price/Day:</b> @car.PricePerDay €</p>
-            </div>
-            
-            <div asp-validation-summary="All" class="text-danger"></div>
-            
-            <div class="car-card-actions">
-                <a href="/Owner/EditMyCar?vehicleId=@car.VehicleId" class="btn-edit">
-                    Edit
-                </a>
-
-                <form method="post" action="/Owner/DeleteCar">
-                    <input type="hidden" name="vehicleId" value="@car.VehicleId" />
-                    <button type="submit" class="btn-delete">Delete</button>
-                </form>
-            </div>
-        </div>
-    }
-
-</div> *@
-
