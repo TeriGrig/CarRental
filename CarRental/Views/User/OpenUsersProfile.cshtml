@@ -1,11 +1,11 @@
 ﻿<div class="profile-page-layout">
 
-    <!-- LEFT COLUMN -->
+    
     <div class="profile-column">
 
         <section class="profile-personal-info-card">
             <h3>Personal Information</h3>
-
+            <!-- LEFT COLUMN -->
             <div class="profile-content">
 
                 <div class="profile-left">
@@ -35,21 +35,23 @@
 
             <h3>Leave a Review</h3>
 
-            <form id="reviewForm">
+            <form asp-controller="Reviews"
+                  asp-action="AddReview"
+                  method="post">
 
-                <input type="hidden" id="recipientId" value="@Model.User.Id" />
+                <input type="hidden" name="recipientId" value="@Model.User.Id" />
 
                 <div class="form-group">
                     <label>Rating (1-5)</label>
-                    <input type="number" id="rating" min="1" max="5" class="form-control" />
+                    <input type="number" name="rating" min="1" max="5" class="form-control" />
                 </div>
 
                 <div class="form-group">
                     <label>Your Comment</label>
-                    <textarea id="comment" class="form-control" rows="4"></textarea>
+                    <textarea name="comment" class="form-control" rows="4"></textarea>
                 </div>
 
-                <button type="button" onclick="submitReview()" class="submit-review-btn">
+                <button type="submit" class="submit-review-btn">
                     Submit Review
                 </button>
 

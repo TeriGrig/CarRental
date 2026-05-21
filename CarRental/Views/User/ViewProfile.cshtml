@@ -6,7 +6,9 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-
+<div class="profile-page-layout">
+    <!-- LEFT COLUMN -->
+    <div class="profile-column">
 <section class="profile-personal-info-card">
     <h3>Personal Information</h3>
 
@@ -20,6 +22,13 @@
                 <a href="/User/EditProfile">Edit My Profile</a>
                 <br />
                 <a href="/Home/Index">Back to Home</a>
+                @if (Model is Owner)
+                {
+                    
+                <a asp-controller="Owner" asp-action="ViewMyCar">Manage My Cars</a>            
+                }
+
+
             </nav>
 
         </div>
@@ -37,19 +46,28 @@
         <p>Licence Year: @(Model.LicenceYear > 0 ? Model.LicenceYear.ToString() : "Not provided")</p>
 }
 
-@if (Model is Owner)
-{ <h3>Owner Dashboard</h3>
-        <a asp-controller="Owner" asp-action="ViewMyCar">Manage My Cars</a>
-    
-}</div></div>
+</div></div>
 
 
-    </section>
+        </section>
+   
 
-<hr />
-<section>
+
+
+    <!-- account analytics -->
+    <section class="account-analytics-section">
+
+        <h3>Account Analytics</h3>
+
+        
+
+        </section>
+    </div><hr />
+    <!-- reviws -->
+    <div class="reviews-column">
+    <section class="reviews-section" ">
     <h3>My Reviews</h3>
-</section>
+
 
 @{
     var myReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
@@ -84,5 +102,5 @@ else
 {
     <p>You haven't received any reviews yet.</p>
 }
-
-
+    </section></div>
+</div>
