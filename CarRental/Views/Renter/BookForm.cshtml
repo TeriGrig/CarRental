@@ -38,8 +38,13 @@
         </div>
 
         
-        <div id="bookCarMap"
-             class="book-car-map">
+        <div id="bookCarMap" class="book-car-map">
+            <button id="resetMapBtn"
+                    style="position:absolute; bottom:10px; left:10px; z-index:1000;
+                background:white; border:1px solid #ccc;
+                padding:6px 10px; border-radius:6px; cursor:pointer;">
+                Reset Map
+            </button>
         </div>
 
     </div>
@@ -108,6 +113,13 @@
     <b>@Model.Make @Model.Model</b>
     `)
     .openPopup();
+
+    document.getElementById("resetMapBtn").addEventListener("click", function () {
+    map.flyTo([37.9838, 23.7275], 7, {
+    animate: true,
+    duration: 1.2
+    });
+    });
 
     setTimeout(() => {
     map.invalidateSize();
