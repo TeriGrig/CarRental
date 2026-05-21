@@ -84,87 +84,52 @@
 </div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-@* <script>
-
-    // Create map centered on Greece
+<script>
+    var selectedLat = null;
+    var selectedLng = null;
+    
+    // Create map
     var map = L.map('map').setView([37.9838, 23.7275], 7);
-
-    // Add OpenStreetMap tiles
+    
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap'
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
     }).addTo(map);
-
-    // Variable for marker
+    
     var marker;
-
-    // When user clicks map
+    
     map.on('click', function (e) {
-
+    
     var lat = e.latlng.lat;
     var lng = e.latlng.lng;
-
-    // Remove old marker
+    
     if (marker) {
     map.removeLayer(marker);
     }
-
+    
     marker = L.marker([lat, lng]).addTo(map);
-
-    // Save coordinates to hidden inputs
-    document.getElementById('Latitude').value = lat;
-    document.getElementById('Longitude').value = lng;
-
+    
+    // IMPORTANT FIX
+    document.getElementById('Latitude').value = lat.toFixed(6);
+    
+    document.getElementById('Longitude').value = lng.toFixed(6);
+    
+    console.log(
+    document.getElementById('Latitude').value,
+    document.getElementById('Longitude').value
+    );
     });
-
-</script> *@
-
-    <script>
-var selectedLat = null;
-var selectedLng = null;
-
-// Create map
-var map = L.map('map').setView([37.9838, 23.7275], 7);
-
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap'
-}).addTo(map);
-
-var marker;
-
-map.on('click', function (e) {
-
-var lat = e.latlng.lat;
-var lng = e.latlng.lng;
-
-if (marker) {
-map.removeLayer(marker);
-}
-
-marker = L.marker([lat, lng]).addTo(map);
-
-// IMPORTANT FIX
-document.getElementById('Latitude').value = lat.toFixed(6);
-
-document.getElementById('Longitude').value = lng.toFixed(6);
-
-console.log(
-document.getElementById('Latitude').value,
-document.getElementById('Longitude').value
-);
-});
-
-// 🔥 BLOCK FORM IF NO COORDS
-document.querySelector("form").addEventListener("submit", function (e) {
-
-    if (selectedLat === null || selectedLng === null) {
-        e.preventDefault();
-        alert("Please select a location on the map!");
-        return;
-    }
-
-    document.getElementById('Latitude').value = selectedLat;
-    document.getElementById('Longitude').value = selectedLng;
-});
+    
+    // 🔥 BLOCK FORM IF NO COORDS
+    document.querySelector("form").addEventListener("submit", function (e) {
+    
+        if (selectedLat === null || selectedLng === null) {
+            e.preventDefault();
+            alert("Please select a location on the map!");
+            return;
+        }
+    
+        document.getElementById('Latitude').value = selectedLat;
+        document.getElementById('Longitude').value = selectedLng;
+    });
 </script>

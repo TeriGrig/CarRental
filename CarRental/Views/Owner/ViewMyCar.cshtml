@@ -1,9 +1,144 @@
 ﻿
 @model List<CarRental.Models.Vehicle>
-    
+
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
 <h2>My Cars</h2>
 
-<div class="cars-grid">
+<div class="cars-map-layout">
+
+    <!-- LEFT SIDE MAP -->
+    <div id="map" class="cars-map">
+        <button id="resetMapBtn"
+                style="position:absolute; bottom:10px; left:10px; z-index:1000;
+            background:white; border:1px solid #ccc;
+            padding:6px 10px; border-radius:6px; cursor:pointer;">
+            Reset Map
+        </button>
+    </div>
+
+   
+    <!-- RIGHT SIDE LIST -->
+    <div class="car-list">
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning">
+                No cars found.
+            </div>
+        }
+
+        @foreach (var car in Model)
+        {
+            <div class="car-list-card"
+                 data-id="@car.VehicleId"
+                 data-lat="@car.Latitude"
+                 data-lng="@car.Longitude">
+
+                <img src="@car.Image" class="car-list-image" />
+
+                <div class="car-list-body">
+
+                    <div class="car-info">
+                        <h4>@car.Make @car.Model</h4>
+
+                        <p>
+                            <b>Year:</b> @car.Year<br>
+                            <b>Cubic:</b> @car.Cubic<br>
+                            <b>Price/Day:</b> @car.PricePerDay €
+                        </p>
+                    </div>
+
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="car-card-actions">
+                        <a href="/Owner/EditMyCar?vehicleId=@car.VehicleId" class="btn-edit">
+                            Edit
+                        </a>
+
+                        <form method="post" action="/Owner/DeleteCar">
+                            <input type="hidden" name="vehicleId" value="@car.VehicleId" />
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    var map = L.map('map').setView([37.9838, 23.7275], 7);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    var markers = {};
+
+    // Create markers
+    @foreach (var car in Model)
+    {
+        if (car.Latitude != 0 && car.Longitude != 0)
+        {
+            <text>
+                markers["@car.VehicleId"] = L.marker([@car.Latitude, @car.Longitude])
+                .addTo(map)
+                .bindPopup(`
+                <b>@car.Make @car.Model</b><br>
+                Price: @car.PricePerDay € / day
+                `);
+            </text>
+        }
+    }
+    document.getElementById("resetMapBtn").addEventListener("click", function () {
+    map.flyTo([37.9838, 23.7275], 7, {
+    animate: true,
+    duration: 1.2
+    });
+    });
+
+    // Click card → focus map
+    document.querySelectorAll(".car-list-card").forEach(card => {
+    card.addEventListener("click", function (e) {
+
+    // prevent click on BOOK button from triggering map move
+    if (e.target.tagName === "BUTTON") return;
+
+    var id = this.getAttribute("data-id");
+    var lat = this.getAttribute("data-lat");
+    var lng = this.getAttribute("data-lng");
+
+    var marker = markers[id];
+
+    if (marker) {
+    map.flyTo(marker.getLatLng(), 15, {
+    animate: true,
+    duration: 1.2
+    });
+
+    marker.openPopup();
+    } else if (lat && lng) {
+    map.flyTo([lat, lng], 15, {
+    animate: true,
+    duration: 1.2
+    });
+    }
+    });
+    });
+
+    });
+</script>
+
+@* <div class="cars-grid">
     @foreach (var car in Model)
     {
         <div class="car-card">
@@ -33,5 +168,5 @@
         </div>
     }
 
-</div>
+</div> *@
 
