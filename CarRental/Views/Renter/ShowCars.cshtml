@@ -30,7 +30,7 @@
 
         @foreach (Vehicle car in Model)
         {
-            if (car.Availability == true)
+            if (car.Availability == true && !car.IsDeleted)
             {
                 <div class="car-list-card"
                      data-id="@car.VehicleId"
@@ -93,6 +93,7 @@
             </text>
         }
     }
+
     document.getElementById("resetMapBtn").addEventListener("click", function () {
     map.flyTo([37.9838, 23.7275], 7, {
     animate: true,
