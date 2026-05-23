@@ -12,6 +12,7 @@
         public int Year { get; set; }
         public int PricePerDay { get; set; }
         public bool Availability { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string Comments { get; set; }

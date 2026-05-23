@@ -146,6 +146,12 @@ namespace CarRental.Areas.Identity.Pages.Account
                     return Page();
                 }
 
+                if (Input.LicenceYear - Input.BirthYear < 17)
+                {
+                    ModelState.AddModelError(string.Empty, "You need to be at least 17 years old to have a driver's license.");
+                    return Page();
+                }
+
                 if (DateTime.Now.Year - Input.LicenceYear < 3)
                 {
                     ModelState.AddModelError(string.Empty, "You must have had your license for at least 3 years.");

@@ -113,7 +113,7 @@ namespace CarRental.Controllers
             { return Content("Owner not found"); }
 
             var vehicles = _context.Vehicles
-            .Where(v => v.OwnerID == owner.Id)
+            .Where(v => v.OwnerID == owner.Id && !v.IsDeleted)
             .ToList();
 
             return View(vehicles);
@@ -138,15 +138,32 @@ namespace CarRental.Controllers
                 var owner = _context.Owners.FirstOrDefault(o => o.UserId == userId);
 
                 var vehicles = _context.Vehicles
-                    .Where(v => v.OwnerID == owner.Id)
+                    .Where(v => v.OwnerID == owner.Id && !v.IsDeleted)
                     .ToList();
 
                 return View("ViewMyCar", vehicles);
             }
 
-            _context.Vehicles.Remove(vehicle);
-            await _context.SaveChangesAsync();
+            var archivedBookings = _context.Bookings
+                .Where(b =>
+                    b.VehicleId == vehicle.VehicleId &&
+                    !b.Vehicle.IsDeleted &&
+                    (b.Status == "Cancelled"
+                    || b.Status == "Rejected"
+                    || b.EndDate < DateTime.Now))
+                .ToList();
 
+            if (archivedBookings.Count() > 0)
+            {
+                vehicle.IsDeleted = true;
+                _context.Vehicles.Update(vehicle);
+            }
+            else
+            {
+                _context.Vehicles.Remove(vehicle);
+            }
+
+            await _context.SaveChangesAsync();
             return RedirectToAction("ViewMyCar");
         }
 

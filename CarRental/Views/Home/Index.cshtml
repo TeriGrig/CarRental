@@ -17,7 +17,7 @@
         <div class="slider-container" id="carSlider">
             @foreach (Vehicle car in Model)
             {
-                @if (car.Availability == true)
+                @if (car.Availability == true && !car.IsDeleted)
                 {
                     <div class="car-card">
                         <div class="car-card-img">

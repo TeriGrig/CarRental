@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Security.Claims;
 
 namespace CarRental.Controllers
@@ -24,7 +25,7 @@ namespace CarRental.Controllers
         public IActionResult ShowCars()
         {
             var vehicles = _context.Vehicles
-                .Where(v => v.Availability == true)
+                .Where(v => v.Availability == true && !v.IsDeleted)
                 .ToList();
 
             return View(vehicles);

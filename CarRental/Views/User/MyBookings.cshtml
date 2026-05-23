@@ -3,9 +3,9 @@
 @{
     var archivedBookings = Model
         .Where(b =>
-            b.Status == "Cancelled"
+            (b.Status == "Cancelled"
             || b.Status == "Rejected"
-            || b.EndDate < DateTime.Now)
+            || b.EndDate < DateTime.Now))
         .ToList();
 
     var activeBookings = Model

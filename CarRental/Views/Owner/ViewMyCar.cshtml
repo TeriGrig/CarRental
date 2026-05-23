@@ -10,34 +10,39 @@
 <div class="view-car-page">
 
     <!-- MAP -->
-    <div id="discoverMap" class="view-car-map"></div>
+    <div id="discoverMap" class="view-car-map">
+        <button id="resetMapBtn"
+                style="position:absolute; bottom:10px; left:10px; z-index:1000;
+            background:white; border:1px solid #ccc;
+            padding:6px 10px; border-radius:6px; cursor:pointer;">
+            Reset Map
+        </button>
+    </div>
 
     <!-- SLIDER SECTION -->
     <div class="view-car-slider-section">
 
         <!-- LEFT ARROW -->
-        <button class="view-car-slider-btn view-car-left-btn"
-                id="slideLeft">
-            &#10094;
-        </button>
+        <div class="slider-wrapper">
+            <button class="slider-btn prev-btn" onclick="scrollSlider(-1)">&#10094;</button>
 
-        <!-- CARS -->
-        <div class="view-car-cars-wrapper">
+            <!-- CARS -->
+            <div class="slider-container" id="carSlider">
 
-            @if (!Model.Any())
-            {
-                <div class="view-car-empty">
-                    No cars found.
-                </div>
-            }
+                @if (!Model.Any())
+                {
+                    <div class="view-car-empty">
+                        No cars found.
+                    </div>
+                }
 
-            else
-            {
-                <div class="view-car-cars-slider"
-                     id="discoverSlider">
+                else
+                {
+                    <div class="view-car-cars-slider"
+                         id="discoverSlider">
 
-                    @foreach (Vehicle car in Model)
-                    {
+                        @foreach (Vehicle car in Model)
+                        {
                             <div class="view-car-car-card"
                                  data-id="@car.VehicleId">
 
@@ -83,19 +88,16 @@
 
                                 </div>
                             </div>
-                        
-                    }
+                        }
 
-                </div>
-            }
+                    </div>
+                }
 
+            </div>
+
+            <!-- RIGHT ARROW -->
+            <button class="slider-btn next-btn" onclick="scrollSlider(1)">&#10095;</button>
         </div>
-
-        <!-- RIGHT ARROW -->
-        <button class="view-car-slider-btn view-car-right-btn"
-                id="slideRight">
-            &#10095;
-        </button>
 
     </div>
 
@@ -137,6 +139,13 @@
             </text>
         }
     }
+
+    document.getElementById("resetMapBtn").addEventListener("click", function () {
+    map.flyTo([37.9838, 23.7275], 7, {
+    animate: true,
+    duration: 1.2
+    });
+    });
 
     // CARD CLICK → MAP
     document.querySelectorAll(".view-car-car-card")
