@@ -7,6 +7,8 @@
 
 <h2 class="view-car-title">Manage Cars</h2>
 
+
+
 <div class="view-car-page">
 
     <!-- MAP -->
@@ -20,6 +22,7 @@
     </div>
 
     <!-- SLIDER SECTION -->
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="view-car-slider-section">
 
         <!-- LEFT ARROW -->
@@ -27,7 +30,8 @@
             <button class="slider-btn prev-btn" onclick="scrollSlider(-1)">&#10094;</button>
 
             <!-- CARS -->
-            <div class="slider-container" id="carSlider">
+
+            <div class="slider-container">
 
                 @if (!Model.Any())
                 {
@@ -38,8 +42,7 @@
 
                 else
                 {
-                    <div class="view-car-cars-slider"
-                         id="discoverSlider">
+                    <div class="view-car-cars-slider" id="carSlider">
 
                         @foreach (Vehicle car in Model)
                         {
@@ -72,17 +75,14 @@
                                     <!-- ACTION BUTTONS -->
                                     <div class="view-car-card-actions">
 
-                                        
-                                        
-                                            <a href="/Owner/EditMyCar?vehicleId=@car.VehicleId" class="view-car-btn-edit">
-                                                Edit
-                                            </a>
+                                        <a href="/Owner/EditMyCar?vehicleId=@car.VehicleId" class="view-car-btn-edit">
+                                            Edit
+                                        </a>
 
-
-                                            <form method="post" action="/Owner/DeleteCar">
-                                                <input type="hidden" name="vehicleId" value="@car.VehicleId" />
-                                                <button type="submit" class="view-car-btn-delete">Delete</button>
-                                            </form>
+                                        <form method="post" action="/Owner/DeleteCar">
+                                            <input type="hidden" name="vehicleId" value="@car.VehicleId" />
+                                            <button type="submit" class="view-car-btn-delete">Delete</button>
+                                        </form>
                                         
                                     </div>
 
@@ -101,7 +101,21 @@
 
     </div>
 
+    <script>
+        function scrollSlider(direction) {
+            const slider = document.getElementById('carSlider');
+            const scrollAmount = 305;
+
+            slider.scrollBy({
+                left: direction * scrollAmount
+            });
+        }
+    </script>
+
 </div>
+
+
+
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
@@ -177,18 +191,6 @@
     });
     });
 
-    // SLIDER
-    const slider = document.getElementById("discoverSlider");
-
-    document.getElementById("slideLeft")
-    .addEventListener("click", () => {
-
-    slider.scrollBy({
-    left: -350,
-    behavior: "smooth"
-    });
-
-    });
 
     document.getElementById("slideRight")
     .addEventListener("click", () => {

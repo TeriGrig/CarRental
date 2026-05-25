@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using CarRental.ViewModels;
 using System.Globalization;
+using NuGet.Packaging.Signing;
 
 namespace CarRental.Controllers
 {
@@ -41,7 +42,7 @@ namespace CarRental.Controllers
                 //ρεντερ και οουνερ μαζι 
                 var renter = _context.Renters
                     .Include(r => r.User)  //ινκλιουντ για να φέρουμε τα στοιχεία του χρήστη
-                    .FirstOrDefault(r => r.UserId == userId);
+                    .FirstOrDefault(r => r.UserId == userId && !r.User.IsDeleted);
 
                 if (renter == null) return NotFound();
 
@@ -51,7 +52,7 @@ namespace CarRental.Controllers
             {
                 var owner = _context.Owners
                     .Include(o => o.User)
-                    .FirstOrDefault(o => o.UserId == userId);
+                    .FirstOrDefault(o => o.UserId == userId && !o.User.IsDeleted);
 
                 if (owner == null) return NotFound();
 
@@ -88,7 +89,6 @@ namespace CarRental.Controllers
 
             return NotFound();
 
-
         }
 
 
@@ -106,12 +106,6 @@ namespace CarRental.Controllers
             user.PhoneNumber = PhoneNumber;
 
             var emailExists = await _userManager.Users.AnyAsync(u => u.Email == Email && u.Id != userId);
-
-            //if (emailExists)
-            //{
-            //    ModelState.AddModelError("Email", "This email is already in use.");
-            //    return View(user);
-            //}
 
             if (emailExists)
             {
@@ -183,6 +177,55 @@ namespace CarRental.Controllers
         }
 
         [HttpGet]
+        public IActionResult DeleteUser()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var user = _context.Users
+                .FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+                return NotFound();
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteUserConfirmed()
+        {
+            var userId = _userManager.GetUserId(User);
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) return NotFound();
+
+            user.IsDeleted = true;
+
+            if (User.IsInRole("Owner"))
+            {
+                var owner = _context.Owners
+                    .Include(o => o.User)
+                    .FirstOrDefault(o => o.UserId == userId);
+                if (owner == null) return NotFound();
+
+                var vehicles = _context.Vehicles.Where(v => v.OwnerID == owner.Id && !v.IsDeleted);
+
+                foreach (var v in vehicles)
+                {
+                    var result = new OwnerController(_context).DeleteCar(v.VehicleId);
+                }
+            }
+
+            await _userManager.UpdateAsync(user);
+
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
+
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> BookingNotifications()
 
         {
@@ -245,10 +288,10 @@ namespace CarRental.Controllers
              .ToListAsync();
             ViewBag.Reviews = reviews;
 
-            var renter = await _context.Renters.Include(r => r.User).FirstOrDefaultAsync(r => r.UserId == userId);
+            var renter = await _context.Renters.Include(r => r.User).FirstOrDefaultAsync(r => r.UserId == userId && !r.User.IsDeleted);
             if (renter != null) return View("OpenUsersProfile", renter);
 
-            var owner = await _context.Owners.Include(o => o.User).FirstOrDefaultAsync(o => o.UserId == userId);
+            var owner = await _context.Owners.Include(o => o.User).FirstOrDefaultAsync(o => o.UserId == userId && !o.User.IsDeleted);
             if (owner != null) return View("OpenUsersProfile", owner);
 
             return NotFound();

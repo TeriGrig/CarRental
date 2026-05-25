@@ -79,8 +79,6 @@ namespace CarRental.Controllers
                 Cubic = model.Cubic ?? 0,
                 Year = model.Year ?? 0,
                 PricePerDay = model.PricePerDay ?? 0,
-                //Latitude = (model.Latitude >= -90 && model.Latitude <= 90) ? model.Latitude : 0,
-                //Longitude = (model.Longitude >= -180 && model.Longitude <= 180) ? model.Longitude : 0,
                 Latitude = model.Latitude,
                 Longitude = model.Longitude,
                 Comments = model.Comments ?? "",
@@ -129,9 +127,17 @@ namespace CarRental.Controllers
                 return NotFound();
             }
 
-            if (!vehicle.Availability)
+            var activeBookings = _context.Bookings
+                .Where(b =>
+                    b.VehicleId == vehicle.VehicleId &&
+                    (b.Status == "Accepted"
+                    || b.Status == "Requested") 
+                    && b.EndDate >= DateTime.Now)
+                .ToList();
+
+            if (activeBookings.Count() > 0)
             {
-                ModelState.AddModelError("", "Car is already booked!");
+                ModelState.AddModelError("", "Car is already booked or requested!");
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -173,11 +179,34 @@ namespace CarRental.Controllers
         public IActionResult EditMyCar(int vehicleId)
         {
             var vehicle = _context.Vehicles.FirstOrDefault(v => v.VehicleId == vehicleId);
+
+            var activeBookings = _context.Bookings
+               .Where(b =>
+                   b.VehicleId == vehicle.VehicleId &&
+                   (b.Status == "Accepted"
+                   || b.Status == "Requested")
+                   && b.EndDate >= DateTime.Now)
+               .ToList();
+
+            if (activeBookings.Count() > 0)
+            {
+                ModelState.AddModelError("", "Car is already booked or requested!");
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var owner = _context.Owners.FirstOrDefault(o => o.UserId == userId);
+
+                var vehicles = _context.Vehicles
+                    .Where(v => v.OwnerID == owner.Id && !v.IsDeleted)
+                    .ToList();
+
+                return View("ViewMyCar", vehicles);
+            }
+
             if (vehicle == null)
             {
                 return NotFound();
             }
-
 
             var model = new AddVehicleViewModel
             {
@@ -200,6 +229,7 @@ namespace CarRental.Controllers
         public async Task<IActionResult> EditMyCar(int vehicleId, [Bind(Prefix = "")] AddVehicleViewModel model)
         {
             var vehicle = _context.Vehicles.FirstOrDefault(v => v.VehicleId == vehicleId);
+
             if (vehicle == null)
             {
                 return NotFound();
@@ -220,6 +250,7 @@ namespace CarRental.Controllers
             vehicle.Latitude = model.Latitude;
             vehicle.Longitude = model.Longitude;
             vehicle.Availability = model.IsAvailable;
+
             if (model.ImageFile != null && model.ImageFile.Length > 0)
             {
                 string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
