@@ -93,10 +93,6 @@ namespace CarRental.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
-
-
-
         //[Authorize]
         [Authorize(Roles = "Owner")]
         [HttpGet]
