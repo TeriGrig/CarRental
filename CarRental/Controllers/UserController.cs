@@ -200,6 +200,11 @@ namespace CarRental.Controllers
             if (user == null) return NotFound();
 
             user.IsDeleted = true;
+            user.Email = null;
+            user.NormalizedEmail = null;
+            user.UserName = $"deleted_{user.Id}";
+            user.NormalizedUserName = user.UserName.ToUpper();
+            user.PhoneNumber = null;
 
             if (User.IsInRole("Owner"))
             {
