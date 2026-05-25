@@ -159,6 +159,33 @@ namespace CarRental.Areas.Identity.Pages.Account
                 }
             }
 
+            var existingEmail = await _userManager.Users
+                .FirstOrDefaultAsync(u =>
+                u.Email == Input.Email &&
+                !u.IsDeleted);
+
+            if (existingEmail != null)
+            {
+                ModelState.AddModelError("Input.Email",
+                    "Email already exists.");
+            }
+
+            var existingPhone = await _userManager.Users
+                .FirstOrDefaultAsync(u =>
+                    u.PhoneNumber == Input.PhoneNumber &&
+                    !u.IsDeleted);
+
+            if (existingPhone != null)
+            {
+                ModelState.AddModelError("Input.PhoneNumber",
+                    "Phone number already exists.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
             var user = CreateUser();
 
             user.UserName = Input.FirstName;
@@ -167,14 +194,6 @@ namespace CarRental.Areas.Identity.Pages.Account
             user.FirstName = Input.FirstName;
             user.LastName = Input.LastName;
             user.PhoneNumber = Input.PhoneNumber;
-
-            var phoneExists = await _userManager.Users.AnyAsync(u => u.PhoneNumber != null && u.PhoneNumber == Input.PhoneNumber);
-
-            if (phoneExists)
-            {
-                ModelState.AddModelError("Input.PhoneNumber", "This phone number is already in use.");
-                return Page();
-            }
 
             var result = await _userManager.CreateAsync(user, Input.Password);
 

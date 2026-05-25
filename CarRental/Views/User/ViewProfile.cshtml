@@ -28,6 +28,16 @@
                 <a asp-controller="Owner" asp-action="ViewMyCar">Manage My Cars</a>            
                 }
 
+                        <form asp-controller="User"
+                              asp-action="DeleteUserConfirmed"
+                              method="post"
+                              onsubmit="return confirm('Are you sure you want to delete your account?');">
+
+                            <button type="submit" class="danger-btn">
+                                Delete profile
+                            </button>
+
+                        </form>
 
             </nav>
 
@@ -52,18 +62,14 @@
         </section>
    
 
-
-
     <!-- account analytics -->
-    <section class="account-analytics-section">
+        <section class="account-analytics-section">
 
         <h3>Account Analytics</h3>
 
-        
-
         </section>
     </div><hr />
-    <!-- reviws -->
+    <!-- reviews -->
     <div class="reviews-column">
     <section class="reviews-section" ">
     <h3>My Reviews</h3>
