@@ -685,8 +685,8 @@ label {
 
 .cars-book-map-layout {
     display: block;
+    height: auto;
     margin-top: 25px;
-    height: auto; 
 }
 .calendar-filter {
     background-color: #f8f9fa;
