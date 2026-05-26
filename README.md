@@ -40,5 +40,14 @@ TO MERGE EACH DEVELOPER'S CHANGE RUN ON GITHUB:
 
 \-> Click the banner on GitHub saying: Compare \& pull request
 
-\-> The banner above merges your branch to main 
+\-> The banner above merges your branch to main
+
+
+
+
+\---------------- For branch creation ----------------
+
+\-> git checkout -b branchName
+
+\-> git push -u origin branchName
 
