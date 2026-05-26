@@ -45,9 +45,16 @@ TO MERGE EACH DEVELOPER'S CHANGE RUN ON GITHUB:
 
 
 
+
 \---------------- For branch creation ----------------
 
 \-> git checkout -b branchName
 
 \-> git push -u origin branchName
+
+
+
+\---------------- For project cloning ----------------
+
+\-> git clone https://github.com/TeriGrig/CarRental.git
 
