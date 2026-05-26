@@ -1,0 +1,1184 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+    text-align: start;
+}
+
+
+body {
+    background-color: #8a9db5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1e293b;
+    margin: 0;
+    padding-bottom: 50px;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+input[type="email"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #ffffff;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+button, .btn-custom {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ffb500;
+}
+
+label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+
+.form-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.login-page-layout {
+    align-content: center;
+}
+
+.login-form {
+    background: white;
+    border-radius: 10px;
+}
+/*/------------------------------------------LOGIN PAGE--------------------------------*/
+.form-group {
+    width: 100%;
+    display: block;
+    justify-content: center;
+}
+
+
+.register-form-wrapper {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+    .register-form-wrapper h2 {
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 24px;
+        color: #0f172a;
+    }
+
+  
+    .register-form-wrapper hr {
+        border: none;
+        border-top: 1px solid #e5e7eb;
+        margin-bottom: 20px;
+    }
+
+    
+    .register-form-wrapper label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    
+    .register-form-wrapper .form-control {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        transition: 0.2s ease;
+        box-sizing: border-box;
+    }
+
+        .register-form-wrapper .form-control:focus {
+            border-color: #ffb500;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255,181,0,0.15);
+        }
+
+/* LOGIN BUTTON */
+#login-submit {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+    #login-submit:hover {
+        transform: translateY(-1px);
+    }
+
+
+.login-links {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 50px;
+    margin-top: 10px;
+}
+
+    /* LINKS */
+
+    .login-links a {
+        text-decoration: none;
+        color: #2563eb;
+        font-size: 14px;
+        transition: 0.2s ease;
+    }
+
+        .login-links a:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+
+
+.register-form-wrapper label input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.text-danger {
+    font-size: 12px;
+}
+/***-----------------------ReGISTER*/
+
+.register-form-wrapper {
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+
+#registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+    
+    #registerForm .form-control {
+        border-radius: 8px;
+    }
+
+    #registerForm h2 {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+/*--------------VIEW mY CARS---------------------*/
+
+
+.view-car-page {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+
+.view-car-title {
+    font-size: 34px;
+    margin-bottom: 20px;
+}
+
+
+
+.view-car-map {
+    width: 100%;
+    height: 460px;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+
+
+.view-car-slider-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+
+.view-car-slider-btn {
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    cursor: pointer;
+    font-size: 24px;
+    transition: 0.2s ease;
+    flex-shrink: 0;
+}
+
+    .view-car-slider-btn:hover {
+        transform: scale(1.08);
+    }
+
+
+.view-car-cars-wrapper {
+    overflow: hidden;
+    width: 100%;
+}
+
+
+.view-car-cars-slider {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 5px 15px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+    .view-car-cars-slider::-webkit-scrollbar {
+        display: none;
+    }
+
+
+.view-car-car-card {
+    min-width: 300px;
+    max-width: 300px;
+    max-height: 410px;
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+    .view-car-car-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.15);
+    }
+
+
+.view-car-car-image {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
+
+
+.view-car-car-content {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+.view-car-car-info h3 {
+    margin-bottom: 12px;
+    font-size: 22px;
+}
+
+.view-car-car-info p {
+    margin: 6px 0;
+    color: #444;
+}
+
+
+.view-car-card-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+}
+
+
+.view-car-btn-edit {
+    border: none;
+    background: #ffb500;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+}
+
+
+.view-car-btn-delete {
+    border: none;
+    background: #e74c3c;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+
+.view-car-empty {
+    padding: 40px;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+/**-------------------------------------*/
+
+.view-cars-map-layout {
+    align-content: center;
+}
+
+.view-cars-map {
+    height: 200px;
+    width: 200px;
+}
+
+.cars-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.car-card {
+    background-color: white;
+    width: 280px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.car-card-body {
+    padding: 20px 25px;
+    text-align: left;
+}
+
+.car-card-img img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.btn-edit {
+    display: block;
+    text-align: center;
+    background: #ffb500;
+    color: white;
+    padding: 10px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-view {
+    display: block;
+    text-align: center;
+    background: #251F3D;
+    color: white;
+    padding: 10px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-delete {
+    width: 100%;
+    background: red;
+    color: white;
+    padding: 10px 0;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.car-card-actions {
+    padding: 0 25px 25px 25px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+
+
+    /*   το link και το form να μοιραστούν τον χώρο 50-50 */
+    .car-card-actions class,
+    .car-card-actions a,
+    .car-card-actions form {
+        flex: 1;
+    }
+
+
+/*  WELCOME PAGE*/
+.index {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.start-section {
+    background-color: #251F3D;
+    width: 100vw; /* Αναγκάζει το div να πιάσει το 100% του πλάτους της οθόνης */
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    margin-top: -24px;
+}
+
+    .start-section h1 {
+        font-size: 52px;
+        color: white;
+        margin-bottom: 15px;
+        letter-spacing: -1px;
+        border-bottom: 2px solid #ffb500;
+    }
+
+    .start-section p {
+        font-size: 19px;
+        color: white;
+        max-width: 700px;
+        margin: 0 auto 30px auto;
+        line-height: 1.6;
+    }
+
+/* Ευθυγράμμιση του slider και των κουμπιών */
+.slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 40px; /* Χώρος δεξιά-αριστερά για να πατάνε τα βελάκια */
+}
+
+/* ΟΡΙΖΟΝΤΙΑ ΟΙ ΚΑΡΤΕΣ*/
+.slider-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto; /*οριζόντιο σκρολάρισμα */
+    scroll-behavior: smooth;
+    gap: 25px;
+    padding: 20px 5px;
+    width: 100%;
+    scrollbar-width: none;
+}
+
+
+    .slider-container::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    .slider-container .car-card {
+        flex: 0 0 280px; /* Δεν επιτρέπει στην κάρτα να αλλάξει μέγεθος */
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+/*ΓΙΑ ΤΑ ΒΕΛΑΚΙΑ */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #211066;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+    .slider-btn:hover {
+        background-color: #2563eb; /* Γίνεται μπλε στο hover */
+    }
+
+/* Τοποθέτηση στα άκρα */
+.prev-btn {
+    left: 0;
+}
+
+.next-btn {
+    right: 0;
+}
+
+
+
+
+/*
+    PRIVACY POLICY
+
+*/
+.text-privacy {
+    font-size: 20px;
+    color: #251F3D;
+}
+
+
+.header-privacy {
+    font-size: 30px;
+    color: #251F3D;
+    border-bottom: 2px solid #251F3D;
+}
+
+
+
+
+
+/*BOOKINGS*/
+.my-bookings {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+
+.bookings-column {
+    flex: 1;
+}
+
+
+.booking-section {
+    height: 80vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+    /* OPTIONAL: nicer scroll */
+    .booking-section::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .booking-section::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+
+    .booking-section::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+.no-bookings-message {
+    text-align: center;
+    padding-top: 100px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* EXISTING CARDS */
+
+.booking-card {
+    border: 1px solid #d1d5db;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background-color: #f9fafb;
+}
+
+.archived {
+    opacity: 0.6;
+}
+
+
+/* ---------------------shhhow cars----------------------------------------------- */
+
+.cars-book-map-layout {
+    display: block;
+    margin-top: 25px;
+    height: auto; 
+}
+.calendar-filter {
+    background-color: #f8f9fa;
+    border: 1px solid #e3e6ec;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+}
+
+.calendar-filter-title h2 {
+    font-size: 26px;
+    color: #251F3D;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.calendar-filter h4 {
+    margin-bottom:30px;
+}
+
+.calendar-filter .filters {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    gap: 15px;
+    width: 100%;
+}
+
+.start-filters, .end-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+
+    .start-filters input, .end-filters input {
+        display: inline-block;
+    }
+
+.start-filters, .end-filters {
+    position: relative;
+}
+
+.calendar-filter .filters > div {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+    .calendar-filter .filters > div label {
+        grid-column: span 2;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+.calendar-filter input[type="date"],
+.calendar-filter input[type="time"] {
+    width: 100%;
+    height: 50px;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #333;
+    background-color: #fff;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+    .calendar-filter input[type="date"]:focus,
+    .calendar-filter input[type="time"]:focus {
+        border-color: #251F3D;
+        box-shadow: 0 0 0 3px rgba(37, 31, 61, 0.1);
+    }
+
+.calendar-filter .show-car-btn {
+    background-color: #251F3D;
+    color: white;
+    border: none;
+    padding: 0 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    height: 43px;
+    align-self: flex-end;
+    margin-bottom: 20px;
+}
+
+    .calendar-filter .show-car-btn:hover {
+        background-color: #383057;
+    }
+
+    .calendar-filter .show-car-btn:active {
+        transform: scale(0.98);
+    }
+
+.cars-book-map, .car-list {
+    display: inline-flex;
+    vertical-align: top;
+}
+/* LEFT SIDE MAP */
+
+#map.cars-book-map {
+    width: 48%;
+    height: 700px; 
+    float: left;
+    margin-right: 2%;
+    border-radius:10px;
+
+
+}
+
+    .cars-book-map-layout::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+/* RIGHT SIDE LIST */
+
+.car-list {
+    width: 50%;
+    float: left;
+    height: 700px; 
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+    
+    .car-list::-webkit-scrollbar {
+        display: none; 
+    }
+
+
+.car-list-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform .2s, box-shadow .2s;
+    flex: 0 0 auto;
+    width: 100%;
+    min-height: 150px;
+}
+
+    .car-list-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+
+.car-list-image {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+}
+
+
+.car-list-body {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.car-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.car-actions {
+    margin-left: auto;
+}
+
+.show-car-btn {
+    background-color: #ffb500;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+/* BOOK CAR PAGE */
+
+.book-page-layout {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 30px;
+}
+
+
+
+.book-car-section {
+    width: 60%;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+
+.book-car-image {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+
+
+.book-car-info {
+    margin-bottom: 20px;
+}
+
+
+
+.book-car-map {
+    width: 100%;
+    height: 300px;
+    min-height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+.booking-form-section {
+    width: 40%;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+}
+/*/--------------------------------PROFILE PAGE -----------------------------*/
+.profile-page-layout {
+    display: flex;
+    gap: 35px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+/* LEFT COLUMN */
+
+.profile-column {
+    flex: 1;
+}
+/* RIGHT COLUMN */
+
+.reviews-column {
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+
+    .reviews-column hr {
+        display: none;
+    }
+
+
+.reviews-section,
+.leave-review-section {
+    width: 100%;
+}
+/* PERSONAL INFO CARD */
+
+.profile-personal-info-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+    .profile-personal-info-card h3 {
+        margin-bottom: 25px;
+    }
+
+.profile-links a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+    .profile-links a:hover {
+        text-decoration: underline;
+    }
+
+.delete-user-btn {
+    background: white;
+    color: red;
+    font-weight: 500;
+}
+    .delete-user-btn:hover {
+        text-decoration: underline;
+    }
+
+
+.profile-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 220px;
+    text-align: center;
+}
+
+
+.profile-picture-img {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e5e7eb;
+}
+
+
+.owner-badge {
+    margin-top: 15px;
+}
+
+    .owner-badge h4 {
+        margin-bottom: 5px;
+        font-size: 22px;
+        color: #111827;
+    }
+
+    .owner-badge p {
+        color: #6b7280;
+        font-size: 15px;
+    }
+
+
+.personal-info {
+    flex: 1;
+    font-size: 18px;
+}
+
+    .personal-info p {
+        margin-bottom: 14px;
+    }
+
+    .personal-info h4 {
+        margin-top: 25px;
+        margin-bottom: 12px;
+        color: #111827;
+    }
+/* REVIEWS SECTION */
+
+.reviews-section,
+.leave-review-section {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+    .reviews-section h3,
+    .leave-review-section h3 {
+        margin-bottom: 20px;
+    }
+/* REVIEWS */
+
+.reviews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 730px;
+    width: 400px;
+    overflow-y: auto;
+}
+
+.review-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 18px 22px;
+    border: 1px solid #e5e7eb;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.review-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #222;
+}
+
+.review-rating {
+    background-color: #5d749f;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.review-comment {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4b5563;
+    margin-top: 10px;
+}
+/* FORM */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+.form-control {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 15px;
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: #5d749f;
+    }
+
+
+
+.submit-review-btn {
+    background-color: #5d749f;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+    .submit-review-btn:hover {
+        background-color: #4b5f84;
+    }
+
+
+.account-analytics-section {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    height: 390px;
+}
+
+    .account-analytics-section h3 {
+        margin-bottom: 20px;
+    }

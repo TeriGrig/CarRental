@@ -1,0 +1,135 @@
+﻿@model CarRental.ViewModels.AddVehicleViewModel
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<div>
+
+    <h3> Please put your vehicle's details in the form below</h3>
+</div>
+
+
+<form asp-action="AddCar" method="post" enctype="multipart/form-data">
+    <div class="form-container">
+    <div class="form-group">
+
+        <label asp-for="Make"></label>
+
+        <input asp-for="Make" class="form-control" list="carMakes" />
+
+        <datalist id="carMakes">
+            <option value="Audi"></option>
+            <option value="Mercedes"></option>
+            <option value="BMW"></option>
+            <option value="Toyota"></option>
+            <option value="Ford"></option>
+            <option value="Volkswagen"></option>
+        </datalist>
+
+        <span asp-validation-for="Make" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Model</label>
+        <input asp-for="Model" class="form-control" type="text" />
+        <span asp-validation-for="Model"></span>
+    </div>
+
+    <div>
+        <label>Cubic</label>
+        <input asp-for="Cubic" type="number" class="form-control" />
+    </div>
+
+    <div>
+        <label>Year</label>
+        <input asp-for="Year" type="number" class="form-control" />
+    </div>
+
+    <div>
+        <label>Price per Day</label>
+        <input asp-for="PricePerDay" type="number" class="form-control" />
+    </div>
+
+    <div>
+        <label>Select Vehicle Location</label>
+
+        <div id="map"
+             style="height:400px; margin-bottom:20px;">
+        </div>
+    </div>
+
+    <div>
+        <label>Comments</label>
+        <textarea asp-for="Comments" class="form-control"></textarea>
+        <span asp-validation-for="Comments"></span>
+    </div>
+
+    <div>
+        <label>Image</label>
+        <input asp-for="ImageFile" type="file" />
+        <span asp-validation-for="ImageFile"></span>
+    </div>
+
+    <div>
+        <label>Available for Rent</label>
+        <input asp-for="IsAvailable" type="checkbox"></>
+        <span asp-validation-for="IsAvailable"></span>
+    </div>
+  
+    @* For choosing the car on the map *@
+    <input asp-for="Latitude" type="hidden" id="Latitude" />
+    <input asp-for="Longitude" type="hidden" id="Longitude" />
+
+    <button type="submit">Submit</button>
+
+</form>
+</div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    var selectedLat = null;
+    var selectedLng = null;
+    
+    // Create map
+    var map = L.map('map').setView([37.9838, 23.7275], 7);
+    
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+    
+    var marker;
+    
+    map.on('click', function (e) {
+    
+    var lat = e.latlng.lat;
+    var lng = e.latlng.lng;
+    
+    if (marker) {
+    map.removeLayer(marker);
+    }
+    
+    marker = L.marker([lat, lng]).addTo(map);
+    
+    // IMPORTANT FIX
+    document.getElementById('Latitude').value = lat.toFixed(6);
+    
+    document.getElementById('Longitude').value = lng.toFixed(6);
+    
+    console.log(
+    document.getElementById('Latitude').value,
+    document.getElementById('Longitude').value
+    );
+    });
+    
+    // 🔥 BLOCK FORM IF NO COORDS
+    document.querySelector("form").addEventListener("submit", function (e) {
+    
+        if (selectedLat === null || selectedLng === null) {
+            e.preventDefault();
+            alert("Please select a location on the map!");
+            return;
+        }
+    
+        document.getElementById('Latitude').value = selectedLat;
+        document.getElementById('Longitude').value = selectedLng;
+    });
+</script>

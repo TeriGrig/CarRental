@@ -1,0 +1,230 @@
+﻿@using System.Security.Claims
+@using CarRental.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CarRental</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CarRental.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CarRental</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                       
+                            <ul class="navbar-nav flex-grow-1">
+                                @if (!User.IsInRole("Renter") && !User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Owner" asp-action="AddCar">Add a Car</a>
+                                    </li>
+                                    @if (User.IsInRole("Owner"))
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" asp-controller="Owner" asp-action="ViewMyCar">View My Cars</a>
+                                        </li>
+                                    }
+                                }
+                                @if (!User.IsInRole("Owner") && !User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Renter" asp-action="ShowCars">Book a car</a>
+                                    </li>
+                                }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="User" asp-action="MyBookings">MyBookings</a>
+                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                </li>
+
+                            </ul>
+                            <ul class="navbar-nav">
+
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                
+                                <li class="nav-item">
+                                    @{
+                                        var currentUser = await UserManager.GetUserAsync(User);
+                                    }
+
+                                    <a class="nav-link text-dark" title="Manage">
+                                        Hello @(currentUser?.FirstName ?? currentUser?.Email)!
+                                    </a>
+                                </li>
+                                    @if (User.IsInRole("Owner") || User.IsInRole("Renter"))
+                                    {
+                                    
+                                        
+                                        <li class="nav-item" style="position: relative;">
+                                  
+                                            <button class="nav-link text-dark btn btn-link" onclick="onClickNotification()">
+                                             <img id="notificationIcon" src="/images/notification-icon-off.png" width="27" />
+                                             </button>
+
+                                            <div id="notificationBox"
+                                             style="display:none; position:absolute; right:0; top:100%; width:300px; background:  white ; z-index: 9999; border:1px solid gray; padding:10px; max-height:300px; overflow-y:auto;">
+                        
+                                                @if (User.IsInRole("Owner"))
+                                                {
+                                                    <h4 style="color:black;">Booking Requests</h4>
+                                                }
+                                                else
+                                                {
+
+                                                    <h4 style="color:black;">Booking Status</h4>
+                                                }
+                        
+                                                <div id="notificationsContent"></div>
+                                            </div>
+                                        </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="User" asp-action="ViewProfile"><img id="accountIcon" src="/images/account-icon.png" width="27" /></a>
+                                    </li>
+
+
+                                    }
+                                }
+                                <partial name="_LoginPartial" />
+                            </ul>
+                        </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+            <footer class="border-top footer text-muted" style="background-color: white !important;">
+        <div class="container">
+            &copy; 2026 - CarRental - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+            function onClickNotification() {
+                var notification = document.getElementById("notificationBox");
+                if (notification.style.display === "none" || notification.style.display === "") {
+                    notification.style.display = "block";
+                    loadNotifications();
+                } else {
+                    notification.style.display = "none";
+                }
+            }
+
+                                function loadNotifications() {
+
+                        var isOwner = @(User.IsInRole("Owner") ? "true" : "false");
+                        var isRenter = @(User.IsInRole("Renter") ? "true" : "false");
+
+                        $.ajax({
+                            url: '/User/BookingNotifications',
+                            method: 'GET',
+                            success: function (bookings) {
+
+                                var notificationsContent = $('#notificationsContent');
+                                notificationsContent.empty();
+
+                                // CHANGE ICON HERE
+                                var icon = document.getElementById("notificationIcon");
+
+                                if (bookings.length > 0) {
+                                    icon.src = "/images/notification-icon-on.png";
+                                } else {
+                                    icon.src = "/images/notification-icon-off.png";
+                                }
+
+                                if (bookings.length === 0) {
+                                    var emptyMsg = isOwner ? "No new requests." : "No status updates.";
+
+                                    notificationsContent.append(
+                                        '<p style="color:black; padding:10px;">' + emptyMsg + '</p>'
+                                    );
+
+                                    return;
+                                }
+
+                                bookings.forEach(function (item) {
+
+                                    var html =
+                                        '<div style="border-bottom:1px solid black; padding:10px; color:black;">' +
+                                        '<div>' + item.message + '</div>';
+
+                                    if (item.profileUrl) {
+                                        html +=
+                                            '<div style="margin-top:5px;">' +
+                                            '<a href="' + item.profileUrl + '" style="color:#3498db; text-decoration:underline; font-size:smaller;">View User Profile</a>' +
+                                            '</div>';
+                                    }
+
+                                    if (isOwner) {
+                                        html +=
+                                            '<div style="margin-top:5px;">' +
+                                            '<button onclick="respondToBooking(' + item.id + ', \'Accepted\')" style="background:green; color:white; border:none; margin-right:5px; cursor:pointer;">Accept</button>' +
+                                            '<button onclick="respondToBooking(' + item.id + ', \'Rejected\')" style="background:red; color:white; border:none; cursor:pointer;">Reject</button>' +
+                                            '</div>';
+                                    }
+
+                                    html += '</div>';
+
+                                    notificationsContent.append(html);
+                                });
+                            },
+
+                            error: function () {
+                                console.log('Failed to load notifications.');
+                            }
+                        });
+                    }
+           
+            
+            function respondToBooking(id, statusValue) {
+            $.ajax({
+                url: '/Owner/UpdateBookingStatus',
+                method: 'POST', 
+                data: {
+                    bookingId: id,
+                    Status: statusValue 
+                },
+                success: function (response) {
+                    if (response.success) {
+                        loadNotifications(); 
+                    }
+                },
+                error: function () {
+                    alert('Failed to respond to booking.');
+                }
+            });
+          
+
+
+
+            }
+
+                    setInterval(loadNotifications, 1000);
+
+    </script>
+</body>
+</html>

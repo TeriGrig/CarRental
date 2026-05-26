@@ -1,0 +1,107 @@
+﻿<div class="profile-page-layout">
+
+    
+    <div class="profile-column">
+
+        <section class="profile-personal-info-card">
+            <h3>Personal Information</h3>
+            <!-- LEFT COLUMN -->
+            <div class="profile-content">
+
+                <div class="profile-left">
+                    <img class="profile-picture-img" src="/images/profile-picture.png" />
+
+                    @if (Model is Owner)
+                    {
+                        <div class="owner-badge">
+                            <h4>Owner Profile</h4>
+                            <p>Verified Car Provider</p>
+                        </div>
+                    }
+                </div>
+
+                <div class="personal-info">
+                    <p>First Name: @Model.User.FirstName</p>
+                    <p>Last Name: @Model.User.LastName</p>
+                    <p>Email: @Model.User.Email</p>
+                    <p>Phone: @Model.User.PhoneNumber</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- LEAVE REVIEW MUST STAY HERE -->
+        <section class="leave-review-section">
+
+            <h3>Leave a Review</h3>
+
+            <form asp-controller="Reviews"
+                  asp-action="AddReview"
+                  method="post">
+
+                <input type="hidden" name="recipientId" value="@Model.User.Id" />
+
+                <div class="form-group">
+                    <label>Rating (1-5)</label>
+                    <input type="number" name="rating" min="1" max="5" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Your Comment</label>
+                    <textarea name="comment" class="form-control" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="submit-review-btn">
+                    Submit Review
+                </button>
+
+            </form>
+
+        </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="reviews-column">
+
+        <section class="reviews-section">
+
+            <h3>Reviews</h3>
+
+            @if (ViewBag.Reviews != null)
+            {
+                <div class="reviews-container">
+
+                    @foreach (var reviewItem in ViewBag.Reviews)
+                    {
+                        <div class="review-card">
+
+                            <div class="review-header">
+                                <div class="review-name">
+                                    @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
+                                </div>
+
+                                <div class="review-rating">
+                                    ⭐ @reviewItem.Rating/5
+                                </div>
+                            </div>
+
+                            <div class="review-comment">
+                                @reviewItem.Comment
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <p>No reviews yet.</p>
+            }
+
+        </section>
+
+    </div>
+
+</div>

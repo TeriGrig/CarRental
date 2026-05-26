@@ -1,0 +1,130 @@
+﻿@model CarRental.Models.Vehicle
+
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<h2>Book Car</h2>
+
+<div class="book-page-layout">
+
+    
+    <div class="book-car-section">
+
+        <h3>
+            @Model.Make @Model.Model from
+            <a asp-controller="User"
+                   asp-action="OpenUsersProfile"
+                   asp-route-userId="@Model.Owner.UserId">
+
+                @Model.Owner.User.FirstName
+                @Model.Owner.User.LastName
+            </a>
+        </h3>
+
+        <img src="@Model.Image" class="book-car-image" />
+
+        <div class="book-car-info">
+            <p>
+                <b>Year:</b> @Model.Year<br>
+
+                <b>Cubic:</b> @Model.Cubic<br>
+
+                <b>Price/Day:</b>
+                @Model.PricePerDay €<br>
+
+                <b>Comments:</b>
+                @Model.Comments
+            </p>
+        </div>
+
+        
+        <div id="bookCarMap" class="book-car-map">
+            <button id="resetMapBtn"
+                    style="position:absolute; bottom:10px; left:10px; z-index:1000;
+                background:white; border:1px solid #ccc;
+                padding:6px 10px; border-radius:6px; cursor:pointer;">
+                Reset Map
+            </button>
+        </div>
+
+    </div>
+
+    <div class="booking-form-section">
+
+        <form method="post"
+              action="/Renter/CreateBooking">
+
+            <input type="hidden"
+                   name="vehicleId"
+                   value="@Model.VehicleId" />
+
+            <div>
+                <label>Start Date</label>
+
+                <input type="date"
+                       name="startDate"
+                       required />
+            </div>
+
+            <div>
+                <label>End Date</label>
+
+                <input type="date"
+                       name="endDate"
+                       required />
+            </div>
+
+            <button type="submit"
+                    class="show-car-btn">
+                Request Booking
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+    var lat = @Model.Latitude;
+    var lng = @Model.Longitude;
+
+    if (lat !== 0 && lng !== 0) {
+
+    var map = L.map('bookCarMap')
+    .setView([lat, lng], 13);
+
+    L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+    }
+    ).addTo(map);
+
+    L.marker([lat, lng])
+    .addTo(map)
+    .bindPopup(`
+    <b>@Model.Make @Model.Model</b>
+    `)
+    .openPopup();
+
+    document.getElementById("resetMapBtn").addEventListener("click", function () {
+    map.flyTo([37.9838, 23.7275], 7, {
+    animate: true,
+    duration: 1.2
+    });
+    });
+
+    setTimeout(() => {
+    map.invalidateSize();
+    }, 100);
+    }
+    });
+
+</script>

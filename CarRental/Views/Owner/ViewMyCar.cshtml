@@ -1,0 +1,206 @@
+﻿@model List<CarRental.Models.Vehicle>
+
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<link rel="stylesheet" href="~/css/view-car-cars.css" />
+
+<h2 class="view-car-title">Manage Cars</h2>
+
+
+
+<div class="view-car-page">
+
+    <!-- MAP -->
+    <div id="discoverMap" class="view-car-map">
+        <button id="resetMapBtn"
+                style="position:absolute; bottom:10px; left:10px; z-index:1000;
+            background:white; border:1px solid #ccc;
+            padding:6px 10px; border-radius:6px; cursor:pointer;">
+            Reset Map
+        </button>
+    </div>
+
+    <!-- SLIDER SECTION -->
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="view-car-slider-section">
+
+        <!-- LEFT ARROW -->
+        <div class="slider-wrapper">
+            <button class="slider-btn prev-btn" onclick="scrollSlider(-1)">&#10094;</button>
+
+            <!-- CARS -->
+
+            <div class="slider-container">
+
+                @if (!Model.Any())
+                {
+                    <div class="view-car-empty">
+                        No cars found.
+                    </div>
+                }
+
+                else
+                {
+                    <div class="view-car-cars-slider" id="carSlider">
+
+                        @foreach (Vehicle car in Model)
+                        {
+                            <div class="view-car-car-card"
+                                 data-id="@car.VehicleId">
+
+                                <img src="@car.Image"
+                                     class="view-car-car-image" />
+
+                                <div class="view-car-car-content">
+
+                                    <div class="view-car-car-info">
+
+                                        <h3>@car.Make @car.Model</h3>
+
+                                        <p>
+                                            <b>Year:</b> @car.Year
+                                        </p>
+
+                                        <p>
+                                            <b>Cubic:</b> @car.Cubic
+                                        </p>
+
+                                        <p>
+                                            <b>Price/Day:</b> @car.PricePerDay €
+                                        </p>
+
+                                    </div>
+
+                                    <!-- ACTION BUTTONS -->
+                                    <div class="view-car-card-actions">
+
+                                        <a href="/Owner/EditMyCar?vehicleId=@car.VehicleId" class="view-car-btn-edit">
+                                            Edit
+                                        </a>
+
+                                        <form method="post" action="/Owner/DeleteCar">
+                                            <input type="hidden" name="vehicleId" value="@car.VehicleId" />
+                                            <button type="submit" class="view-car-btn-delete">Delete</button>
+                                        </form>
+                                        
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+            <!-- RIGHT ARROW -->
+            <button class="slider-btn next-btn" onclick="scrollSlider(1)">&#10095;</button>
+        </div>
+
+    </div>
+
+    <script>
+        function scrollSlider(direction) {
+            const slider = document.getElementById('carSlider');
+            const scrollAmount = 305;
+
+            slider.scrollBy({
+                left: direction * scrollAmount
+            });
+        }
+    </script>
+
+</div>
+
+
+
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    // MAP
+    const map = L.map('discoverMap')
+    .setView([37.9838, 23.7275], 7);
+
+    L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap'
+    }
+    ).addTo(map);
+
+    const markers = {};
+
+    @foreach (var car in Model)
+    {
+        if (car.Latitude != 0 && car.Longitude != 0)
+        {
+            <text>
+                markers["@car.VehicleId"] = L.marker([
+                @car.Latitude,
+                @car.Longitude
+                ])
+                .addTo(map)
+                .bindPopup(`
+                <b>@car.Make @car.Model</b><br>
+                Price: @car.PricePerDay € / day
+                `);
+            </text>
+        }
+    }
+
+    document.getElementById("resetMapBtn").addEventListener("click", function () {
+    map.flyTo([37.9838, 23.7275], 7, {
+    animate: true,
+    duration: 1.2
+    });
+    });
+
+    // CARD CLICK → MAP
+    document.querySelectorAll(".view-car-car-card")
+    .forEach(card => {
+
+    card.addEventListener("click", function (e) {
+
+    // prevent buttons triggering map movement
+    if (e.target.tagName === "BUTTON")
+    return;
+
+    const id = this.getAttribute("data-id");
+
+    const marker = markers[id];
+
+    if (marker) {
+
+    map.flyTo(
+    marker.getLatLng(),
+    15,
+    {
+    animate: true,
+    duration: 1.2
+    }
+    );
+
+    marker.openPopup();
+    }
+    });
+    });
+
+
+    document.getElementById("slideRight")
+    .addEventListener("click", () => {
+
+    slider.scrollBy({
+    left: 350,
+    behavior: "smooth"
+    });
+
+    });
+
+    });
+</script>

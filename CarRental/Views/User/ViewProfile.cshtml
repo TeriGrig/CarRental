@@ -1,0 +1,112 @@
+﻿@using CarRental.Models
+@model dynamic  //ώστε να πάρει το user αυτούσιο και να το χωρίσει μετά
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="profile-page-layout">
+    <!-- LEFT COLUMN -->
+    <div class="profile-column">
+<section class="profile-personal-info-card">
+    <h3>Personal Information</h3>
+
+    <div class="profile-content">
+
+        <div class="profile-left">
+
+            <img class="profile-picture-img" src="/images/profile-picture.png" />
+
+            <nav class="profile-links">
+                <a href="/User/EditProfile">Edit My Profile</a>
+                <br />
+                <a href="/Home/Index">Back to Home</a>
+                @if (Model is Owner)
+                {
+                    
+                <a asp-controller="Owner" asp-action="ViewMyCar">Manage My Cars</a>            
+                }
+
+                        <form asp-controller="User"
+                              asp-action="DeleteUserConfirmed"
+                              method="post"
+                              onsubmit="return confirm('Are you sure you want to delete your account?');">
+
+                            <button type="submit" class="delete-user-btn">
+                                Delete profile
+                            </button>
+
+                        </form>
+
+            </nav>
+
+        </div>
+    
+    <div class="personal-info">
+    <p>First Name: @Model.User.FirstName</p>
+    <p>Last Name: @Model.User.LastName</p>
+    <p>Email: @Model.User.Email</p>
+    <p>Phone: @Model.User.PhoneNumber</p>
+
+
+@if (Model is Renter)
+{
+        <p>Birth Year: @(Model.BirthYear > 0 ? Model.BirthYear.ToString() : "Not provided")</p>
+        <p>Licence Year: @(Model.LicenceYear > 0 ? Model.LicenceYear.ToString() : "Not provided")</p>
+}
+
+</div></div>
+
+
+        </section>
+   
+
+    <!-- account analytics -->
+        <section class="account-analytics-section">
+
+        <h3>Account Analytics</h3>
+
+        </section>
+    </div><hr />
+    <!-- reviews -->
+    <div class="reviews-column">
+    <section class="reviews-section" ">
+    <h3>My Reviews</h3>
+
+
+@{
+    var myReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
+}
+
+@if (myReviews != null && myReviews.Any())
+{
+    <div class="reviews-container">
+        @foreach (var reviewItem in myReviews)
+        {
+            <div class="review-card">
+
+                <div class="review-header">
+                    <div class="review-name">
+                        @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
+                    </div>
+
+                    <div class="review-rating">
+                        ⭐ @reviewItem.Rating/5
+                    </div>
+                </div>
+
+                <div class="review-comment">
+                    @reviewItem.Comment
+                </div>
+
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>You haven't received any reviews yet.</p>
+}
+    </section></div>
+</div>

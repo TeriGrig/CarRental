@@ -1,0 +1,71 @@
+﻿@using CarRental.Models
+@model dynamic
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<h2>Edit Your Profile</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<div class="form-container">
+
+    <form asp-action="EditProfile" method="post">
+
+        <div class="form-group">
+            <label>First Name</label>
+            <input type="text"
+                   name="FirstName"
+                   value="@Model.User.FirstName" />
+        </div>
+
+        <div class="form-group">
+            <label>Last Name</label>
+            <input type="text"
+                   name="LastName"
+                   value="@Model.User.LastName" />
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email"
+                   name="Email"
+                   value="@Model.User.Email" />
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text"
+                   name="PhoneNumber"
+                   value="@Model.User.PhoneNumber" />
+        </div>
+
+        @if (Model is Renter)
+        {
+            <div class="form-group">
+                <label>Birth Year</label>
+                <input type="number"
+                       name="BirthYear"
+                       value="@Model.BirthYear" />
+            </div>
+
+            <div class="form-group">
+                <label>Licence Year</label>
+                <input type="number"
+                       name="LicenceYear"
+                       value="@Model.LicenceYear" />
+            </div>
+        }
+
+        <div class="button-group">
+            <button type="submit">Save Changes</button>
+
+            <a href="/User/ViewProfile" class="cancel-btn">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+
+</div>
