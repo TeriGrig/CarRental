@@ -10,7 +10,6 @@ using System.Security.Claims;
 
 namespace CarRental.Controllers
 {
-    
     public class RenterController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,8 +24,13 @@ namespace CarRental.Controllers
 
         public IActionResult ShowCars()
         {
+            ViewBag.StartDate = "";
+            ViewBag.StartTime = "";
+            ViewBag.EndDate = "";
+            ViewBag.EndTime = "";
+
             var vehicles = _context.Vehicles
-                .Where(v => v.Availability == true && !v.IsDeleted)
+                .Where(v => v.Availability && !v.IsDeleted)
                 .ToList();
 
             return View(vehicles);
@@ -55,32 +59,62 @@ namespace CarRental.Controllers
                 ))
                 .ToList();
 
-            return View(availableVehicles);
+            //ViewBag.StartDate = start;
+            //ViewBag.StartTime = start.TimeOfDay;
+            //ViewBag.EndDate = end;
+            //ViewBag.EndTime = end.TimeOfDay;
+
+            ViewBag.StartDate = model.StartDate.ToString("yyyy-MM-dd");
+            ViewBag.StartTime = model.StartTime.ToString(@"HH\:mm");
+
+            ViewBag.EndDate = model.EndDate.ToString("yyyy-MM-dd");
+            ViewBag.EndTime = model.EndTime.ToString(@"HH\:mm");
+
+            // full datetime for booking
+            ViewBag.FullStart = start.ToString("yyyy-MM-ddTHH:mm:ss");
+            ViewBag.FullEnd = end.ToString("yyyy-MM-ddTHH:mm:ss");
+
+            return View("ShowCars", availableVehicles);
         }
 
 
         // Book car button
 
         [HttpPost]
-        public IActionResult Book(int vehicleId)
+        public IActionResult Book(int vehicleId, DateTime startDate, DateTime endDate)
         {
-            return RedirectToAction("BookForm", new { vehicleId });
+            if (startDate >= endDate || startDate == DateTime.MinValue || endDate == DateTime.MinValue)
+            {
+                TempData["BookingError"] = "Please enter valid booking dates.";
+
+                return RedirectToAction("ShowCars");
+            }
+            
+            return RedirectToAction(
+                "BookForm",
+                new
+                {
+                    vehicleId,
+                    startDate,
+                    endDate
+                });
         }
 
 
         [Authorize(Roles = "Renter")]
         [HttpGet]
-        public IActionResult BookForm(int vehicleId)
+        public IActionResult BookForm(int vehicleId, DateTime startDate, DateTime endDate)
         {
             var vehicle = _context.Vehicles
-        .Include(v => v.Owner)
-            .ThenInclude(o => o.User)
-        .FirstOrDefault(v => v.VehicleId == vehicleId);
+                .Include(v => v.Owner)
+                .ThenInclude(o => o.User)
+                .FirstOrDefault(v => v.VehicleId == vehicleId);
 
             if (vehicle == null)
-            {
                 return NotFound();
-            }
+
+            ViewBag.StartDate = startDate;
+            ViewBag.EndDate = endDate;
 
             return View(vehicle);
         }
@@ -116,7 +150,7 @@ namespace CarRental.Controllers
             _context.Bookings.Add(booking);
 
            
-            vehicle.Availability = false;
+            //vehicle.Availability = false;
             _context.SaveChanges();
             TempData["Success"] = "Request created!";
 
