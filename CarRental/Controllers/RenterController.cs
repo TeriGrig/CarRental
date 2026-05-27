@@ -1,5 +1,6 @@
 ﻿using CarRental.Data;
 using CarRental.Models;
+using CarRental.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +20,9 @@ namespace CarRental.Controllers
             _context = context;
         }
 
-        
+
         // Show all cars
-        
+
         public IActionResult ShowCars()
         {
             var vehicles = _context.Vehicles
@@ -29,6 +30,32 @@ namespace CarRental.Controllers
                 .ToList();
 
             return View(vehicles);
+        }
+
+        [HttpGet]
+        public IActionResult SearchCars(SearchViewModel model)
+        {
+            var start = model.StartDate.Date + model.StartTime.TimeOfDay;
+            var end = model.EndDate.Date + model.EndTime.TimeOfDay;
+
+            if (start >= end)
+            {
+                ModelState.AddModelError("", "End date must be after start date");
+                return View();
+            }
+
+            var availableVehicles = _context.Vehicles
+                .Where(v => !v.IsDeleted && v.Availability)
+                .Where(v => !v.Bookings.Any(b =>
+                    (b.Status == "Accepted" || b.Status == "Requested")
+                    &&
+                    start < b.EndDate
+                    &&
+                    end > b.StartDate
+                ))
+                .ToList();
+
+            return View(availableVehicles);
         }
 
 

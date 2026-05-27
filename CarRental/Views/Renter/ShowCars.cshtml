@@ -5,35 +5,56 @@
 
 
 <div class="cars-book-map-layout">
-     <section class="calendar-filter">
-         <div class="calendar-filter-title">
-    <h2>Select the dates and time you need the car</h2>
-        </div>
+    <form asp-controller="Renter" asp-action="SearchCars" method="get">
+        <section class="calendar-filter">
 
-        <div class="filters">
-            <div class="start-filters">
-                <label>Start Date:</label>
-
-                <input type="date"  name="startDate" required />
-                <input type="time" name="startTime" required/>
-            </div>
-            <h4>/</h4>
-            <div class="end-filters">
-                <label>End Date:</label>
-
-                <input type="date"  name="endDate" required />
-                <input type="time" name="endTime" required/>
+            <div class="calendar-filter-title">
+                <h2>Select the dates and time you need the car</h2>
             </div>
 
-            <button type="submit" class="show-car-btn">
-                Search
-            </button>
-        </div>
+            <div class="filters">
 
-   
+                <div class="start-filters">
 
+                    <label>Start Date:</label>
 
-    </section>
+                    <input type="date"
+                           name="startDate"
+                           min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                           required />
+
+                    <input type="time"
+                           name="startTime"
+                           required />
+
+                </div>
+
+                <h4>/</h4>
+
+                <div class="end-filters">
+
+                    <label>End Date:</label>
+
+                    <input type="date"
+                           name="endDate"
+                           min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                           required />
+
+                    <input type="time"
+                           name="endTime"
+                           required />
+
+                </div>
+
+                <button type="submit"
+                        class="show-car-btn">
+                    Search
+                </button>
+
+            </div>
+
+        </section>
+    </form>
 
     <!-- LEFT SIDE MAP -->
     <div id="map" class="cars-book-map">
