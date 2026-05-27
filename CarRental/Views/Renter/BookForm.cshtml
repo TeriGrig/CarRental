@@ -58,20 +58,22 @@
                    name="vehicleId"
                    value="@Model.VehicleId" />
 
+            <input type="hidden"
+                   name="startDate"
+                   value="@ViewBag.StartDate" />
+
+            <input type="hidden"
+                   name="endDate"
+                   value="@ViewBag.EndDate" />
+
             <div>
-                <label>Start Date</label>
+                <strong>Booking period:</strong><br />
 
-                <input type="date"
-                       name="startDate"
-                       required />
-            </div>
+                @Convert.ToDateTime(ViewBag.StartDate).ToString("dd/MM/yyyy HH:mm")
 
-            <div>
-                <label>End Date</label>
+                -
 
-                <input type="date"
-                       name="endDate"
-                       required />
+                @Convert.ToDateTime(ViewBag.EndDate).ToString("dd/MM/yyyy HH:mm")
             </div>
 
             <button type="submit"
@@ -80,7 +82,6 @@
             </button>
 
         </form>
-
     </div>
 
 </div>
