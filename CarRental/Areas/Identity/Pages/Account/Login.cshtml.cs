@@ -114,15 +114,15 @@ namespace CarRental.Areas.Identity.Pages.Account
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
 
-                if (user.IsDeleted)
-                {
-                    ModelState.AddModelError("", "This account has been deleted.");
-                    return Page();
-                }
-
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
+
+                if (user.IsDeleted)
+                {
+                    ModelState.AddModelError("", "This account has been deleted.");
                     return Page();
                 }
 

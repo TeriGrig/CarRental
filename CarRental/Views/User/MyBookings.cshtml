@@ -31,7 +31,9 @@
 
             @foreach (var booking in activeBookings)
             {
-                <div class="booking-card">
+                <div class="booking-card" 
+                     data-lat="@booking.Vehicle.Latitude"
+                     data-lon="@booking.Vehicle.Longitude">
 
                     @if (User.IsInRole("Owner"))
                     {
@@ -75,6 +77,10 @@
                     </p>
 
                     <p>Status: @booking.Status</p>
+
+                    <p class="booking-address">
+                        Loading address...
+                    </p>
 
                    
                     @if (booking.Status == "Accepted")
@@ -142,36 +148,59 @@
 
                     @if (User.IsInRole("Owner"))
                     {
-                        <h4>
-                            Booking made for @booking.Vehicle.Make
-                            @booking.Vehicle.Model by user
+                        @if (!booking.Renter.User.IsDeleted)
+                        {
+                            <h4>
+                                Booking made for @booking.Vehicle.Make
+                                @booking.Vehicle.Model by user
+                                    <a asp-controller="User"
+                                       asp-action="OpenUsersProfile"
+                                       asp-route-userId="@booking.Renter.UserId">
 
-                            <a asp-controller="User"
-                                   asp-action="OpenUsersProfile"
-                                   asp-route-userId="@booking.Renter.UserId">
+                                        @booking.Renter.User.FirstName
+                                        @booking.Renter.User.LastName
 
-                                @booking.Renter.User.FirstName
-                                @booking.Renter.User.LastName
-
-                            </a>
-                        </h4>
+                                    </a>
+                            </h4>
+                        }
+                        else
+                        {
+                            <h4>
+                                Booking made for @booking.Vehicle.Make
+                                @booking.Vehicle.Model by deleted user
+                                <a>@booking.Renter.User.FirstName</a>
+                                <a>@booking.Renter.User.LastName</a>
+                            </h4>
+                        }
                     }
 
                     @if (User.IsInRole("Renter"))
                     {
-                        <h4>
-                            Booking for vehicle @booking.Vehicle.Make
-                            @booking.Vehicle.Model owned by
+                        @if (!booking.Vehicle.Owner.User.IsDeleted)
+                        {
+                            <h4>
+                                Booking for vehicle @booking.Vehicle.Make
+                                @booking.Vehicle.Model owned by
 
-                            <a asp-controller="User"
+                                <a asp-controller="User"
                                    asp-action="OpenUsersProfile"
                                    asp-route-userId="@booking.Vehicle.Owner.UserId">
 
-                                @booking.Vehicle.Owner.User.FirstName
-                                @booking.Vehicle.Owner.User.LastName
+                                    @booking.Vehicle.Owner.User.FirstName
+                                    @booking.Vehicle.Owner.User.LastName
 
-                            </a>
-                        </h4>
+                                </a>
+                            </h4>
+                        }
+                        else
+                        {
+                            <h4>
+                                Booking for vehicle @booking.Vehicle.Make
+                                @booking.Vehicle.Model owned by deleted user
+                                <a>@booking.Vehicle.Owner.User.FirstName</a>
+                                <a>@booking.Vehicle.Owner.User.LastName</a>
+                            </h4>
+                        }
                     }
 
                     <p>
@@ -191,3 +220,72 @@
     </div>
 
 </div>
+
+
+<!-- Finding location by coordinates -->
+<script>
+    async function getAddress(lat, lon) {
+
+        try {
+
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+            );
+
+            const data = await response.json();
+
+            const address = data.address;
+
+            const road =
+                address.road ||
+                address.pedestrian ||
+                address.footway ||
+                "Unknown street";
+
+            const houseNumber =
+                address.house_number || "";
+
+            const postcode =
+                address.postcode || "Unknown postal code";
+
+            const region =
+                address.state ||
+                address.region ||
+                address.county ||
+                "Unknown region";
+
+            return `
+                Address: ${road} ${houseNumber}<br>
+                Postal Code: ${postcode}<br>
+                Region: ${region}
+            `;
+
+        } catch (error) {
+
+            return "Address not found";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", async function () {
+
+        const bookingCards =
+            document.querySelectorAll(".booking-card");
+
+        for (const card of bookingCards) {
+
+            const lat = card.dataset.lat;
+            const lon = card.dataset.lon;
+
+            if (!lat || !lon)
+                continue;
+
+            const addressElement =
+                card.querySelector(".booking-address");
+
+            const address =
+                await getAddress(lat, lon);
+
+            addressElement.innerHTML = address;
+        }
+    });
+</script>
