@@ -116,7 +116,7 @@ namespace CarRental.Controllers
             _context.Bookings.Add(booking);
 
            
-            vehicle.Availability = false;
+            //vehicle.Availability = false;
             _context.SaveChanges();
             TempData["Success"] = "Request created!";
 
