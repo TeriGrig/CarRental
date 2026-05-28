@@ -5,6 +5,12 @@
 
 
 <div class="cars-book-map-layout">
+    @if (TempData["BookingError"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["BookingError"]
+        </div>
+    }
     <form asp-controller="Renter" asp-action="SearchCars" method="get">
         <section class="calendar-filter">
 
@@ -21,10 +27,12 @@
                     <input type="date"
                            name="startDate"
                            min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                           value="@ViewBag.StartDate"
                            required />
 
                     <input type="time"
                            name="startTime"
+                           value="@ViewBag.StartTime"
                            required />
 
                 </div>
@@ -38,10 +46,12 @@
                     <input type="date"
                            name="endDate"
                            min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                           value="@ViewBag.EndDate"
                            required />
 
                     <input type="time"
                            name="endTime"
+                           value="@ViewBag.EndTime"
                            required />
 
                 </div>
@@ -100,9 +110,27 @@
                             </p>
                         </div>
 
-                        <form method="post" action="/Renter/Book" class="car-actions">
-                            <input type="hidden" name="vehicleId" value="@car.VehicleId" />
-                            <button class="show-car-btn" type="submit">Book</button>
+                        <form method="post"
+                              action="/Renter/Book"
+                              class="car-actions">
+
+                            <input type="hidden"
+                                   name="vehicleId"
+                                   value="@car.VehicleId" />
+
+                            <input type="hidden"
+                                   name="startDate"
+                                   value="@ViewBag.FullStart" />
+
+                            <input type="hidden"
+                                   name="endDate"
+                                   value="@ViewBag.FullEnd" />
+
+                            <button class="show-car-btn"
+                                    type="submit">
+                                Book
+                            </button>
+
                         </form>
 
                     </div>
