@@ -59,11 +59,6 @@ namespace CarRental.Controllers
                 ))
                 .ToList();
 
-            //ViewBag.StartDate = start;
-            //ViewBag.StartTime = start.TimeOfDay;
-            //ViewBag.EndDate = end;
-            //ViewBag.EndTime = end.TimeOfDay;
-
             ViewBag.StartDate = model.StartDate.ToString("yyyy-MM-dd");
             ViewBag.StartTime = model.StartTime.ToString(@"HH\:mm");
 
