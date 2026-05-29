@@ -3,6 +3,7 @@ using CarRental.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarRental.Controllers
 {
@@ -97,6 +98,33 @@ namespace CarRental.Controllers
             TempData["Success"] = "Admin created successfully.";
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ShowReports()
+        {
+            var reports = await _context.Reports
+                .Include(r => r.Reporter)
+                .Include(r => r.ReportRecipient)
+                .OrderByDescending(r => r.DateTime)
+                .ToListAsync();
+
+            return View(reports);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAsSeen(int reportId)
+        {
+            var report = await _context.Reports.FirstOrDefaultAsync(r => r.ReportId == reportId);
+
+            if (report != null)
+            {
+                report.Seen = true;
+                _context.Update(report);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(ShowReports));
         }
     }
 }

@@ -1,14 +1,20 @@
 ﻿using CarRental.Data;
 using CarRental.Models;
+using CarRental.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using CarRental.ViewModels;
-using System.Globalization;
 using NuGet.Packaging.Signing;
+using System.Globalization;
+using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System;
+using System.Threading.Tasks;
+
+
+
 
 namespace CarRental.Controllers
 {
@@ -358,5 +364,36 @@ namespace CarRental.Controllers
 
         }
 
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ReportUser(string recipientId)
+        {
+         
+            var reporterId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+          
+
+            if (string.IsNullOrEmpty(recipientId))
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
+            
+            var newReport = new Report
+            {
+                ReporterId = reporterId,
+                ReportRecipientId = recipientId,
+                DateTime = DateTime.Now,
+                Seen = false
+            };
+
+           
+            _context.Reports.Add(newReport);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "User has been successfully reported to administration.";
+            return RedirectToAction("OpenUsersProfile", new { userId = recipientId });
+        }
     }
 }

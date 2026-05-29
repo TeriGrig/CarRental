@@ -50,6 +50,7 @@ input[type="text"],
 input[type="date"],
 input[type="number"],
 input[type="email"],
+input[type="password"],
 textarea,
 select {
     width: 100%;
@@ -623,7 +624,7 @@ label {
 
 
 
-/*BOOKINGS*/
+/*--------------------------------BOOKINGS-------------------------------------*/
 .my-bookings {
     display: flex;
     gap: 30px;
@@ -889,7 +890,6 @@ label {
 }
 /*------------------------------------- BOOK CAR PAGE--------------------------------------------------------- */
 
-/* Centers the entire card components horizontally and vertically on the screen */
 .book-page-layout {
     display: flex;
     justify-content: center;
@@ -899,7 +899,6 @@ label {
     box-sizing: border-box;
 }
 
-/* Updated main container width to keep it neat and centralized */
 .book-car-section {
     width: 100%;
     max-width: 750px;
@@ -911,7 +910,7 @@ label {
     box-sizing: border-box;
 }
 
-/* Flex row wrapper to force image and info to be side-by-side */
+
 .car-details-row {
     display: flex;
     gap: 25px;
@@ -939,7 +938,7 @@ label {
     min-height: 280px;
     border-radius: 12px;
     overflow: hidden;
-    position: relative; /* Fixed missing position reference for the reset button */
+    position: relative; 
 }
 
 
@@ -1224,4 +1223,156 @@ label {
 
     .account-analytics-section h3 {
         margin-bottom: 20px;
+    }
+
+
+
+
+/*   ----------------------------- ADMIN UI---------------------------------------------------------*/
+
+/*Show Reports*/
+
+
+.reports-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.reports-column {
+    height: 900px;
+    width:70%;
+    overflow-y: auto;
+    padding-right: 10px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+}
+    .reports-column::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    .reports-column::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+
+    .reports-column::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+.reports-list {
+    margin-top: 20px;
+}
+
+.no-reports-message {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 20px;
+}
+
+.report-card {
+    border: 1px solid #d1d5db;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background-color: #f9fafb;
+}
+
+
+.report-unseen {
+    border-left: 4px solid #dc3545;
+}
+
+.report-seen {
+    border-left: 4px solid #6c757d;
+    background-color: #fcfcfc;
+    opacity: 0.65;
+    filter: grayscale(40%);
+    box-shadow: none;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+
+.report-id {
+    margin: 0;
+    font-size: 1.1rem; 
+    color: #251F3D;
+    display: inline-block;
+}
+
+.report-date {
+    margin: 2px 0 0 0;
+    color: #777777;
+    font-size: 0.8rem; 
+}
+
+
+
+.report-divider {
+    border: 0;
+    border-top: 1px solid #eeeeee;
+    margin: 8px 0; 
+}
+
+.report-details-grid {
+    display: grid;
+    grid-template-columns: 90px 100px;
+    gap: 60px;
+    margin-bottom: 5px;
+}
+
+.party-label {
+    color: #555555;
+    font-size: 0.75rem; 
+    text-transform: uppercase;
+    display: block;
+}
+
+.party-name {
+    margin: 2px 0;
+    font-size: 0.95rem; 
+    font-weight: 600;
+}
+.report-actions-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+    border-top: 1px solid #f1f1f1;
+    padding-top: 8px; 
+}
+
+.btn-report-action {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.15s ease;
+}
+
+.btn-mark-seen {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+    .btn-mark-seen:hover {
+        background-color: #5a6268;
+    }
+
+.btn-investigate {
+    background-color: #251F3D;
+    color: #ffffff;
+}
+
+    .btn-investigate:hover {
+        background-color: #1a162b;
     }
