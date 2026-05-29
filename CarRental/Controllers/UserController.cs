@@ -379,12 +379,13 @@ namespace CarRental.Controllers
                 return BadRequest("Invalid user ID.");
             }
 
-            
+
             var newReport = new Report
             {
                 ReporterId = reporterId,
                 ReportRecipientId = recipientId,
                 DateTime = DateTime.Now,
+                Description = "",   //to be changed after the changes.
                 Seen = false
             };
 
