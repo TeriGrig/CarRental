@@ -11,5 +11,6 @@ namespace CarRental.Models
         public User ReportRecipient { get; set; }
         public DateTime DateTime { get; set; }
         public bool Seen { get; set; } = false;
+        public string Description { get; set; }
     }
 }
