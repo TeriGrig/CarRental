@@ -26,7 +26,17 @@
                     <p>Email: @Model.User.Email</p>
                     <p>Phone: @Model.User.PhoneNumber</p>
                 </div>
+                @if (!User.IsInRole("Admin"))
+                {
+                    <form asp-controller="User" asp-action="ReportUser" method="post" style="display:inline;">
+                        <input type="hidden" name="recipientId" value="@Model.User.Id" />
 
+                        <button type="submit" class="report-btn" onclick="return confirm('Are you sure you want to report this user?');">
+                            Report
+                        </button>
+                    </form>
+                }
+                
             </div>
         </section>
 

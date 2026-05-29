@@ -1,0 +1,92 @@
+﻿@model List<CarRental.Models.Report>
+
+<div class="reports-container">
+    <div class="reports-column">
+        <h2>System Reports</h2>
+        <div class="reports-list">
+
+            @if (!Model.Any())
+            {
+                <p class="no-reports-message">No reports found in the system.</p>
+            }
+            else
+            {
+                @foreach (var report in Model)
+                {
+                    <div class="report-card @(report.Seen ? "report-seen" : "report-unseen")">
+
+                        <div class="report-header">
+                            <div>
+                                <h4 class="report-id">Report #@report.ReportId</h4>
+                                <p class="report-date">
+                                    <strong>Filed on:</strong> @report.DateTime.ToString("dd/MM/yyyy HH:mm")
+                                </p>
+                            </div>
+
+                            @if (report.Seen)
+                            {
+                                <span class="report-badge badge-seen">Seen</span>
+                            }
+                            else
+                            {
+                                <span class="report-badge badge-unseen">Action Required</span>
+                            }
+                        </div>
+
+                        <hr class="report-divider" />
+
+                        <div class="report-details-grid">
+                            <div class="report-party">
+                                <strong class="party-label">Reporter</strong>
+                                <p class="party-name">
+                                    @if (report.Reporter != null)
+                                    {
+                                        <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReporterId" class="reporter-link">
+                                            @report.Reporter.FirstName @report.Reporter.LastName
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="user-unknown">Unknown User</span>
+                                    }
+                                </p>
+                            </div>
+
+                            <div class="report-party">
+                                <strong class="party-label">Recipient User</strong>
+                                <p class="party-name">
+                                    @if (report.ReportRecipient != null)
+                                    {
+                                        <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReportRecipientId" class="accused-link">
+                                            @report.ReportRecipient.FirstName @report.ReportRecipient.LastName
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="user-unknown">Unknown User</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="report-actions-footer">
+                            @if (!report.Seen)
+                            {
+                                <form asp-controller="Admin" asp-action="MarkAsSeen" method="post" class="form-inline">
+                                    <input type="hidden" name="reportId" value="@report.ReportId" />
+                                    <button type="submit" class="btn-report-action btn-mark-seen">
+                                        Mark as Seen
+                                    </button>
+                                </form>
+                            }
+
+                            <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReportRecipientId" class="btn-report-action btn-investigate">
+                                Investigate Report
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
