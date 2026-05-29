@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CarRental.Views.Admin
+namespace CarRental.Views.Home
 {
-    public class AdminDeleteUserModel : PageModel
+    public class SuspendedModel : PageModel
     {
         public void OnGet()
         {

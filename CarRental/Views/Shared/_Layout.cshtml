@@ -34,12 +34,10 @@
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-controller="Owner" asp-action="AddCar">Add a Car</a>
                                     </li>
-                                    @if (User.IsInRole("Owner"))
-                                    {
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-controller="Owner" asp-action="ViewMyCar">View My Cars</a>
-                                        </li>
-                                    }
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Owner" asp-action="ViewMyCar">View My Cars</a>
+                                    </li>
+                                    
                                 }
                                 @if (!User.IsInRole("Owner") && !User.IsInRole("Admin"))
                                 {
@@ -47,9 +45,20 @@
                                         <a class="nav-link text-dark" asp-controller="Renter" asp-action="ShowCars">Book a car</a>
                                     </li>
                                 }
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="User" asp-action="MyBookings">MyBookings</a>
-                            </li>
+                                @if (!User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="User" asp-action="MyBookings">MyBookings</a>
+                                    </li>
+                                }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="CreateAdmin">Create Admin</a>
+                                    </li>
+                                }
+                            
+
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Privacy</a>
                                 </li>

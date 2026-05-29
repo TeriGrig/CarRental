@@ -1,0 +1,30 @@
+﻿@page
+@model CarRental.Views.Admin.CreateAdminModel
+
+<h2>Create Admin</h2>
+
+<form asp-controller="Admin" asp-action="CreateAdmin" method="post">
+
+    <div>
+        <label>First Name</label>
+        <input type="text" name="firstName" required />
+    </div>
+
+    <div>
+        <label>Last Name</label>
+        <input type="text" name="lastName" required />
+    </div>
+
+    <div>
+        <label>Email</label>
+        <input type="email" name="email" required />
+    </div>
+
+    <div>
+        <label>Password</label>
+        <input type="password" name="password" required />
+    </div>
+
+    <button type="submit">Create Admin</button>
+
+</form>

@@ -12,6 +12,7 @@ namespace CarRental.Data
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,6 +65,18 @@ namespace CarRental.Data
                 .WithOne()
                 .HasForeignKey<Admin>(a => a.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.Reporter)
+                .WithMany()
+                .HasForeignKey(r => r.ReporterId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.ReportRecipient)
+                .WithMany()
+                .HasForeignKey(r => r.ReportRecipientId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

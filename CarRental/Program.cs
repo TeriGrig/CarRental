@@ -1,9 +1,10 @@
 using CarRental.Data;
+using CarRental.Middleware;
 using CarRental.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 var culture = new CultureInfo("en-US");
@@ -99,6 +100,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
+app.UseMiddleware<SuspensionMiddleware>();
 app.UseAuthorization();
 
 

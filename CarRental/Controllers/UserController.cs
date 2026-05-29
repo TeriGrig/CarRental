@@ -310,29 +310,31 @@ namespace CarRental.Controllers
         public async Task<IActionResult> MyBookings()
         {
             var userId = _userManager.GetUserId(User);
-
-            if (User.IsInRole("Owner"))
+            if (!User.IsInRole("Admin"))
             {
-                var owner = await _context.Owners.FirstOrDefaultAsync(o => o.UserId == userId);
+                if (User.IsInRole("Owner"))
+                {
+                    var owner = await _context.Owners.FirstOrDefaultAsync(o => o.UserId == userId);
 
-                var bookings = _context.Bookings
-                .Where(b => b.Vehicle.OwnerID == owner.Id)
-                .Include(b => b.Vehicle)
-                .Include(b => b.Renter)
-                 .ThenInclude(r => r.User)
-                .ToList();
-                return View(bookings);
-            }
-            if (User.IsInRole("Renter"))
-            {
-                var renter = await _context.Renters.FirstOrDefaultAsync(r => r.UserId == userId);
-                var bookings = _context.Bookings
-                .Where(b => b.RenterId == renter.Id)
-                .Include(b => b.Vehicle)
-                .Include(b => b.Vehicle.Owner)
-                    .ThenInclude(r => r.User)
-                .ToList();
-                return View(bookings);
+                    var bookings = _context.Bookings
+                    .Where(b => b.Vehicle.OwnerID == owner.Id)
+                    .Include(b => b.Vehicle)
+                    .Include(b => b.Renter)
+                     .ThenInclude(r => r.User)
+                    .ToList();
+                    return View(bookings);
+                }
+                if (User.IsInRole("Renter"))
+                {
+                    var renter = await _context.Renters.FirstOrDefaultAsync(r => r.UserId == userId);
+                    var bookings = _context.Bookings
+                    .Where(b => b.RenterId == renter.Id)
+                    .Include(b => b.Vehicle)
+                    .Include(b => b.Vehicle.Owner)
+                        .ThenInclude(r => r.User)
+                    .ToList();
+                    return View(bookings);
+                }
             }
             return View();
         }
