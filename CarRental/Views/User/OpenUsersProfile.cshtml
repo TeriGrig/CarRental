@@ -1,15 +1,13 @@
 ﻿<div class="profile-page-layout">
 
-    
     <div class="profile-column">
 
         <section class="profile-personal-info-card">
             <h3>Personal Information</h3>
-            <!-- LEFT COLUMN -->
             <div class="profile-content">
 
                 <div class="profile-left">
-                    <img class="profile-picture-img" src="/images/profile-picture.png" />
+                    <img class="profile-picture-img" src="/images/profile-picture.png" alt="Profile Picture" />
 
                     @if (Model is Owner)
                     {
@@ -21,97 +19,162 @@
                 </div>
 
                 <div class="personal-info">
-                    <p>First Name: @Model.User.FirstName</p>
-                    <p>Last Name: @Model.User.LastName</p>
-                    <p>Email: @Model.User.Email</p>
-                    <p>Phone: @Model.User.PhoneNumber</p>
+                    <p><strong>First Name:</strong> @Model.User.FirstName</p>
+                    <p><strong>Last Name:</strong> @Model.User.LastName</p>
+                    <p><strong>Email:</strong> @Model.User.Email</p>
+                    <p><strong>Phone:</strong> @Model.User.PhoneNumber</p>
                 </div>
+
                 @if (!User.IsInRole("Admin"))
                 {
                     <form asp-controller="User" asp-action="ReportUser" method="post" style="display:inline;">
                         <input type="hidden" name="recipientId" value="@Model.User.Id" />
-
                         <button type="submit" class="report-btn" onclick="return confirm('Are you sure you want to report this user?');">
                             Report
                         </button>
                     </form>
                 }
-                
+
             </div>
         </section>
+        @if (Model is Owner ownerEntity)
+        {
+            <div class="account-analytics-section" style="height: auto; margin-bottom: 30px;">
+                <h3>Owner's Vehicles</h3>
 
-        <!-- LEAVE REVIEW MUST STAY HERE -->
-        <section class="leave-review-section">
-
-            <h3>Leave a Review</h3>
-
-            <form asp-controller="Reviews"
-                  asp-action="AddReview"
-                  method="post">
-
-                <input type="hidden" name="recipientId" value="@Model.User.Id" />
-
-                <div class="form-group">
-                    <label>Rating (1-5)</label>
-                    <input type="number" name="rating" min="1" max="5" class="form-control" />
-                </div>
-
-                <div class="form-group">
-                    <label>Your Comment</label>
-                    <textarea name="comment" class="form-control" rows="4"></textarea>
-                </div>
-
-                <button type="submit" class="submit-review-btn">
-                    Submit Review
-                </button>
-
-            </form>
-
-        </section>
-
-    </div>
-
-    <!-- RIGHT COLUMN -->
-    <div class="reviews-column">
-
-        <section class="reviews-section">
-
-            <h3>Reviews</h3>
-
-            @if (ViewBag.Reviews != null)
-            {
-                <div class="reviews-container">
-
-                    @foreach (var reviewItem in ViewBag.Reviews)
+                <div class="slider-container">
+                    @if (ownerEntity.Vehicles == null || !ownerEntity.Vehicles.Any())
                     {
-                        <div class="review-card">
-
-                            <div class="review-header">
-                                <div class="review-name">
-                                    @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
-                                </div>
-
-                                <div class="review-rating">
-                                    ⭐ @reviewItem.Rating/5
-                                </div>
-                            </div>
-
-                            <div class="review-comment">
-                                @reviewItem.Comment
-                            </div>
-
+                        <div class="view-car-empty">
+                            No cars found for this owner.
                         </div>
                     }
+                    else
+                    {
+                        <div class="view-car-cars-slider" id="carSlider" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;">
+                            @foreach (var car in ownerEntity.Vehicles)
+                            {
+                                <div class="view-car-car-card" data-id="@car.VehicleId" style="min-width: 200px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px;">
+                                    <img src="@car.Image" class="view-car-car-image" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;" />
 
+                                    <div class="view-car-car-content" style="margin-top: 10px;">
+                                        <div class="view-car-car-info">
+                                            <h4 style="margin: 0 0 5px 0; font-size: 16px;">@car.Make @car.Model</h4>
+                                            <p style="margin: 2px 0; font-size: 13px;"><b>Year:</b> @car.Year</p>
+                                            <p style="margin: 2px 0; font-size: 13px;"><b>Cubic:</b> @car.Cubic cc</p>
+                                            <p style="margin: 2px 0; font-size: 13px; color: #5d749f;"><b>Price/Day:</b> @car.PricePerDay €</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
-            }
-            else
-            {
-                <p>No reviews yet.</p>
-            }
+            </div>
+        }
+        @if (User.IsInRole("Admin"))
+        {
+            <section class="leave-review-section admin-suspend-section">
+                <h3>Manage User Access</h3>
 
-        </section>
+                @if (Model.User.IsSuspended)
+                {
+                    <div style="text-align: center; margin-top: 10px;">
+                        <p style="color: #742a2a; font-weight: 600; margin-bottom: 20px; font-size: 16px;">
+                            Suspended untill
+                            <span style="text-decoration: underline;">@Model.User.SuspensionEnd.ToString("dd/MM/yyyy")</span>
+                        </p>
 
-    </div>
+                        <form asp-controller="Admin" asp-action="LiftSuspension" method="post">
+                            <input type="hidden" name="UserId" value="@Model.User.Id" />
 
-</div>
+                            <button type="submit" class="submit-lift-btn">
+                                 Lift Suspension 
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <form asp-controller="Admin" asp-action="SuspendUser" method="post">
+                        <input type="hidden" name="UserId" value="@Model.User.Id" />
+
+                        <div class="form-group">
+                            <label>Suspend Until :</label>
+                            <input type="date" name="date" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        </div>
+
+                        <button type="submit" class="submit-suspend-btn">
+                            Suspend User
+                        </button>
+                    </form>
+                }
+
+                @if (ViewBag.StartDate != null && ViewBag.EndDate != null)
+                {
+                    <div class="booking-period-box">
+                        <strong>Booking period:</strong>
+                        <span>
+                            @Convert.ToDateTime(ViewBag.StartDate).ToString("dd/MM/yyyy HH:mm")
+                            -
+                            @Convert.ToDateTime(ViewBag.EndDate).ToString("dd/MM/yyyy HH:mm")
+                        </span>
+                    </div>
+                }
+            </section>
+        }
+        else
+        {
+            <section class="leave-review-section">
+                <h3>Leave a Review</h3>
+                <form asp-controller="Reviews" asp-action="AddReview" method="post">
+                    <input type="hidden" name="recipientId" value="@Model.User.Id" />
+
+                    <div class="form-group">
+                        <label>Rating (1-5)</label>
+                        <input type="number" name="rating" min="1" max="5" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Your Comment</label>
+                        <textarea name="comment" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-review-btn">
+                        Submit Review
+                    </button>
+                </form>
+            </section>
+        }
+
+    </div> <div class="reviews-column">
+    <section class="reviews-section">
+        <h3>Reviews</h3>
+
+        @if (ViewBag.Reviews != null)
+        {
+            <div class="reviews-container">
+                @foreach (var reviewItem in ViewBag.Reviews)
+                {
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-name">
+                                @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
+                            </div>
+                            <div class="review-rating">
+                                ⭐ @reviewItem.Rating/5
+                            </div>
+                        </div>
+                        <div class="review-comment">
+                            @reviewItem.Comment
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No reviews yet.</p>
+        }
+    </section>
+</div></div>

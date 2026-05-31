@@ -1,6 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@if (User.IsInRole("Admin"))
+{
+    RedirectToPageResult redirectResult = new RedirectToPageResult("/Admin/AdminHome");
+}
+else
+{
+
+
+
+
+
 
 <div class="start-section">
     <h1>Welcome to CarRental</h1>
@@ -69,5 +80,5 @@
     }
 </script>
 
-
+}
 
