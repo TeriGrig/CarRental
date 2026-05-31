@@ -16,29 +16,13 @@
                     <div class="report-card @(report.Seen ? "report-seen" : "report-unseen")">
 
                         <div class="report-header">
-                            <div>
+                            <div class="report-meta-group">
                                 <h4 class="report-id">Report #@report.ReportId</h4>
-                                <p class="report-date">
-                                    <strong>Filed on:</strong> @report.DateTime.ToString("dd/MM/yyyy HH:mm")
-                                </p>
-                            </div>
-
-                            @if (report.Seen)
-                            {
-                                <span class="report-badge badge-seen">Seen</span>
-                            }
-                            else
-                            {
-                                <span class="report-badge badge-unseen">Action Required</span>
-                            }
-                        </div>
-
-                        <hr class="report-divider" />
-
-                        <div class="report-details-grid">
-                            <div class="report-party">
-                                <strong class="party-label">Reporter</strong>
-                                <p class="party-name">
+                                <span class="report-date">
+                                    (@report.DateTime.ToString("dd/MM/yyyy HH:mm"))
+                                </span>
+                                <span class="report-header-party">
+                                    <strong>Reporter:</strong>
                                     @if (report.Reporter != null)
                                     {
                                         <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReporterId" class="reporter-link">
@@ -47,14 +31,14 @@
                                     }
                                     else
                                     {
-                                        <span class="user-unknown">Unknown User</span>
+                                        <span class="user-unknown">Unknown</span>
                                     }
-                                </p>
-                            </div>
+                                </span>
 
-                            <div class="report-party">
-                                <strong class="party-label">Recipient User</strong>
-                                <p class="party-name">
+                                <span class="report-header-separator"></span>
+
+                                <span class="report-header-party">
+                                    <strong>Accused:</strong>
                                     @if (report.ReportRecipient != null)
                                     {
                                         <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReportRecipientId" class="accused-link">
@@ -63,26 +47,46 @@
                                     }
                                     else
                                     {
-                                        <span class="user-unknown">Unknown User</span>
+                                        <span class="user-unknown">Unknown</span>
                                     }
-                                </p>
+                                </span>
+
+                               
+                            </div>
+
+                            <div>
+                                @if (report.Seen)
+                                {
+                                    <span class="report-badge badge-seen">Seen</span>
+                                }
+                                
                             </div>
                         </div>
 
-                        <div class="report-actions-footer">
-                            @if (!report.Seen)
-                            {
-                                <form asp-controller="Admin" asp-action="MarkAsSeen" method="post" class="form-inline">
-                                    <input type="hidden" name="reportId" value="@report.ReportId" />
-                                    <button type="submit" class="btn-report-action btn-mark-seen">
-                                        Mark as Seen
-                                    </button>
-                                </form>
-                            }
+                        <hr class="report-divider" />
 
-                            <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReportRecipientId" class="btn-report-action btn-investigate">
-                                Investigate Report
-                            </a>
+                        <div class="report-description">
+                            <strong class="report-description-label">Description:</strong>
+                            <p class="report-description-text">
+                                @if (!string.IsNullOrWhiteSpace(report.Description))
+                                {
+                                    @report.Description
+                                }
+                                else
+                                {
+                                    <span class="user-unknown" style="font-weight: normal;">No description given by user.</span>
+                                }
+                            </p>
+                        </div>
+
+                        <div class="report-actions-footer">
+                            <form asp-controller="Admin" asp-action="InvestigateAndMarkAsSeen" method="post" class="form-inline">
+                                <input type="hidden" name="reportId" value="@report.ReportId" />
+                                <input type="hidden" name="recipientId" value="@report.ReportRecipientId" />
+                                <button type="submit" class="btn-report-action btn-investigate">
+                                    Investigate Report
+                                </button>
+                            </form>
                         </div>
                     </div>
                 }

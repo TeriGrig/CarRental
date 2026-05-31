@@ -1,97 +1,4 @@
 ﻿
-<style>
-    .account-analytics-section {
-        margin-bottom: 45px !important;
-    }
-
-   
-    #profileSliderWrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 0 10px;
-        box-sizing: border-box;
-        margin-bottom: 10px;
-    }
-
-    
-    #profileCarSlider {
-        display: flex;
-        gap: 15px;
-        overflow-x: hidden;
-        scroll-behavior: smooth;
-        width: 100%;
-        padding: 15px 5px;
-    }
-
-   
-    #profileSliderWrapper .view-car-car-card {
-        min-width: 190px;
-        max-width: 190px;
-        flex-shrink: 0;
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        box-sizing: border-box;
-    }
-
-    #profileSliderWrapper .view-car-car-image {
-        width: 100%;
-        height: 110px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-
-    #profileSliderWrapper .view-car-car-info h4 {
-        margin: 8px 0 4px 0;
-        font-size: 15px;
-        color: #211066;
-        font-weight: 700;
-    }
-
-    #profileSliderWrapper .view-car-car-info p {
-        margin: 2px 0;
-        font-size: 12px;
-        color: #4b5563;
-    }
-
-    #profileSliderWrapper .slider-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-      
-        background-color: #211066;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 35px;
-        height: 35px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        transition: background-color 0.2s ease;
-    }
-
-        #profileSliderWrapper .slider-btn:hover {
-            background-color: #2563eb;
-            
-        }
-
-    #profileSliderWrapper .prev-btn {
-        left: 0;
-    }
-
-    #profileSliderWrapper .next-btn {
-        right: 0;
-    }
-</style>
 
 <div class="profile-page-layout">
 
@@ -122,12 +29,35 @@
 
                 @if (!User.IsInRole("Admin"))
                 {
-                    <form asp-controller="User" asp-action="ReportUser" method="post" style="display:inline;">
-                        <input type="hidden" name="recipientId" value="@Model.User.Id" />
-                        <button type="submit" class="report-btn" onclick="return confirm('Are you sure you want to report this user?');">
-                            Report
-                        </button>
-                    </form>
+                    <button type="button" class="report-btn" onclick="openReportModal()">
+                        Report User
+                    </button>
+
+                    <div id="reportModal" class="report-modal-overlay" style="display: none;">
+                        <div class="report-modal-content">
+                            <div class="report-modal-header">
+                                <h3>Report Form</h3>
+                                <span class="close-modal-btn" onclick="closeReportModal()">&times;</span>
+                            </div>
+
+                            <form asp-controller="User" asp-action="ReportUser" method="post">
+                                <input type="hidden" name="recipientId" value="@Model.User.Id" />
+
+                                <div class="form-group" style="margin-top: 15px;">
+                                    <label style="display:block; margin-bottom: 5px; font-weight:600;">Description for report:</label>
+                                    <textarea name="description" class="form-control" rows="5" required
+                                              placeholder="Please describe why you are reporting this user..."></textarea>
+                                </div>
+
+                                <div class="report-modal-actions">
+                                    <button type="button" class="btn-cancel-modal" onclick="closeReportModal()">Cancel</button>
+                                    <button type="submit" class="btn-submit-modal">Submit Report</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                   
                 }
 
             </div>
@@ -141,7 +71,7 @@
             @if (ownerEntity.Vehicles == null || !ownerEntity.Vehicles.Any())
             {
                 <div class="view-car-empty">
-                    No cars found for this owner.
+                    There are no available cars from this owner at this time.
                 </div>
             }
             else
@@ -289,3 +219,19 @@
         }
     </section>
 </div></div>
+
+<script>
+    function openReportModal() {
+        document.getElementById('reportModal').style.display = 'flex';
+    }
+    function closeReportModal() {
+        document.getElementById('reportModal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('reportModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>

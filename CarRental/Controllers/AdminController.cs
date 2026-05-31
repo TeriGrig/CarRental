@@ -168,19 +168,22 @@ namespace CarRental.Controllers
             return View(reports);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> MarkAsSeen(int reportId)
-        {
-            var report = await _context.Reports.FirstOrDefaultAsync(r => r.ReportId == reportId);
 
-            if (report != null)
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> InvestigateAndMarkAsSeen(int reportId, string recipientId)
+        {
+            
+            var report = await _context.Reports.FirstOrDefaultAsync(r => r.ReportId == reportId);
+            if (report != null && !report.Seen)
             {
                 report.Seen = true;
                 _context.Update(report);
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction(nameof(ShowReports));
+            
+            return RedirectToAction("OpenUsersProfile", "User", new { userId = recipientId });
         }
 
 
