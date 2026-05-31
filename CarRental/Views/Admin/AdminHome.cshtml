@@ -1,4 +1,397 @@
-﻿@page
-@model CarRental.Views.Admin.AdminHomeModel
-@{
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
 }
+
+<style>
+    .admin-wrapper {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .admin-title {
+        text-align: center;
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .admin-hr {
+        border: 0;
+        height: 3px;
+        background: #34495e;
+        width: 100px;
+        margin: 0 auto 40px auto;
+        border-radius: 2px;
+    }
+
+    .stats-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        flex: 1;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-top: 5px solid #3498db;
+    }
+
+        .stat-card.vehicles {
+            border-top-color: #2ecc71;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .stat-card p {
+            margin: 5px 0 0 0;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+    .admin-section {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+        .admin-section h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+        .admin-table th {
+            background-color: #34495e;
+            color: white;
+            padding: 12px 15px;
+            font-weight: 600;
+        }
+
+        .admin-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #edf2f7;
+            color: #2d3748;
+        }
+
+        .admin-table tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+        .status-badge.available {
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-badge.not-available {
+            background-color: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-badge.requested {
+            background-color: #feebc8;
+            color: #744210;
+        }
+
+        .status-badge.rejected {
+            background-color: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-badge.accepted {
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+
+    .profile-link {
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .profile-link:hover {
+            text-decoration: underline;
+            color: #1d4ed8;
+        }
+
+    .suspended {
+        background-color: #fed7d7;
+        color: #742a2a;
+    }
+
+    .nonSuspended {
+        background-color: #c6f6d5;
+        color: #22543d;
+    }
+</style>
+
+<div class="admin-wrapper">
+    <h2 class="admin-title">Admin Dashboard</h2>
+    <div class="admin-hr"></div>
+
+    <div class="stats-row">
+        <div class="stat-card users">
+            <h3>@ViewBag.TotalUsersCount</h3>
+            <p>Users</p>
+        </div>
+        <div class="stat-card vehicles">
+            <h3>@ViewBag.TotalVehiclesCount</h3>
+            <p>Vehicles</p>
+        </div>
+    </div>
+
+    <div class="admin-section">
+        <h3>Ιδιοκτήτες</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Account Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Owners != null)
+                {
+                    foreach (var owner in ViewBag.Owners)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@owner.User.Id" class="profile-link">
+                                    @owner.User.FirstName @owner.User.LastName
+                                </a>
+                            </td>
+                            <td>@owner.User.Email</td>
+                            <td>@owner.User.PhoneNumber</td>
+                            <td>
+                                @if (owner.User.IsSuspended)
+                                {
+                                    <span class="status-badge suspended">
+                                        Suspended (Έως @owner.User.SuspensionEnd.ToString("dd/MM/yyyy"))
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge nonSuspended">Active</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-section">
+        <h3>Ενοικιαστές</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Birth Year</th>
+                    <th>License Year</th>
+                    <th>Account Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Renters != null)
+                {
+                    foreach (var renter in ViewBag.Renters)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@renter.User.Id" class="profile-link">
+                                    @renter.User.FirstName @renter.User.LastName
+                                </a>
+                            </td>
+                            <td>@renter.User.Email</td>
+                            <td>@(renter.BirthYear > 0 ? renter.BirthYear.ToString() : "-")</td>
+                            <td>@(renter.LicenceYear > 0 ? renter.LicenceYear.ToString() : "-")</td>
+                            <td>
+                                @if (renter.User.IsSuspended)
+                                {
+                                    <span class="status-badge suspended">
+                                        Suspended (Έως @renter.User.SuspensionEnd.ToString("dd/MM/yyyy"))
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge nonSuspended">Active</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-section">
+        <h3>Οχήματα</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Cubics</th>
+                    <th>Owner</th>
+                    <th>Price per Day</th>
+                    <th>Current Availability</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.AllVehicles != null)
+                {
+                    foreach (var vehicle in ViewBag.AllVehicles)
+                    {
+                        <tr>
+                            <td>@vehicle.Make @vehicle.Model (@vehicle.Year)</td>
+                            <td>@vehicle.Cubic cc</td>
+                            <td>
+                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@vehicle.Owner.User.Id" class="profile-link">
+                                    @vehicle.Owner.User.FirstName @vehicle.Owner.User.LastName
+                                </a>
+                            </td>
+                            <td>@vehicle.PricePerDay €</td>
+                            <td>
+                                @if (vehicle.Availability)
+                                {
+                                    <span class="status-badge available">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge not-available">Not Available</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-section">
+        <h3>Κρατήσεις</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Owner</th>
+                    <th>Renter</th>
+                    <th>Dates</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.AllBookings != null)
+                {
+                    foreach (var booking in ViewBag.AllBookings)
+                    {
+                        <tr>
+                            <td>@booking.Vehicle.Make @booking.Vehicle.Model</td>
+                            <td>
+                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@booking.Vehicle.Owner.User.Id" class="profile-link">
+                                    @booking.Vehicle.Owner.User.FirstName @booking.Vehicle.Owner.User.LastName
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@booking.Renter.User.Id" class="profile-link">
+                                    @booking.Renter.User.FirstName @booking.Renter.User.LastName
+                                </a>
+                            </td>
+                            <td>@booking.StartDate.ToShortDateString() - @booking.EndDate.ToShortDateString()</td>
+                            <td>
+                                @if (booking.Status == "Requested")
+                                {
+                                    <span class="status-badge requested">@booking.Status</span>
+                                }
+                                else if (booking.Status == "Rejected")
+                                {
+                                    <span class="status-badge rejected">@booking.Status</span>
+                                }
+                                else if (booking.Status == "Available")
+                                {
+                                    <span class="status-badge available">@booking.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge accepted">@booking.Status</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-section">
+        <h3>Admins</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                 
+                    <th>Account Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Admins != null)
+                {
+                    foreach (var admin in ViewBag.Admins)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@admin.Id" class="profile-link">
+                                    @admin.FirstName @admin.LastName
+                                </a>
+                            </td>
+                            <td>@admin.Email</td>
+                          
+                            <td>
+                                <span class="status-badge nonSuspended">System Admin</span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #7f8c8d;">No other admins found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

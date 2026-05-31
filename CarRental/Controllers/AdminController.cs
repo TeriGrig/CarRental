@@ -27,10 +27,63 @@ namespace CarRental.Controllers
             return View();
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> LiftSuspension(string UserId)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == UserId);
+
+            if (user != null)
+            {
+              
+                user.IsSuspended = false;
+                user.SuspensionEnd = default; 
+
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+
+      
+            return RedirectToAction("OpenUsersProfile", "User", new { userId = UserId });
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> AdminHome()
         {
-            return View();
+            ViewBag.TotalUsersCount = await _context.Users.CountAsync();
+            ViewBag.TotalVehiclesCount = await _context.Vehicles.CountAsync();
+
+      
+            ViewBag.Owners = await _context.Owners
+                .Include(o => o.User)
+                .Where(o => !o.User.IsDeleted)
+                .ToListAsync();
+
+            ViewBag.Renters = await _context.Renters
+                .Include(r => r.User)
+                .Where(r => !r.User.IsDeleted)
+                .ToListAsync();
+
+       
+            ViewBag.AllVehicles = await _context.Vehicles
+                .Include(v => v.Owner)
+                .ThenInclude(o => o.User)
+                .ToListAsync();
+
+            ViewBag.AllBookings = await _context.Bookings
+                .Include(b => b.Vehicle)
+                .Include(b => b.Renter)
+                .ThenInclude(r => r.User)
+                .ToListAsync();
+
+            var ownerUserIds = await _context.Owners.Select(o => o.User.Id).ToListAsync();
+            var renterUserIds = await _context.Renters.Select(r => r.User.Id).ToListAsync();
+
+            ViewBag.Admins = await _context.Users
+            .Where(u => !u.IsDeleted && !ownerUserIds.Contains(u.Id) && !renterUserIds.Contains(u.Id))
+            .ToListAsync();
+            return View("AdminHome");
         }
 
         public async Task<IActionResult> SuspendUser(string UserId, DateOnly date)
@@ -47,6 +100,9 @@ namespace CarRental.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> CreateAdmin(
@@ -126,5 +182,18 @@ namespace CarRental.Controllers
 
             return RedirectToAction(nameof(ShowReports));
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ShowSuspendedUsers()
+        {
+            var suspendedUsers = await _context.Users
+                .Where(u => u.IsSuspended && !u.IsDeleted)
+                .ToListAsync();
+            return View(suspendedUsers);
+        }
+
+
+   
     }
 }

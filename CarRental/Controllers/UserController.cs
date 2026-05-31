@@ -290,24 +290,39 @@ namespace CarRental.Controllers
         [Authorize]
         public async Task<IActionResult> OpenUsersProfile(string userId)
         {
-
             if (string.IsNullOrEmpty(userId)) return NotFound();
 
+            
             var reviews = await _context.Reviews
              .Include(r => r.Commenter)
              .Where(r => r.RecipientId == userId && !r.IsDeleted)
              .ToListAsync();
             ViewBag.Reviews = reviews;
 
+          
             var renter = await _context.Renters.Include(r => r.User).FirstOrDefaultAsync(r => r.UserId == userId && !r.User.IsDeleted);
             if (renter != null) return View("OpenUsersProfile", renter);
 
-            var owner = await _context.Owners.Include(o => o.User).FirstOrDefaultAsync(o => o.UserId == userId && !o.User.IsDeleted);
-            if (owner != null) return View("OpenUsersProfile", owner);
+            
+            var owner = await _context.Owners
+                .Include(o => o.User)
+                .Include(o => o.Vehicles) 
+                .FirstOrDefaultAsync(o => o.UserId == userId && !o.User.IsDeleted);
+
+            if (owner != null)
+            {
+                
+                if (!User.IsInRole("Admin"))
+                {
+                    
+                    owner.Vehicles = owner.Vehicles.Where(v => v.Availability == true).ToList();
+                }
+              
+
+                return View("OpenUsersProfile", owner);
+            }
 
             return NotFound();
-
-
         }
 
 

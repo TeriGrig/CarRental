@@ -62,17 +62,18 @@
         <span asp-validation-for="Comments"></span>
     </div>
 
-    <div>
-        <label>Image</label>
-        <input asp-for="ImageFile" type="file" />
-        <span asp-validation-for="ImageFile"></span>
-    </div>
+        <div class="form-row">
+            <label class="form-label">Vehicle Image</label>
+            <input asp-for="ImageFile" type="file" class="form-input-file" />
+            <span asp-validation-for="ImageFile" class="field-error"></span>
+        </div>
 
-    <div>
-        <label>Available for Rent</label>
-        <input asp-for="IsAvailable" type="checkbox"></>
-        <span asp-validation-for="IsAvailable"></span>
-    </div>
+        <div class="form-row-checkbox">
+            <input asp-for="IsAvailable" type="checkbox" class="form-checkbox" />
+            <label class="checkbox-label">Available for Rent</label>
+            <span asp-validation-for="IsAvailable" class="field-error"></span>
+        </div>
+
   
     @* For choosing the car on the map *@
     <input asp-for="Latitude" type="hidden" id="Latitude" />
