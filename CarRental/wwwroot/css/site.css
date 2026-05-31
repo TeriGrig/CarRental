@@ -659,7 +659,7 @@ label {
 }
 
     .slider-btn:hover {
-        background-color: #2563eb; /* Γίνεται μπλε στο hover */
+        background-color: #2563eb;
     }
 
 /* Τοποθέτηση στα άκρα */
@@ -670,8 +670,6 @@ label {
 .next-btn {
     right: 0;
 }
-
-
 
 
 /*

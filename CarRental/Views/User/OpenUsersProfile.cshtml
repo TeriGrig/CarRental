@@ -1,4 +1,99 @@
-﻿<div class="profile-page-layout">
+﻿
+<style>
+    .account-analytics-section {
+        margin-bottom: 45px !important;
+    }
+
+   
+    #profileSliderWrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    
+    #profileCarSlider {
+        display: flex;
+        gap: 15px;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        width: 100%;
+        padding: 15px 5px;
+    }
+
+   
+    #profileSliderWrapper .view-car-car-card {
+        min-width: 190px;
+        max-width: 190px;
+        flex-shrink: 0;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-sizing: border-box;
+    }
+
+    #profileSliderWrapper .view-car-car-image {
+        width: 100%;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    #profileSliderWrapper .view-car-car-info h4 {
+        margin: 8px 0 4px 0;
+        font-size: 15px;
+        color: #211066;
+        font-weight: 700;
+    }
+
+    #profileSliderWrapper .view-car-car-info p {
+        margin: 2px 0;
+        font-size: 12px;
+        color: #4b5563;
+    }
+
+    #profileSliderWrapper .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+      
+        background-color: #211066;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        transition: background-color 0.2s ease;
+    }
+
+        #profileSliderWrapper .slider-btn:hover {
+            background-color: #2563eb;
+            
+        }
+
+    #profileSliderWrapper .prev-btn {
+        left: 0;
+    }
+
+    #profileSliderWrapper .next-btn {
+        right: 0;
+    }
+</style>
+
+<div class="profile-page-layout">
 
     <div class="profile-column">
 
@@ -37,41 +132,57 @@
 
             </div>
         </section>
-        @if (Model is Owner ownerEntity)
-        {
-            <div class="account-analytics-section" style="height: auto; margin-bottom: 30px;">
-                <h3>Owner's Vehicles</h3>
+    @if (Model is Owner ownerEntity)
+{
+    <div class="account-analytics-section">
+        <h3>Owner's Vehicles</h3>
 
-                <div class="slider-container">
-                    @if (ownerEntity.Vehicles == null || !ownerEntity.Vehicles.Any())
-                    {
-                        <div class="view-car-empty">
-                            No cars found for this owner.
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="view-car-cars-slider" id="carSlider" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;">
-                            @foreach (var car in ownerEntity.Vehicles)
-                            {
-                                <div class="view-car-car-card" data-id="@car.VehicleId" style="min-width: 200px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px;">
-                                    <img src="@car.Image" class="view-car-car-image" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;" />
+        <div class="slider-container">
+            @if (ownerEntity.Vehicles == null || !ownerEntity.Vehicles.Any())
+            {
+                <div class="view-car-empty">
+                    No cars found for this owner.
+                </div>
+            }
+            else
+            {
+                <div class="slider-wrapper" id="profileSliderWrapper">
+                    <button class="slider-btn prev-btn" onclick="scrollProfileSlider(-1)">&#10094;</button>
+                    
+                    <div class="view-car-cars-slider" id="profileCarSlider">
+                        @foreach (var car in ownerEntity.Vehicles)
+                        {
+                            <div class="view-car-car-card" data-id="@car.VehicleId">
+                                <img src="@car.Image" class="view-car-car-image" />
 
-                                    <div class="view-car-car-content" style="margin-top: 10px;">
-                                        <div class="view-car-car-info">
-                                            <h4 style="margin: 0 0 5px 0; font-size: 16px;">@car.Make @car.Model</h4>
-                                            <p style="margin: 2px 0; font-size: 13px;"><b>Year:</b> @car.Year</p>
-                                            <p style="margin: 2px 0; font-size: 13px;"><b>Cubic:</b> @car.Cubic cc</p>
-                                            <p style="margin: 2px 0; font-size: 13px; color: #5d749f;"><b>Price/Day:</b> @car.PricePerDay €</p>
-                                        </div>
+                                <div class="view-car-car-content">
+                                    <div class="view-car-car-info">
+                                        <h4>@car.Make @car.Model</h4>
+                                        <p><b>Year:</b> @car.Year</p>
+                                        <p><b>Cubic:</b> @car.Cubic cc</p>
+                                        <p class="car-price"><b>Price/Day:</b> @car.PricePerDay €</p>
                                     </div>
                                 </div>
-                            }
-                        </div>
-                    }
+                            </div>
+                        }
+                    </div>
+                    
+                    <button class="slider-btn next-btn" onclick="scrollProfileSlider(1)">&#10095;</button>
                 </div>
-            </div>
-        }
+            }
+        </div>
+    </div>
+}
+        <script>
+                    function scrollProfileSlider(direction) {
+                        const slider = document.getElementById('profileCarSlider');
+                        const scrollAmount = 205;
+
+                        slider.scrollBy({
+                            left: direction * scrollAmount
+                        });
+                    }
+        </script>
         @if (User.IsInRole("Admin"))
         {
             <section class="leave-review-section admin-suspend-section">
