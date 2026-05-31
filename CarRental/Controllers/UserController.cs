@@ -382,29 +382,24 @@ namespace CarRental.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> ReportUser(string recipientId)
+        public async Task<IActionResult> ReportUser(string recipientId, string description)
         {
-         
             var reporterId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-          
 
             if (string.IsNullOrEmpty(recipientId))
             {
                 return BadRequest("Invalid user ID.");
             }
 
-
             var newReport = new Report
             {
                 ReporterId = reporterId,
                 ReportRecipientId = recipientId,
                 DateTime = DateTime.Now,
-                Description = "",   //to be changed after the changes.
+                Description = description ?? "", 
                 Seen = false
             };
 
-           
             _context.Reports.Add(newReport);
             await _context.SaveChangesAsync();
 
