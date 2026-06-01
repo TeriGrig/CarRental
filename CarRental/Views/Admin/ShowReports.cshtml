@@ -13,82 +13,90 @@
             {
                 @foreach (var report in Model)
                 {
-                    <div class="report-card @(report.Seen ? "report-seen" : "report-unseen")">
+                    if (!report.ReportRecipient.IsDeleted)
+                    {
+                        <div class="report-card @(report.Seen ? "report-seen" : "report-unseen")">
 
-                        <div class="report-header">
-                            <div class="report-meta-group">
-                                <h4 class="report-id">Report #@report.ReportId</h4>
-                                <span class="report-date">
-                                    (@report.DateTime.ToString("dd/MM/yyyy HH:mm"))
-                                </span>
-                                <span class="report-header-party">
-                                    <strong>Reporter:</strong>
-                                    @if (report.Reporter != null)
+                            <div class="report-header">
+                                <div class="report-meta-group">
+                                    <h4 class="report-id">Report #@report.ReportId</h4>
+                                    <span class="report-date">
+                                        (@report.DateTime.ToString("dd/MM/yyyy HH:mm"))
+                                    </span>
+                                    <span class="report-header-party">
+                                        <strong>Reporter:</strong>
+                                        @if (report.Reporter != null || !report.Reporter.IsDeleted)
+                                        {
+                                            <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReporterId" class="reporter-link">
+                                                @report.Reporter.FirstName @report.Reporter.LastName
+                                            </a>
+                                        }
+                                        else if (report.Reporter.IsDeleted)
+                                        {
+                                            <a>@report.Reporter.FirstName</a>
+                                            @report.Reporter.LastName
+                                        }
+                                        else
+                                        {
+                                            <span class="user-unknown">Unknown</span>
+                                        }
+                                    </span>
+
+                                    <span class="report-header-separator"></span>
+
+                                    <span class="report-header-party">
+                                        <strong>Accused:</strong>
+                                        @if (report.ReportRecipient != null)
+                                        {
+                                            <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReportRecipientId" class="accused-link">
+                                                @report.ReportRecipient.FirstName @report.ReportRecipient.LastName
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="user-unknown">Unknown</span>
+                                        }
+                                    </span>
+
+                                   
+                                </div>
+
+                                <div>
+                                    @if (report.Seen)
                                     {
-                                        <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReporterId" class="reporter-link">
-                                            @report.Reporter.FirstName @report.Reporter.LastName
-                                        </a>
+                                        <span class="report-badge badge-seen">Seen</span>
+                                    }
+                                    
+                                </div>
+                            </div>
+
+                            <hr class="report-divider" />
+
+                            <div class="report-description">
+                                <strong class="report-description-label">Description:</strong>
+                                <p class="report-description-text">
+                                    @if (!string.IsNullOrWhiteSpace(report.Description))
+                                    {
+                                        @report.Description
                                     }
                                     else
                                     {
-                                        <span class="user-unknown">Unknown</span>
+                                        <span class="user-unknown" style="font-weight: normal;">No description given by user.</span>
                                     }
-                                </span>
-
-                                <span class="report-header-separator"></span>
-
-                                <span class="report-header-party">
-                                    <strong>Accused:</strong>
-                                    @if (report.ReportRecipient != null)
-                                    {
-                                        <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@report.ReportRecipientId" class="accused-link">
-                                            @report.ReportRecipient.FirstName @report.ReportRecipient.LastName
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <span class="user-unknown">Unknown</span>
-                                    }
-                                </span>
-
-                               
+                                </p>
                             </div>
 
-                            <div>
-                                @if (report.Seen)
-                                {
-                                    <span class="report-badge badge-seen">Seen</span>
-                                }
-                                
+                            <div class="report-actions-footer">
+                                <form asp-controller="Admin" asp-action="InvestigateAndMarkAsSeen" method="post" class="form-inline">
+                                    <input type="hidden" name="reportId" value="@report.ReportId" />
+                                    <input type="hidden" name="recipientId" value="@report.ReportRecipientId" />
+                                    <button type="submit" class="btn-report-action btn-investigate">
+                                        Investigate Report
+                                    </button>
+                                </form>
                             </div>
                         </div>
-
-                        <hr class="report-divider" />
-
-                        <div class="report-description">
-                            <strong class="report-description-label">Description:</strong>
-                            <p class="report-description-text">
-                                @if (!string.IsNullOrWhiteSpace(report.Description))
-                                {
-                                    @report.Description
-                                }
-                                else
-                                {
-                                    <span class="user-unknown" style="font-weight: normal;">No description given by user.</span>
-                                }
-                            </p>
-                        </div>
-
-                        <div class="report-actions-footer">
-                            <form asp-controller="Admin" asp-action="InvestigateAndMarkAsSeen" method="post" class="form-inline">
-                                <input type="hidden" name="reportId" value="@report.ReportId" />
-                                <input type="hidden" name="recipientId" value="@report.ReportRecipientId" />
-                                <button type="submit" class="btn-report-action btn-investigate">
-                                    Investigate Report
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                    }
                 }
             }
         </div>
