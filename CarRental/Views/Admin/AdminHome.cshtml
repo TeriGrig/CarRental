@@ -320,14 +320,30 @@
                         <tr>
                             <td>@booking.Vehicle.Make @booking.Vehicle.Model</td>
                             <td>
-                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@booking.Vehicle.Owner.User.Id" class="profile-link">
-                                    @booking.Vehicle.Owner.User.FirstName @booking.Vehicle.Owner.User.LastName
-                                </a>
+                                @if (!booking.Vehicle.Owner.User.IsDeleted)
+                                {
+                                    <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@booking.Vehicle.Owner.User.Id" class="profile-link">
+                                        @booking.Vehicle.Owner.User.FirstName 
+                                        @booking.Vehicle.Owner.User.LastName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a>@booking.Vehicle.Owner.User.FirstName </a>
+                                    @booking.Vehicle.Owner.User.LastName
+                                }
                             </td>
                             <td>
-                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@booking.Renter.User.Id" class="profile-link">
-                                    @booking.Renter.User.FirstName @booking.Renter.User.LastName
-                                </a>
+                                @if (!booking.Renter.User.IsDeleted){
+                                    <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@booking.Renter.User.Id" class="profile-link">
+                                        @booking.Renter.User.FirstName @booking.Renter.User.LastName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a>@booking.Renter.User.FirstName </a>
+                                    @booking.Renter.User.LastName
+                                }
                             </td>
                             <td>@booking.StartDate.ToShortDateString() - @booking.EndDate.ToShortDateString()</td>
                             <td>
@@ -373,7 +389,7 @@
                     {
                         <tr>
                             <td>
-                                <a asp-controller="User" asp-action="OpenUsersProfile" asp-route-userId="@admin.Id" class="profile-link">
+                                <a asp-controller="User" asp-action="ViewProfile" asp-route-userId="@admin.Id" class="profile-link">
                                     @admin.FirstName @admin.LastName
                                 </a>
                             </td>

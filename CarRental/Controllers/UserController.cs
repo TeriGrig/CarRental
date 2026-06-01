@@ -64,6 +64,16 @@ namespace CarRental.Controllers
 
                 return View(owner);
             }
+            else if (User.IsInRole("Admin"))
+            {
+                var admin = _context.Admins
+                    .Include(a => a.User)
+                    .FirstOrDefault(a => a.UserId == userId && !a.User.IsDeleted);
+
+                if (admin == null) return NotFound();
+
+                return View(admin);
+            }
 
             return NotFound();
         }
