@@ -266,6 +266,7 @@ namespace CarRental.Controllers
                     profileUrl = "/User/OpenUsersProfile?userId=" + b.Renter.UserId
 
                 })
+                    .Take(10)
                   .ToListAsync();
 
                 bookings.Reverse();
@@ -292,6 +293,7 @@ namespace CarRental.Controllers
                     profileUrl = "/User/OpenUsersProfile?userId=" + b.Vehicle.Owner.UserId,
                     showPaymentButton = b.Status == "Accepted" && !b.IsPaid
                 })
+                    .Take(10)
                   .ToListAsync();
 
                 bookings.Reverse();

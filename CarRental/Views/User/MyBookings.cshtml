@@ -79,13 +79,27 @@
                     </p>
 
                     <p>Status:<b> @booking.Status, @(booking.IsPaid ? "Paid" : "Not paid") </b></p>
+                   
                     
 
                     <p class="booking-address">
                         Loading address...
                     </p>
 
-                   
+                    <div class="booking-actions-row" style="display: flex; gap: 10px; align-items: center; margin-top: 15px;">
+                    @if (booking.Status == "Accepted" && !booking.IsPaid && User.IsInRole("Renter"))
+                    {
+                       
+                            <a asp-controller="Renter"
+                               asp-action="PayBooking"
+                               asp-route-bookingId="@booking.BookingId"
+                               class="btn-custom payment-btn">
+                              
+                                Proceed to Payment
+                            </a>
+
+                       
+                    }
                     @if (booking.Status == "Accepted")
                     {
                         <form asp-controller="User"
@@ -102,7 +116,7 @@
 
                         </form>
                     }
-
+                   </div>
                     @if (User.IsInRole("Owner") && booking.Status == "Requested")
                     {
                         <form asp-controller="Owner"
