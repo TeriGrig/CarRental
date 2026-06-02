@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Claims;
+using Stripe.Checkout;
 
 namespace CarRental.Controllers
 {
@@ -153,7 +154,71 @@ namespace CarRental.Controllers
        
         }
 
+        [HttpGet]
+        [Route("Renter/PayBooking")]
+        public IActionResult PayBooking(int bookingId)
+        {
+            var booking = _context.Bookings
+                .Include(b => b.Vehicle)
+                .FirstOrDefault(b => b.BookingId == bookingId);
 
+            if (booking == null)
+                return NotFound();
 
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> {"card"},
+
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        Quantity = 1,
+
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            Currency = "eur",
+
+                            UnitAmount =  booking.Vehicle.PricePerDay * 100,
+
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = booking.Vehicle.Make + " " + booking.Vehicle.Model
+                            }
+                        }
+                    }
+                },
+
+                Mode = "payment",
+
+                SuccessUrl =  "https://localhost:7146/Renter/PaymentSuccess?bookingId=" + bookingId,
+
+                CancelUrl = "https://localhost:7146/User/MyBookings"
+            };
+
+            var service = new SessionService();
+
+            Session session = service.Create(options);
+
+            return Redirect(session.Url);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Renter")]
+        public async Task<IActionResult> PaymentSuccess(int bookingId)
+        {
+            var booking = await _context.Bookings
+                .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            if (booking == null)
+                return NotFound();
+
+            booking.IsPaid = true;
+
+            _context.Update(booking);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("MyBookings", "User");
+        }
     }
 }

@@ -134,15 +134,18 @@
                                                 {
 
                                                     <h4 style="color:black;">Booking Status</h4>
+                                                    @* if ()
+                                                    {
+
+                                                    } *@
                                                 }
                         
                                                 <div id="notificationsContent"></div>
                                             </div>
                                         </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-controller="User" asp-action="ViewProfile"><img id="accountIcon" src="/images/account-icon.png" width="27" /></a>
-                                    </li>
-
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" asp-controller="User" asp-action="ViewProfile"><img id="accountIcon" src="/images/account-icon.png" width="27" /></a>
+                                        </li>
 
                                     }
                                 }
@@ -178,70 +181,81 @@
                 }
             }
 
-                                function loadNotifications() {
+            function loadNotifications() {
 
-                        var isOwner = @(User.IsInRole("Owner") ? "true" : "false");
-                        var isRenter = @(User.IsInRole("Renter") ? "true" : "false");
+                var isOwner = @(User.IsInRole("Owner") ? "true" : "false");
+                var isRenter = @(User.IsInRole("Renter") ? "true" : "false");
 
-                        $.ajax({
-                            url: '/User/BookingNotifications',
-                            method: 'GET',
-                            success: function (bookings) {
+                $.ajax({
+                    url: '/User/BookingNotifications',
+                    method: 'GET',
+                    success: function (bookings) {
 
-                                var notificationsContent = $('#notificationsContent');
-                                notificationsContent.empty();
+                        var notificationsContent = $('#notificationsContent');
+                        notificationsContent.empty();
 
-                                // CHANGE ICON HERE
-                                var icon = document.getElementById("notificationIcon");
+                        // CHANGE ICON HERE
+                        var icon = document.getElementById("notificationIcon");
 
-                                if (bookings.length > 0) {
-                                    icon.src = "/images/notification-icon-on.png";
-                                } else {
-                                    icon.src = "/images/notification-icon-off.png";
-                                }
+                        if (bookings.length > 0) {
+                            icon.src = "/images/notification-icon-on.png";
+                        } else {
+                            icon.src = "/images/notification-icon-off.png";
+                        }
 
-                                if (bookings.length === 0) {
-                                    var emptyMsg = isOwner ? "No new requests." : "No status updates.";
+                        if (bookings.length === 0) {
+                            var emptyMsg = isOwner ? "No new requests." : "No status updates.";
 
-                                    notificationsContent.append(
-                                        '<p style="color:black; padding:10px;">' + emptyMsg + '</p>'
-                                    );
+                            notificationsContent.append(
+                                '<p style="color:black; padding:10px;">' + emptyMsg + '</p>'
+                            );
 
-                                    return;
-                                }
+                            return;
+                        }
 
-                                bookings.forEach(function (item) {
+                        bookings.forEach(function (item) {
 
-                                    var html =
-                                        '<div style="border-bottom:1px solid black; padding:10px; color:black;">' +
-                                        '<div>' + item.message + '</div>';
+                            var html =
+                                '<div style="border-bottom:1px solid black; padding:10px; color:black;">' +
+                                '<div>' + item.message + '</div>';
 
-                                    if (item.profileUrl) {
-                                        html +=
-                                            '<div style="margin-top:5px;">' +
-                                            '<a href="' + item.profileUrl + '" style="color:#3498db; text-decoration:underline; font-size:smaller;">View User Profile</a>' +
-                                            '</div>';
-                                    }
-
-                                    if (isOwner) {
-                                        html +=
-                                            '<div style="margin-top:5px;">' +
-                                            '<button onclick="respondToBooking(' + item.id + ', \'Accepted\')" style="background:green; color:white; border:none; margin-right:5px; cursor:pointer;">Accept</button>' +
-                                            '<button onclick="respondToBooking(' + item.id + ', \'Rejected\')" style="background:red; color:white; border:none; cursor:pointer;">Reject</button>' +
-                                            '</div>';
-                                    }
-
-                                    html += '</div>';
-
-                                    notificationsContent.append(html);
-                                });
-                            },
-
-                            error: function () {
-                                console.log('Failed to load notifications.');
+                            if (item.profileUrl) {
+                                html +=
+                                    '<div style="margin-top:5px;">' +
+                                    '<a href="' + item.profileUrl + '" style="color:#3498db; text-decoration:underline; font-size:smaller;">View User Profile</a>' +
+                                    '</div>';
                             }
+
+                            if (item.showPaymentButton) {
+                                html +=
+                                    '<div style="margin-top:5px;">' +
+                                    '<a href="/Renter/PayBooking?bookingId=' + item.id + '">' +
+                                    '<button style="background:orange;color:white;border:none;cursor:pointer;">' +
+                                    'Proceed to Payment' +
+                                    '</button>' +
+                                    '</a>' +
+                                    '</div>';
+                            }
+
+                            if (isOwner) {
+                                html +=
+                                    '<div style="margin-top:5px;">' +
+                                    '<button onclick="respondToBooking(' + item.id + ', \'Accepted\')" style="background:green; color:white; border:none; margin-right:5px; cursor:pointer;">Accept</button>' +
+                                    '<button onclick="respondToBooking(' + item.id + ', \'Rejected\')" style="background:red; color:white; border:none; cursor:pointer;">Reject</button>' +
+                                    '</div>';
+                            }
+
+                            html += '</div>';
+
+                            notificationsContent.append(html);
                         });
+                    },
+
+                    error: function () {
+                        console.log('Failed to load notifications.');
                     }
+                });
+            }
            
             
             function respondToBooking(id, statusValue) {

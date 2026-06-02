@@ -5,9 +5,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 var culture = new CultureInfo("en-US");
+var stripeSecretKey = builder.Configuration["Stripe:SecretKey"];
+
+StripeConfiguration.ApiKey = stripeSecretKey;
 
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;

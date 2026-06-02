@@ -78,7 +78,8 @@
                         @booking.EndDate.ToString("dd-MM-yyyy HH:mm")
                     </p>
 
-                    <p>Status:<b> @booking.Status</b></p>
+                    <p>Status:<b> @booking.Status, @(booking.IsPaid ? "Paid" : "Not paid") </b></p>
+                    
 
                     <p class="booking-address">
                         Loading address...
