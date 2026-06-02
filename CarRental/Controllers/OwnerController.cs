@@ -280,15 +280,6 @@ namespace CarRental.Controllers
 
             booking.Status = Status;
 
-            if (Status == "Accepted")
-            {
-                booking.Vehicle.Availability = false;
-            }
-            else if (Status == "Rejected")
-            {
-                booking.Vehicle.Availability = true;
-            }
-
             _context.Update(booking);
 
             await _context.SaveChangesAsync();
