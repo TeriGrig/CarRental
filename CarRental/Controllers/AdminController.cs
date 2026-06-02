@@ -164,7 +164,6 @@ namespace CarRental.Controllers
                 .Include(r => r.ReportRecipient)
                 .OrderByDescending(r => r.DateTime)
                 .ToListAsync();
-
             return View(reports);
         }
 

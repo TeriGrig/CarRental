@@ -144,10 +144,8 @@ namespace CarRental.Controllers
             };
 
             _context.Bookings.Add(booking);
-
-           
-            //vehicle.Availability = false;
             _context.SaveChanges();
+            _context.Update(booking);
             TempData["Success"] = "Request created!";
 
             return RedirectToAction("ShowCars");
@@ -165,6 +163,11 @@ namespace CarRental.Controllers
             if (booking == null)
                 return NotFound();
 
+            var days = (booking.EndDate.Date - booking.StartDate.Date).Days;
+
+            if (days <= 0)
+                days = 1;
+
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string> {"card"},
@@ -179,7 +182,7 @@ namespace CarRental.Controllers
                         {
                             Currency = "eur",
 
-                            UnitAmount =  booking.Vehicle.PricePerDay * 100,
+                            UnitAmount =  booking.Vehicle.PricePerDay * days * 100,
 
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {

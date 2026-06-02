@@ -209,3 +209,54 @@
 
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const startDate = document.querySelector('[name="startDate"]');
+    const startTime = document.querySelector('[name="startTime"]');
+    const endDate = document.querySelector('[name="endDate"]');
+    const endTime = document.querySelector('[name="endTime"]');
+
+    function getStart() {
+    return new Date(startDate.value + "T" + startTime.value);
+    }
+
+    function updateEndMin() {
+    const start = getStart();
+
+    if (!isNaN(start)) {
+
+    // set min end date
+    const minDate = start.toISOString().split("T")[0];
+    endDate.min = minDate;
+
+    // if same day, enforce time rule dynamically
+    if (endDate.value === startDate.value) {
+    endTime.min = startTime.value;
+    } else {
+    endTime.min = "";
+    }
+    }
+    }
+
+    function validateDates() {
+    const start = getStart();
+    const end = new Date(endDate.value + "T" + endTime.value);
+
+    if (!isNaN(start) && !isNaN(end)) {
+    if (end <= start) {
+    alert("End date/time must be after start date/time");
+    endDate.value = "";
+    endTime.value = "";
+    }
+    }
+    }
+
+    startDate.addEventListener("change", updateEndMin);
+    startTime.addEventListener("change", updateEndMin);
+
+    endDate.addEventListener("change", validateDates);
+    endTime.addEventListener("change", validateDates);
+    });
+</script>
