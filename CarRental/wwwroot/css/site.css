@@ -749,9 +749,12 @@ label {
     opacity: 0.6;
 }
 
+.payment-btn{
+    color:black;
+    text-decoration:none;
 
+}
 /* ---------------------shhhow cars----------------------------------------------- */
-
 .cars-book-map-layout {
     display: block;
     height: auto;
@@ -1067,7 +1070,7 @@ label {
 /* RIGHT COLUMN */
 
 .reviews-column {
-    width: 450px;
+    width: 500px;
     display: flex;
     flex-direction: column;
     gap: 25px;
@@ -1185,6 +1188,7 @@ label {
     padding: 24px;
     border: 1px solid #e5e7eb;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    width:550px;
 }
 
     .reviews-section h3,
@@ -1197,8 +1201,8 @@ label {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    height: 730px;
-    width: 400px;
+    height: 450px;
+    width: 500px;
     overflow-y: auto;
 }
 
@@ -1494,6 +1498,7 @@ label {
 .admin-suspend-section {
     border: 1px solid #feb2b2;
     max-width: 800px;
+    width:800px;
 }
 
     .admin-suspend-section h3 {
