@@ -285,9 +285,18 @@ namespace CarRental.Controllers
                     id = b.BookingId,
                     message = b.Status == "Requested"
                         ? "Your booking for " + b.Vehicle.Make + " is pending approval from " + b.Vehicle.Owner.User.FirstName
-                        : "Your booking for " + b.Vehicle.Make + " has been " + b.Status.ToLower() + " by " + b.Vehicle.Owner.User.FirstName, 
-                        profileUrl = "/User/OpenUsersProfile?userId=" + b.Vehicle.Owner.UserId
+                        : b.Status == "Accepted" && !b.IsPaid
+                            ? "Your booking for " + b.Vehicle.Make + " has been accepted. Payment required."
+                            : "Your booking for " + b.Vehicle.Make + " has been " + b.Status.ToLower() + " by " + b.Vehicle.Owner.User.FirstName,
 
+                    //: "Your booking for " + b.Vehicle.Make + " has been " + b.Status.ToLower() + " by " + b.Vehicle.Owner.User.FirstName, 
+                    //profileUrl = "/User/OpenUsersProfile?userId=" + b.Vehicle.Owner.UserId + 
+                    //((b.Status == "Accepted" && !b.IsPaid)
+                    //? "Please procced to payment"
+                    //: ""),
+
+                    profileUrl = "/User/OpenUsersProfile?userId=" + b.Vehicle.Owner.UserId,
+                    showPaymentButton = b.Status == "Accepted" && !b.IsPaid
                 })
                   .ToListAsync();
                 return Json(bookings);
