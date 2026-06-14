@@ -306,11 +306,16 @@ namespace CarRental.Controllers
                 var bookings = await _context.Bookings
                     .Include(b => b.Vehicle)
                     .Include(b => b.Renter.User)
-                    .Where(b => b.Vehicle.OwnerID == owner.Id && b.Status == "Requested")
+                    .Where(b => b.Vehicle.OwnerID == owner.Id && (b.Status == "Requested" || b.Status == "Canceled"))
                     .Select(b => new
                     {
                         id = b.BookingId,
-                        message = "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName,
+                        //message = "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName ,
+                        message = b.Status == "Canceled"
+                            ? "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName + " has been canceled."
+                            : b.Status == "Requested"
+                                ? "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName + " is pending your approval."
+                                : null,
                         profileUrl = "/User/OpenUsersProfile?userId=" + b.Renter.UserId
                     })
                     .Take(10)
@@ -334,7 +339,7 @@ namespace CarRental.Controllers
                             ? "Your booking for " + b.Vehicle.Make + " is pending approval from " + b.Vehicle.Owner.User.FirstName
                             : b.Status == "Accepted" && !b.IsPaid
                                 ? "Your booking for " + b.Vehicle.Make + " has been accepted. Payment required."
-                                : "Your booking for " + b.Vehicle.Make + " has been " + b.Status.ToLower() + " by " + b.Vehicle.Owner.User.FirstName,
+                                : "Your booking for " + b.Vehicle.Make + " has been " + b.Status.ToLower(),
                         profileUrl = "/User/OpenUsersProfile?userId=" + b.Vehicle.Owner.UserId,
                         showPaymentButton = b.Status == "Accepted" && !b.IsPaid
                     })
