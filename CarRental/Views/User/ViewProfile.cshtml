@@ -1,32 +1,30 @@
 ﻿@using CarRental.Models
-@model dynamic  //ώστε να πάρει το user αυτούσιο και να το χωρίσει μετά
+@model dynamic  // ώστε να πάρει το user αυτούσιο και να το χωρίσει μετά
 
 @{
     ViewData["Title"] = "My Profile";
 }
 
-<h1>@ViewData["Title"]</h1>
 <div class="profile-page-layout">
-    <!-- LEFT COLUMN -->
     <div class="profile-column">
-<section class="profile-personal-info-card">
-    <h3>Personal Information</h3>
+        <section class="profile-personal-info-card">
+            <h3>Personal Information</h3>
 
-    <div class="profile-content">
+            <div class="profile-content">
 
-        <div class="profile-left">
+                <div class="profile-left">
 
-            <img class="profile-picture-img" src="/images/profile-picture.png" />
+                    <img class="profile-picture-img" src="/images/profile-picture.png" />
 
-            <nav class="profile-links">
-                <a href="/User/EditProfile">Edit My Profile</a>
-                <br />
-                <a href="/Home/Index">Back to Home</a>
-                @if (Model is Owner)
-                {
-                    
-                <a asp-controller="Owner" asp-action="ViewMyCar">Manage My Cars</a>            
-                }
+                    <nav class="profile-links">
+                        <a href="/User/EditProfile">Edit My Profile</a>
+                        <br />
+                        <a href="/Home/Index">Back to Home</a>
+                        @if (Model is Owner)
+                        {
+                            <br />
+                            <a asp-controller="Owner" asp-action="ViewMyCar">Manage My Cars</a>
+                        }
 
                         <form asp-controller="User"
                               asp-action="DeleteUserConfirmed"
@@ -36,77 +34,166 @@
                             <button type="submit" class="delete-user-btn">
                                 Delete profile
                             </button>
-
                         </form>
+                    </nav>
 
-            </nav>
-
-        </div>
-    
-    <div class="personal-info">
-    <p>First Name: @Model.User.FirstName</p>
-    <p>Last Name: @Model.User.LastName</p>
-    <p>Email: @Model.User.Email</p>
-    <p>Phone: @Model.User.PhoneNumber</p>
-
-
-@if (Model is Renter)
-{
-        <p>Birth Year: @(Model.BirthYear > 0 ? Model.BirthYear.ToString() : "Not provided")</p>
-        <p>Licence Year: @(Model.LicenceYear > 0 ? Model.LicenceYear.ToString() : "Not provided")</p>
-}
-
-</div></div>
-
-
-        </section>
-   
-
-    <!-- account analytics -->
-        <section class="account-analytics-section">
-
-        <h3>Account Analytics</h3>
-
-        </section>
-    </div><hr />
-    <!-- reviews -->
-    <div class="reviews-column">
-    <section class="reviews-section" ">
-    <h3>My Reviews</h3>
-
-
-@{
-    var myReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
-}
-
-@if (myReviews != null && myReviews.Any())
-{
-    <div class="reviews-container">
-        @foreach (var reviewItem in myReviews)
-        {
-            <div class="review-card">
-
-                <div class="review-header">
-                    <div class="review-name">
-                        @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
-                    </div>
-
-                    <div class="review-rating">
-                        ⭐ @reviewItem.Rating/5
-                    </div>
                 </div>
 
-                <div class="review-comment">
-                    @reviewItem.Comment
-                </div>
+                <div class="personal-info">
+                    <p>First Name: @Model.User.FirstName</p>
+                    <p>Last Name: @Model.User.LastName</p>
+                    <p>Email: @Model.User.Email</p>
+                    <p>Phone: @Model.User.PhoneNumber</p>
 
+                    @if (Model is Renter)
+                    {
+                        <p>Birth Year: @(Model.BirthYear > 0 ? Model.BirthYear.ToString() : "Not provided")</p>
+                        <p>Licence Year: @(Model.LicenceYear > 0 ? Model.LicenceYear.ToString() : "Not provided")</p>
+                    }
+                </div>
             </div>
+        </section>
+
+        @if (!User.IsInRole("Admin"))
+        {
+            <section class="account-analytics-section">
+                <h3>Account Analytics</h3>
+
+                <div class="analytics-grid">
+
+                    <div class="analytics-card rating-card">
+                        <div class="analytics-info">
+                            <h4>@(ViewBag.AverageRating ?? "No ratings yet")</h4>
+                            <p>Average Rating</p>
+                        </div>
+                    </div>
+
+                    <div class="analytics-card alert-card">
+                        <div class="analytics-info">
+                            <h4>@(ViewBag.ReportsReceivedCount ?? 0)</h4>
+                            <p>Times Reported</p>
+                        </div>
+                    </div>
+
+                    @if (User.IsInRole("Renter"))
+                    {
+                        <div class="analytics-card renter-stat">
+                            <div class="analytics-info">
+                                <h4>@(ViewBag.RenterTotalBookings ?? 0) Bookings</h4>
+                                <p>Total Bookings</p>
+                            </div>
+                        </div>
+                        <div class="analytics-card renter-stat">
+                            <div class="analytics-info">
+                                <h4>@(ViewBag.RenterTotalDays ?? 0) Days</h4>
+                                <p>Total Days Rented</p>
+                            </div>
+                        </div>
+                    }
+
+                    @if (User.IsInRole("Owner"))
+                    {
+                        <div class="analytics-card owner-stat">
+                            <div class="analytics-info">
+                                <h4>@(ViewBag.OwnerTotalCars ?? 0) Cars</h4>
+                                <p>Fleet Size</p>
+                            </div>
+                        </div>
+                        <div class="analytics-card owner-stat">
+                            <div class="analytics-info">
+                                <h4>@(ViewBag.OwnerTotalDeals ?? 0) Deals</h4>
+                                <p>Successful Deals</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
         }
     </div>
-}
-else
-{
-    <p>You haven't received any reviews yet.</p>
-}
-    </section></div>
+
+    <div class="reviews-column">
+        <section class="reviews-section">
+            <h3>My Reviews</h3>
+
+            @{
+                var myReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
+            }
+
+            @if (myReviews != null && myReviews.Any())
+            {
+                <div class="reviews-container">
+                    @foreach (var reviewItem in myReviews)
+                    {
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="review-name">
+                                    @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
+                                </div>
+                                <div class="review-rating">
+                                    ⭐ @reviewItem.Rating/5
+                                </div>
+                            </div>
+                            <div class="review-comment">
+                                @reviewItem.Comment
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>You haven't received any reviews yet.</p>
+            }
+        </section>
+    </div>
 </div>
+
+<style>
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 15px;
+    }
+
+    .analytics-card {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        border-left: 5px solid #cbd5e1;
+    }
+
+    .rating-card {
+        border-left-color: #eab308;
+    }
+
+    .alert-card {
+        border-left-color: #ef4444;
+    }
+
+    .renter-stat {
+        border-left-color: #3b82f6;
+    }
+
+    .owner-stat {
+        border-left-color: #10b981;
+    }
+
+    .analytics-info h4 {
+        margin: 0;
+        font-size: 18px;
+        color: #211066;
+        font-weight: 700;
+    }
+
+    .analytics-info p {
+        margin: 4px 0 0 0;
+        font-size: 11px;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+</style>

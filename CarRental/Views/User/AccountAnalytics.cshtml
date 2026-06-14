@@ -1,0 +1,209 @@
+﻿@model CarRental.Models.User
+
+@{
+    ViewData["Title"] = "Account Analytics";
+}
+
+<div class="analytics-page-wrapper">
+
+    <section class="account-analytics-section">
+
+        <div class="analytics-header-inside">
+            <div class="user-meta">
+                <h3>@Model.FirstName @Model.LastName</h3>
+                <p class="account-sub">Account Statistics</p>
+            </div>
+
+            <div class="status-container">
+                @if (Model.IsSuspended)
+                {
+                    <span class="status-badge suspended">
+                        Suspended (Until @Model.SuspensionEnd.ToString("dd/MM/yyyy"))
+                    </span>
+                }
+                else
+                {
+                    <span class="status-badge nonSuspended">Active Account</span>
+                }
+            </div>
+        </div>
+
+        <div class="analytics-grid">
+
+            @if (!User.IsInRole("Admin"))
+            {
+                <div class="analytics-card rating-card">
+                    <div class="analytics-info">
+                        <h4>@ViewBag.AverageRating</h4>
+                        <p>Average Rating</p>
+                    </div>
+                </div>
+
+                <div class="analytics-card alert-card">
+                    <div class="analytics-info">
+                        <h4>@ViewBag.ReportsReceivedCount</h4>
+                        <p>Times Reported</p>
+                    </div>
+                </div>
+            }
+
+            @if (ViewBag.RenterTotalBookings != null && ViewBag.RenterTotalBookings > 0)
+            {
+                <div class="analytics-card renter-stat">
+                    <div class="analytics-info">
+                        <h4>@ViewBag.RenterTotalBookings Bookings</h4>
+                        <p>As a Renter</p>
+                    </div>
+                </div>
+                <div class="analytics-card renter-stat">
+                    <div class="analytics-info">
+                        <h4>@ViewBag.RenterTotalDays Days</h4>
+                        <p>Total Days Rented</p>
+                    </div>
+                </div>
+            }
+
+            @if (ViewBag.OwnerTotalCars != null && ViewBag.OwnerTotalCars > 0)
+            {
+                <div class="analytics-card owner-stat">
+                    <div class="analytics-info">
+                        <h4>@ViewBag.OwnerTotalCars Cars</h4>
+                        <p>Fleet Size</p>
+                    </div>
+                </div>
+                <div class="analytics-card owner-stat">
+                    <div class="analytics-info">
+                        <h4>@ViewBag.OwnerTotalDeals Deals</h4>
+                        <p>Successful Rental Deals</p>
+                    </div>
+                </div>
+            }
+
+            @if (User.IsInRole("Admin") && ViewBag.TotalPendingReports != null)
+            {
+                <div class="analytics-card admin-stat">
+                    <div class="analytics-info">
+                        <h4>@ViewBag.TotalPendingReports</h4>
+                        <p>Unseen System Reports</p>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </section>
+</div>
+
+<style>
+    .analytics-page-wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .account-analytics-section {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e5e7eb;
+    }
+
+    .analytics-header-inside {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+        .analytics-header-inside h3 {
+            color: #211066;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .account-sub {
+        font-size: 13px;
+        color: #64748b;
+        margin: 4px 0 0 0;
+    }
+
+    .status-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+        .status-badge.nonSuspended {
+            background-color: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status-badge.suspended {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .analytics-card {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        border-left: 5px solid #cbd5e1;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .analytics-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+    .rating-card {
+        border-left-color: #eab308;
+    }
+
+    .alert-card {
+        border-left-color: #ef4444;
+    }
+    .renter-stat {
+        border-left-color: #3b82f6;
+    }
+    .owner-stat {
+        border-left-color: #10b981;
+    }/
+    .admin-stat {
+        border-left-color: #8b5cf6;
+    }
+
+    .analytics-info h4 {
+        margin: 0;
+        font-size: 18px;
+        color: #211066;
+        font-weight: 700;
+    }
+
+    .analytics-info p {
+        margin: 4px 0 0 0;
+        font-size: 12px;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+
+</style>
