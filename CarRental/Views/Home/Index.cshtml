@@ -7,78 +7,71 @@
 }
 else
 {
-
-
-
-
-
-
-<div class="start-section">
-    <h1>Welcome to CarRental</h1>
-    <p>We promise you the best experience possible</p> 
-</div>
-
-<div class="index">
-    
-    <h2 style="margin-top: 40px; text-align: center; margin-bottom: 20px; color:#211066 "> Check Our Fleet</h2>
-    
-    <div class="slider-wrapper">
-        <button class="slider-btn prev-btn" onclick="scrollSlider(-1)">&#10094;</button>
-        
-        <div class="slider-container" id="carSlider">
-            @foreach (Vehicle car in Model)
-            {
-                @if (car.Availability == true && !car.IsDeleted)
-                {
-                    <div class="car-card">
-                        <div class="car-card-img">
-                            <img src="@car.Image" alt="@car.Make @car.Model" />
-                        </div>
-
-                        <div class="car-card-body">
-                            <h4>@car.Make @car.Model</h4>
-                            <p><b>Year:</b> @car.Year</p>
-                            <p><b>Cubic:</b> @car.Cubic</p>
-                            <p class="car-price"><b>Price/Day:</b> @car.PricePerDay €</p>
-                        </div>
-
-                        @if (User.IsInRole("Owner"))
-                        {
-                            <div class="car-card-actions">
-                                <a href="/Owner/ViewMyCar?vehicleId=@car.VehicleId" class="btn-view">
-                                    View
-                                </a>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="car-card-actions">
-                                <a href="/Renter/ShowCars?vehicleId=@car.VehicleId" class="btn-edit">
-                                    Book
-                                </a>
-                            </div>
-                        }
-
-                    </div>
-                }
-            }
-        </div>
-        
-        <button class="slider-btn next-btn" onclick="scrollSlider(1)">&#10095;</button>
+    <div class="start-section">
+        <h1>Welcome to CarRental</h1>
+        <p>We promise you the best experience possible</p> 
     </div>
     
-</div>
-
-<script>
-    function scrollSlider(direction) {
-        const slider = document.getElementById('carSlider');
-        const scrollAmount = 305; 
+    <div class="index">
         
-        slider.scrollBy({
-            left: direction * scrollAmount
-        });
-    }
-</script>
-
+        <h2 style="margin-top: 40px; text-align: center; margin-bottom: 20px; color:#211066 "> Check Our Fleet</h2>
+        
+        <div class="slider-wrapper">
+            <button class="slider-btn prev-btn" onclick="scrollSlider(-1)">&#10094;</button>
+            
+            <div class="slider-container" id="carSlider">
+                @foreach (Vehicle car in Model)
+                {
+                    @if (car.Availability == true && !car.IsDeleted)
+                    {
+                        <div class="car-card">
+                            <div class="car-card-img">
+                                <img src="@car.Image" alt="@car.Make @car.Model" />
+                            </div>
+    
+                            <div class="car-card-body">
+                                <h4>@car.Make @car.Model</h4>
+                                <p><b>Year:</b> @car.Year</p>
+                                <p><b>Cubic:</b> @car.Cubic</p>
+                                <p class="car-price"><b>Price/Day:</b> @car.PricePerDay €</p>
+                            </div>
+    
+                            @if (User.IsInRole("Owner"))
+                            {
+                                <div class="car-card-actions">
+                                    <a href="/Owner/ViewMyCar?vehicleId=@car.VehicleId" class="btn-view">
+                                        View
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="car-card-actions">
+                                    <a href="/Renter/ShowCars?vehicleId=@car.VehicleId" class="btn-edit">
+                                        Book
+                                    </a>
+                                </div>
+                            }
+    
+                        </div>
+                    }
+                }
+            </div>
+            
+            <button class="slider-btn next-btn" onclick="scrollSlider(1)">&#10095;</button>
+        </div>
+        
+    </div>
+    
+    <script>
+        function scrollSlider(direction) {
+            const slider = document.getElementById('carSlider');
+            const scrollAmount = 305; 
+            
+            slider.scrollBy({
+                left: direction * scrollAmount
+            });
+        }
+    </script>
 }
 

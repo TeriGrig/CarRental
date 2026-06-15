@@ -20,7 +20,6 @@ namespace CarRental.Controllers
             _context = context;
         }
 
-
         // Show all cars
 
         public IActionResult ShowCars()
