@@ -306,13 +306,12 @@ namespace CarRental.Controllers
                 var bookings = await _context.Bookings
                     .Include(b => b.Vehicle)
                     .Include(b => b.Renter.User)
-                    .Where(b => b.Vehicle.OwnerID == owner.Id && (b.Status == "Requested" || b.Status == "Canceled"))
+                    .Where(b => b.Vehicle.OwnerID == owner.Id && (b.Status == "Requested" || b.Status == "Cancelled"))
                     .Select(b => new
                     {
                         id = b.BookingId,
-                        //message = "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName ,
-                        message = b.Status == "Canceled"
-                            ? "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName + " has been canceled."
+                        message = b.Status == "Cancelled"
+                            ? "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName + " has been cancelled."
                             : b.Status == "Requested"
                                 ? "Booking for " + b.Vehicle.Make + " from " + b.Renter.User.FirstName + " is pending your approval."
                                 : null,
@@ -368,6 +367,7 @@ namespace CarRental.Controllers
                         .Include(b => b.Vehicle)
                         .Include(b => b.Renter).ThenInclude(r => r.User)
                         .ToList();
+                    bookings.Reverse();
                     return View(bookings);
                 }
                 if (User.IsInRole("Renter"))
@@ -378,6 +378,7 @@ namespace CarRental.Controllers
                         .Include(b => b.Vehicle)
                         .Include(b => b.Vehicle.Owner).ThenInclude(r => r.User)
                         .ToList();
+                    bookings.Reverse();
                     return View(bookings);
                 }
             }
