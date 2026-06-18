@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,6 +81,15 @@ namespace CarRental.Controllers
         public async Task<IActionResult> OpenUsersProfile(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return NotFound();
+
+            var admin = await _context.Admins
+                .Include(a => a.User)
+                .FirstOrDefaultAsync(a => a.UserId == userId && !a.User.IsDeleted);
+
+            if (admin != null)
+            {
+                return View("OpenUsersProfile", admin);
+            }
 
             var reviews = await _context.Reviews
                 .Include(r => r.Commenter)

@@ -1,4 +1,16 @@
 ﻿@page
 @model CarRental.Views.Home.SuspendedModel
 
-<h1>Your account has been suspended</h1>
+<h1>Your account has been suspended.</h1>
+
+@if (ViewBag.SuspensionEnd != null)
+{
+    <h2>
+        Suspension will be lifted automatically on
+        <strong>@(((DateOnly)ViewBag.SuspensionEnd).ToString("dd/MM/yyyy"))</strong>.
+    </h2>
+}
+else
+{
+    <h2>Your suspension does not currently have an end date.</h2>
+}
