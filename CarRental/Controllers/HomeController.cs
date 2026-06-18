@@ -1,5 +1,6 @@
 using CarRental.Data;
 using CarRental.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -9,10 +10,12 @@ namespace CarRental.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -26,8 +29,15 @@ namespace CarRental.Controllers
             return View();
         }
 
-        public IActionResult Suspended()
+        public async Task<IActionResult> Suspended()
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                ViewBag.SuspensionEnd = user?.SuspensionEnd;
+            }
+
             return View();
         }
 
