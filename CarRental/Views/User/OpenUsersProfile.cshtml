@@ -251,28 +251,29 @@
             }
         </section>
 
-        <section class="leave-review-section">
-            <h3>Leave a Review</h3>
-            <form asp-controller="Reviews" asp-action="AddReview" method="post">
-                <input type="hidden" name="recipientId" value="@Model.User.Id" />
+        @if (!User.IsInRole("Admin")){
+            <section class="leave-review-section">
+                <h3>Leave a Review</h3>
+                <form asp-controller="Reviews" asp-action="AddReview" method="post">
+                    <input type="hidden" name="recipientId" value="@Model.User.Id" />
 
-                <div class="form-group">
-                    <label>Rating (1-5)</label>
-                    <input type="number" name="rating" min="1" max="5" class="form-control" />
-                </div>
+                    <div class="form-group">
+                        <label>Rating (1-5)</label>
+                        <input type="number" name="rating" min="1" max="5" class="form-control" />
+                    </div>
 
-                <div class="form-group">
-                    <label>Your Comment</label>
-                    <textarea name="comment" class="form-control" rows="4"></textarea>
-                </div>
+                    <div class="form-group">
+                        <label>Your Comment</label>
+                        <textarea name="comment" class="form-control" rows="4"></textarea>
+                    </div>
 
-                <button type="submit" class="submit-review-btn">
-                    Submit Review
-                </button>
-            </form>
-        </section>
+                    <button type="submit" class="submit-review-btn">
+                        Submit Review
+                    </button>
+                </form>
+            </section>
+        }
     </div>
-
 </div>
 
 <style>
