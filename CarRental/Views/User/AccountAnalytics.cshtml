@@ -28,10 +28,10 @@
             </div>
         </div>
 
-        <div class="analytics-grid">
+        @if (!User.IsInRole("Admin"))
+        {
+            <div class="analytics-grid">
 
-            @if (!User.IsInRole("Admin"))
-            {
                 <div class="analytics-card rating-card">
                     <div class="analytics-info">
                         <h4>@ViewBag.AverageRating</h4>
@@ -45,51 +45,41 @@
                         <p>Times Reported</p>
                     </div>
                 </div>
-            }
 
-            @if (ViewBag.RenterTotalBookings != null && ViewBag.RenterTotalBookings > 0)
-            {
-                <div class="analytics-card renter-stat">
-                    <div class="analytics-info">
-                        <h4>@ViewBag.RenterTotalBookings Bookings</h4>
-                        <p>As a Renter</p>
+                @if (ViewBag.RenterTotalBookings != null && ViewBag.RenterTotalBookings > 0)
+                {
+                    <div class="analytics-card renter-stat">
+                        <div class="analytics-info">
+                            <h4>@ViewBag.RenterTotalBookings Bookings</h4>
+                            <p>As a Renter</p>
+                        </div>
                     </div>
-                </div>
-                <div class="analytics-card renter-stat">
-                    <div class="analytics-info">
-                        <h4>@ViewBag.RenterTotalDays Days</h4>
-                        <p>Total Days Rented</p>
+                    <div class="analytics-card renter-stat">
+                        <div class="analytics-info">
+                            <h4>@ViewBag.RenterTotalDays Days</h4>
+                            <p>Total Days Rented</p>
+                        </div>
                     </div>
-                </div>
-            }
+                }
 
-            @if (ViewBag.OwnerTotalCars != null && ViewBag.OwnerTotalCars > 0)
-            {
-                <div class="analytics-card owner-stat">
-                    <div class="analytics-info">
-                        <h4>@ViewBag.OwnerTotalCars Cars</h4>
-                        <p>Fleet Size</p>
+                @if (ViewBag.OwnerTotalCars != null && ViewBag.OwnerTotalCars > 0)
+                {
+                    <div class="analytics-card owner-stat">
+                        <div class="analytics-info">
+                            <h4>@ViewBag.OwnerTotalCars Cars</h4>
+                            <p>Fleet Size</p>
+                        </div>
                     </div>
-                </div>
-                <div class="analytics-card owner-stat">
-                    <div class="analytics-info">
-                        <h4>@ViewBag.OwnerTotalDeals Deals</h4>
-                        <p>Successful Rental Deals</p>
+                    <div class="analytics-card owner-stat">
+                        <div class="analytics-info">
+                            <h4>@ViewBag.OwnerTotalDeals Deals</h4>
+                            <p>Successful Rental Deals</p>
+                        </div>
                     </div>
-                </div>
-            }
+                }
 
-            @if (User.IsInRole("Admin") && ViewBag.TotalPendingReports != null)
-            {
-                <div class="analytics-card admin-stat">
-                    <div class="analytics-info">
-                        <h4>@ViewBag.TotalPendingReports</h4>
-                        <p>Unseen System Reports</p>
-                    </div>
-                </div>
-            }
-
-        </div>
+            </div>
+        }
     </section>
 </div>
 
@@ -180,12 +170,15 @@
     .alert-card {
         border-left-color: #ef4444;
     }
+
     .renter-stat {
         border-left-color: #3b82f6;
     }
+
     .owner-stat {
         border-left-color: #10b981;
-    }/
+    }
+
     .admin-stat {
         border-left-color: #8b5cf6;
     }
@@ -204,6 +197,4 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
-
-
 </style>
