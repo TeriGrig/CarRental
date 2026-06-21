@@ -1,6 +1,5 @@
 ﻿@using CarRental.Models
 @model dynamic  // ώστε να πάρει το user αυτούσιο και να το χωρίσει μετά
-
 @{
     ViewData["Title"] = "My Profile";
 }
@@ -11,9 +10,7 @@
             <h3>Personal Information</h3>
 
             <div class="profile-content">
-
                 <div class="profile-left">
-
                     <img class="profile-picture-img" src="/images/profile-picture.png" />
 
                     <nav class="profile-links">
@@ -36,7 +33,6 @@
                             </button>
                         </form>
                     </nav>
-
                 </div>
 
                 <div class="personal-info">
@@ -60,7 +56,6 @@
                 <h3>Account Analytics</h3>
 
                 <div class="analytics-grid">
-
                     <div class="analytics-card rating-card">
                         <div class="analytics-info">
                             <h4>@(ViewBag.AverageRating ?? "No ratings yet")</h4>
@@ -111,41 +106,45 @@
         }
     </div>
 
-    <div class="reviews-column">
-        <section class="reviews-section">
-            <h3>My Reviews</h3>
+    @if (!User.IsInRole("Admin"))
+    {
+        <div class="reviews-column">
+            <section class="reviews-section">
+                <h3>My Reviews</h3>
 
-            @{
-                var myReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
-            }
+                @{
+                    var myReviews = ViewBag.Reviews as IEnumerable<CarRental.Models.Review>;
+                }
 
-            @if (myReviews != null && myReviews.Any())
-            {
-                <div class="reviews-container">
-                    @foreach (var reviewItem in myReviews)
-                    {
-                        <div class="review-card">
-                            <div class="review-header">
-                                <div class="review-name">
-                                    @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
+                @if (myReviews != null && myReviews.Any())
+                {
+                    <div class="reviews-container">
+                        @foreach (var reviewItem in myReviews)
+                        {
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <div class="review-name">
+                                        @reviewItem.Commenter.FirstName @reviewItem.Commenter.LastName
+                                    </div>
+                                    <div class="review-rating">
+                                        ⭐ @reviewItem.Rating/5
+                                    </div>
                                 </div>
-                                <div class="review-rating">
-                                    ⭐ @reviewItem.Rating/5
-                                </div>
+                                <div class="review-comment">
+                                    @reviewItem.Comment
+                                }
                             </div>
-                            <div class="review-comment">
-                                @reviewItem.Comment
                             </div>
-                        </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <p>You haven't received any reviews yet.</p>
-            }
-        </section>
-    </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>You haven't received any reviews yet.</p>
+                }
+            </section>
+        </div>
+    }
 </div>
 
 <style>
@@ -166,21 +165,10 @@
         border-left: 5px solid #cbd5e1;
     }
 
-    .rating-card {
-        border-left-color: #eab308;
-    }
-
-    .alert-card {
-        border-left-color: #ef4444;
-    }
-
-    .renter-stat {
-        border-left-color: #3b82f6;
-    }
-
-    .owner-stat {
-        border-left-color: #10b981;
-    }
+    .rating-card { border-left-color: #eab308; }
+    .alert-card { border-left-color: #ef4444; }
+    .renter-stat { border-left-color: #3b82f6; }
+    .owner-stat { border-left-color: #10b981; }
 
     .analytics-info h4 {
         margin: 0;
