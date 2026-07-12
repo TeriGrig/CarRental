@@ -30,8 +30,13 @@ namespace CarRental.Controllers
             ViewBag.EndTime = "";
 
             var vehicles = _context.Vehicles
-                .Where(v => v.Availability && !v.IsDeleted)
-                .ToList();
+            .Include(v => v.Owner)
+            .ThenInclude(o => o.User)
+            .Where(v =>
+                v.Availability &&
+                !v.IsDeleted &&
+                !v.Owner.User.IsSuspended)
+            .ToList();
 
             return View(vehicles);
         }
