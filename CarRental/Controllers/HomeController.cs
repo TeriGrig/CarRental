@@ -19,7 +19,15 @@ namespace CarRental.Controllers
         }
         public IActionResult Index()
         {
-            var vehicles = _context.Vehicles.ToList();
+            //var vehicles = _context.Vehicles.ToList();
+            var vehicles = _context.Vehicles
+            .Include(v => v.Owner)
+            .ThenInclude(o => o.User)
+            .Where(v =>
+                v.Availability &&
+                !v.IsDeleted &&
+                !v.Owner.User.IsSuspended)
+            .ToList();
             return View(vehicles);
            
         }

@@ -22,8 +22,8 @@ else
             <div class="slider-container" id="carSlider">
                 @foreach (Vehicle car in Model)
                 {
-                    @if (car.Availability == true && !car.IsDeleted)
-                    {
+                    @* @if (car.Availability == true && !car.IsDeleted)
+                    { *@
                         <div class="car-card">
                             <div class="car-card-img">
                                 <img src="@car.Image" alt="@car.Make @car.Model" />
@@ -54,7 +54,6 @@ else
                             }
     
                         </div>
-                    }
                 }
             </div>
             
